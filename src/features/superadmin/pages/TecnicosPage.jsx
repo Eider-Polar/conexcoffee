@@ -1,0 +1,563 @@
+import { useState } from 'react';
+import {
+  UserCheck,
+  Search,
+  Pencil,
+  Eye,
+  X,
+} from 'lucide-react';
+import ModuloCabecera from '../components/ModuloCabecera';
+
+const INITIAL_TECNICOS = [
+  {
+    id: 1,
+    numeroIdentificacion: '79845123',
+    primerNombre: 'CARLOS',
+    segundoNombre: 'EDUARDO',
+    primerApellido: 'RAMÍREZ',
+    segundoApellido: 'VARGAS',
+    telefono: '3138901234',
+    correo: 'carlos.ramirez@conexcoffee.com',
+    especialidad: 'Q-Grader / Agrónomo Especialista en Suelos',
+    zonaAsignada: 'Huila (Pitalito, Acevedo)',
+    visitasRealizadas: 84,
+    activo: true,
+    avatar: '/images/users/avatar-8.jpg',
+  },
+  {
+    id: 2,
+    numeroIdentificacion: '10882341',
+    primerNombre: 'ANDRÉS',
+    segundoNombre: 'FELIPE',
+    primerApellido: 'GUTIÉRREZ',
+    segundoApellido: 'MORA',
+    telefono: '3156789012',
+    correo: 'andres.gutierrez@conexcoffee.com',
+    especialidad: 'Técnico de Campo en Buenas Prácticas Agrícolas',
+    zonaAsignada: 'Cauca (Popayán, Cajibío)',
+    visitasRealizadas: 62,
+    activo: true,
+    avatar: '/images/users/avatar-7.jpg',
+  },
+  {
+    id: 3,
+    numeroIdentificacion: '52987412',
+    primerNombre: 'DIANA',
+    segundoNombre: 'MARCELA',
+    primerApellido: 'ORTEGA',
+    segundoApellido: 'LÓPEZ',
+    telefono: '3174567890',
+    correo: 'diana.ortega@conexcoffee.com',
+    especialidad: 'Catadora Q Arabica Grader / Auditora Fair Trade',
+    zonaAsignada: 'Nariño (La Unión, Buesaco)',
+    visitasRealizadas: 95,
+    activo: true,
+    avatar: '/images/users/avatar-4.jpg',
+  },
+];
+
+export default function TecnicosPage() {
+  const [tecnicos, setTecnicos] = useState(INITIAL_TECNICOS);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const [modalRegistroAbierto, setModalRegistroAbierto] = useState(false);
+  const [modalEditarAbierto, setModalEditarAbierto] = useState(false);
+  const [modalDetalleAbierto, setModalDetalleAbierto] = useState(false);
+
+  const [tecnicoActual, setTecnicoActual] = useState(null);
+
+  const [formData, setFormData] = useState({
+    numeroIdentificacion: '',
+    primerNombre: '',
+    segundoNombre: '',
+    primerApellido: '',
+    segundoApellido: '',
+    telefono: '',
+    correo: '',
+    especialidad: '',
+    zonaAsignada: '',
+  });
+
+  const abrirModalCrear = () => {
+    setFormData({
+      numeroIdentificacion: '',
+      primerNombre: '',
+      segundoNombre: '',
+      primerApellido: '',
+      segundoApellido: '',
+      telefono: '',
+      correo: '',
+      especialidad: '',
+      zonaAsignada: '',
+    });
+    setModalRegistroAbierto(true);
+  };
+
+  const abrirModalEditar = (t) => {
+    setTecnicoActual(t);
+    setFormData({
+      numeroIdentificacion: t.numeroIdentificacion || '',
+      primerNombre: t.primerNombre || '',
+      segundoNombre: t.segundoNombre || '',
+      primerApellido: t.primerApellido || '',
+      segundoApellido: t.segundoApellido || '',
+      telefono: t.telefono || '',
+      correo: t.correo || '',
+      especialidad: t.especialidad || '',
+      zonaAsignada: t.zonaAsignada || '',
+    });
+    setModalEditarAbierto(true);
+  };
+
+  const abrirModalDetalles = (t) => {
+    setTecnicoActual(t);
+    setModalDetalleAbierto(true);
+  };
+
+  const guardarCreacion = (e) => {
+    e.preventDefault();
+    const nuevo = {
+      id: Date.now(),
+      ...formData,
+      visitasRealizadas: 0,
+      activo: true,
+      avatar: '/images/users/user-dummy-img.jpg',
+    };
+    setTecnicos([nuevo, ...tecnicos]);
+    setModalRegistroAbierto(false);
+  };
+
+  const guardarEdicion = (e) => {
+    e.preventDefault();
+    setTecnicos(
+      tecnicos.map((t) =>
+        t.id === tecnicoActual.id ? { ...t, ...formData } : t
+      )
+    );
+    setModalEditarAbierto(false);
+  };
+
+  const filtrados = tecnicos.filter((t) => {
+    const term = searchTerm.toLowerCase();
+    return (
+      t.numeroIdentificacion.toLowerCase().includes(term) ||
+      t.primerNombre.toLowerCase().includes(term) ||
+      t.primerApellido.toLowerCase().includes(term) ||
+      t.telefono.toLowerCase().includes(term) ||
+      t.zonaAsignada.toLowerCase().includes(term)
+    );
+  });
+
+  return (
+    <div className="space-y-6">
+      {/* Cabecera idéntica a components.cabecera-modulo con imagen tecnico.jpg */}
+      <ModuloCabecera
+        titulo="Técnicos y Extensionistas"
+        subtitulo="Personal agronómico y catadores autorizados para visitas de campo y muestreo"
+        imagenPortada="/images/portadas/tecnico.jpg"
+        mensaje="Gestión de la información de los técnicos y catadores en campo."
+        icono={UserCheck}
+        totalRegistros={filtrados.length}
+        onRegistrar={abrirModalCrear}
+        textoBotonRegistrar="Registrar Técnico"
+      />
+
+      {/* Buscador */}
+      <div className="bg-white p-4 rounded-2xl border border-surface-200 shadow-2xs flex items-center justify-between">
+        <div className="relative w-full sm:w-80">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-surface-400" />
+          <input
+            type="text"
+            placeholder="Buscar por cédula, nombre, teléfono o zona…"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-surface-200 focus:outline-none focus:ring-2 focus:ring-[#AD2E01]/20 focus:border-[#AD2E01]"
+          />
+        </div>
+      </div>
+
+      {/* Tabla Oficial (Nº, Identificación, Nombres, Apellidos, Teléfono, Acciones) */}
+      <div className="bg-white rounded-2xl border border-surface-200 shadow-2xs overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm text-left">
+            <thead className="bg-surface-50 border-b border-surface-200 text-surface-600 uppercase text-xs tracking-wider">
+              <tr>
+                <th scope="col" className="px-4 py-3.5 font-bold w-12 text-center">Nº</th>
+                <th scope="col" className="px-5 py-3.5 font-bold">Identificación</th>
+                <th scope="col" className="px-5 py-3.5 font-bold">Nombres</th>
+                <th scope="col" className="px-5 py-3.5 font-bold">Apellidos</th>
+                <th scope="col" className="px-5 py-3.5 font-bold">Teléfono</th>
+                <th scope="col" className="px-5 py-3.5 font-bold text-center">Zona Asignada</th>
+                <th scope="col" className="px-5 py-3.5 font-bold text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-surface-100">
+              {filtrados.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="text-center py-10 text-surface-500">
+                    No se encontraron técnicos registrados.
+                  </td>
+                </tr>
+              ) : (
+                filtrados.map((t, index) => (
+                  <tr key={t.id} className="hover:bg-surface-50/80 transition-colors">
+                    <td className="px-4 py-3.5 text-center font-bold text-surface-500 text-xs">
+                      {index + 1}
+                    </td>
+                    <td className="px-5 py-3.5 font-semibold text-surface-900 font-mono text-xs">
+                      {t.numeroIdentificacion}
+                    </td>
+                    <td className="px-5 py-3.5">
+                      <div className="flex items-center gap-2.5">
+                        <img
+                          src={t.avatar}
+                          alt={t.primerNombre}
+                          className="h-8 w-8 rounded-full object-cover border border-surface-200 shrink-0"
+                          onError={(e) => {
+                            e.currentTarget.src = '/images/users/user-dummy-img.jpg';
+                          }}
+                        />
+                        <span className="font-semibold text-surface-800">
+                          {t.primerNombre} {t.segundoNombre}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-5 py-3.5 font-medium text-surface-700">
+                      {t.primerApellido} {t.segundoApellido}
+                    </td>
+                    <td className="px-5 py-3.5 text-surface-600 font-mono text-xs">
+                      {t.telefono}
+                    </td>
+                    <td className="px-5 py-3.5 text-center">
+                      <span className="inline-block px-2.5 py-1 rounded-lg text-xs font-semibold bg-[#FFF1ED] text-[#AD2E01] border border-[#AD2E01]/20">
+                        {t.zonaAsignada}
+                      </span>
+                    </td>
+                    <td className="px-5 py-3.5 text-center">
+                      <div className="flex items-center justify-center gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => abrirModalEditar(t)}
+                          title="Editar"
+                          className="p-1.5 rounded-lg border border-surface-200 bg-white text-surface-600 hover:text-[#AD2E01] hover:border-[#AD2E01]/30 hover:bg-[#FFF1ED] transition-colors cursor-pointer shadow-2xs"
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => abrirModalDetalles(t)}
+                          title="Ver"
+                          className="p-1.5 rounded-lg border border-surface-200 bg-white text-surface-600 hover:text-blue-600 hover:border-blue-300 hover:bg-blue-50 transition-colors cursor-pointer shadow-2xs"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* MODAL REGISTRAR TÉCNICO */}
+      {modalRegistroAbierto && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-surface-200 my-8">
+            <div className="flex items-center justify-between pb-4 border-b border-surface-200">
+              <div className="flex items-center gap-2.5">
+                <div className="h-9 w-9 rounded-xl bg-[#FFF1ED] text-[#AD2E01] flex items-center justify-center">
+                  <UserCheck className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-surface-900">Registrar Técnico</h3>
+                  <p className="text-xs text-surface-500">Datos personales y zona de trabajo</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setModalRegistroAbierto(false)}
+                className="p-1.5 rounded-lg text-surface-400 hover:bg-surface-100 cursor-pointer"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <form onSubmit={guardarCreacion} className="mt-4 space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-surface-700 mb-1">Cédula de Ciudadanía *</label>
+                  <input
+                    required
+                    type="text"
+                    value={formData.numeroIdentificacion}
+                    onChange={(e) => setFormData({ ...formData, numeroIdentificacion: e.target.value })}
+                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200"
+                    placeholder="79845123"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-surface-700 mb-1">Teléfono Móvil *</label>
+                  <input
+                    required
+                    type="text"
+                    value={formData.telefono}
+                    onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
+                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-surface-700 mb-1">Primer Nombre *</label>
+                  <input
+                    required
+                    type="text"
+                    value={formData.primerNombre}
+                    onChange={(e) => setFormData({ ...formData, primerNombre: e.target.value.toUpperCase() })}
+                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-surface-700 mb-1">Primer Apellido *</label>
+                  <input
+                    required
+                    type="text"
+                    value={formData.primerApellido}
+                    onChange={(e) => setFormData({ ...formData, primerApellido: e.target.value.toUpperCase() })}
+                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-surface-700 mb-1">Correo Electrónico *</label>
+                  <input
+                    required
+                    type="email"
+                    value={formData.correo}
+                    onChange={(e) => setFormData({ ...formData, correo: e.target.value })}
+                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-surface-700 mb-1">Zona Asignada *</label>
+                  <input
+                    required
+                    type="text"
+                    value={formData.zonaAsignada}
+                    onChange={(e) => setFormData({ ...formData, zonaAsignada: e.target.value })}
+                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200"
+                    placeholder="Ej. Huila (Pitalito, Acevedo)"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-surface-700 mb-1">Especialidad o Certificación</label>
+                <input
+                  type="text"
+                  value={formData.especialidad}
+                  onChange={(e) => setFormData({ ...formData, especialidad: e.target.value })}
+                  className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200"
+                  placeholder="Ej. Q-Grader, Ingeniero Agrónomo, Auditor de Calidad"
+                />
+              </div>
+
+              <div className="flex justify-end gap-3 pt-3 border-t border-surface-200">
+                <button
+                  type="button"
+                  onClick={() => setModalRegistroAbierto(false)}
+                  className="px-4 py-2 rounded-xl border border-surface-200 text-sm font-semibold text-surface-600 hover:bg-surface-50 cursor-pointer"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 rounded-xl bg-[#AD2E01] hover:bg-[#8D2501] text-white text-sm font-semibold shadow-md cursor-pointer"
+                >
+                  Guardar Técnico
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL DETALLES */}
+      {modalDetalleAbierto && tecnicoActual && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-surface-200">
+            <div className="flex items-center justify-between pb-3 border-b border-surface-200">
+              <div className="flex items-center gap-3">
+                <img
+                  src={tecnicoActual.avatar}
+                  alt={tecnicoActual.primerNombre}
+                  className="h-12 w-12 rounded-full object-cover border-2 border-[#AD2E01]"
+                  onError={(e) => {
+                    e.currentTarget.src = '/images/users/user-dummy-img.jpg';
+                  }}
+                />
+                <div>
+                  <h3 className="text-lg font-bold text-surface-900">
+                    {tecnicoActual.primerNombre} {tecnicoActual.primerApellido}
+                  </h3>
+                  <span className="text-xs text-surface-500 font-mono">CC {tecnicoActual.numeroIdentificacion}</span>
+                </div>
+              </div>
+              <button
+                onClick={() => setModalDetalleAbierto(false)}
+                className="p-1 rounded-lg text-surface-400 hover:bg-surface-100"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="mt-4 space-y-3 text-sm">
+              <div className="grid grid-cols-2 gap-3 bg-surface-50 p-3 rounded-xl border border-surface-200 text-xs">
+                <div>
+                  <span className="text-surface-500 block">Teléfono</span>
+                  <span className="font-semibold text-surface-800">{tecnicoActual.telefono}</span>
+                </div>
+                <div>
+                  <span className="text-surface-500 block">Correo</span>
+                  <span className="font-semibold text-surface-800">{tecnicoActual.correo}</span>
+                </div>
+                <div>
+                  <span className="text-surface-500 block">Zona de Acción</span>
+                  <span className="font-semibold text-[#AD2E01]">{tecnicoActual.zonaAsignada}</span>
+                </div>
+                <div>
+                  <span className="text-surface-500 block">Visitas a Fincas</span>
+                  <span className="font-semibold text-emerald-700">{tecnicoActual.visitasRealizadas} auditorías</span>
+                </div>
+              </div>
+
+              <div>
+                <span className="text-xs font-bold text-surface-700 block mb-1">Especialidad</span>
+                <p className="text-xs text-surface-700 bg-surface-50 p-2.5 rounded-lg border border-surface-100 font-medium">
+                  {tecnicoActual.especialidad}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-5 flex justify-end">
+              <button
+                onClick={() => setModalDetalleAbierto(false)}
+                className="px-4 py-2 rounded-xl bg-surface-900 text-white text-xs font-semibold"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL EDITAR TÉCNICO */}
+      {modalEditarAbierto && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-surface-200 my-8">
+            <div className="flex items-center justify-between pb-4 border-b border-surface-200">
+              <div className="flex items-center gap-2.5">
+                <div className="h-9 w-9 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center">
+                  <Pencil className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-surface-900">Editar Técnico</h3>
+                  <p className="text-xs text-surface-500">{tecnicoActual?.primerNombre} {tecnicoActual?.primerApellido}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setModalEditarAbierto(false)}
+                className="p-1.5 rounded-lg text-surface-400 hover:bg-surface-100 cursor-pointer"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <form onSubmit={guardarEdicion} className="mt-4 space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-surface-700 mb-1">Cédula</label>
+                  <input
+                    type="text"
+                    value={formData.numeroIdentificacion}
+                    onChange={(e) => setFormData({ ...formData, numeroIdentificacion: e.target.value })}
+                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-surface-700 mb-1">Teléfono</label>
+                  <input
+                    type="text"
+                    value={formData.telefono}
+                    onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
+                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-surface-700 mb-1">Primer Nombre</label>
+                  <input
+                    type="text"
+                    value={formData.primerNombre}
+                    onChange={(e) => setFormData({ ...formData, primerNombre: e.target.value })}
+                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-surface-700 mb-1">Primer Apellido</label>
+                  <input
+                    type="text"
+                    value={formData.primerApellido}
+                    onChange={(e) => setFormData({ ...formData, primerApellido: e.target.value })}
+                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-surface-700 mb-1">Correo Electrónico</label>
+                  <input
+                    type="email"
+                    value={formData.correo}
+                    onChange={(e) => setFormData({ ...formData, correo: e.target.value })}
+                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-surface-700 mb-1">Zona Asignada</label>
+                  <input
+                    type="text"
+                    value={formData.zonaAsignada}
+                    onChange={(e) => setFormData({ ...formData, zonaAsignada: e.target.value })}
+                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-surface-700 mb-1">Especialidad</label>
+                <input
+                  type="text"
+                  value={formData.especialidad}
+                  onChange={(e) => setFormData({ ...formData, especialidad: e.target.value })}
+                  className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200"
+                />
+              </div>
+
+              <div className="flex justify-end gap-3 pt-3 border-t border-surface-200">
+                <button
+                  type="button"
+                  onClick={() => setModalEditarAbierto(false)}
+                  className="px-4 py-2 rounded-xl border border-surface-200 text-sm font-semibold text-surface-600 hover:bg-surface-50 cursor-pointer"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-sm font-semibold shadow-md cursor-pointer"
+                >
+                  Actualizar Técnico
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

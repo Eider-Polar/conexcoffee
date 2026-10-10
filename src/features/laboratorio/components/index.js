@@ -1,0 +1,12 @@
+export { default as MuestrasLaboratorioTable } from './MuestrasLaboratorioTable';
+export { default as RegistrarCatadorModal } from './RegistrarCatadorModal';
+export { default as EditarCatadorModal } from './EditarCatadorModal';
+export { default as VerCatadorModal } from './VerCatadorModal';
+export { default as ConsultarCatadorModal } from './ConsultarCatadorModal';
+export { default as ActualizarAnalisisModal } from './ActualizarAnalisisModal';
+export { default as VerAnalisisModal } from './VerAnalisisModal';
+export { default as AsignarCatadorModal } from './AsignarCatadorModal';
+export { default as ModificarSensorialModal } from './ModificarSensorialModal';
+export { default as VerSensorialModal } from './VerSensorialModal';
+export { default as GenerarReporteModal } from './GenerarReporteModal';
+export { default as VerMuestraModal } from './VerMuestraModal';

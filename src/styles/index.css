@@ -1,0 +1,270 @@
+@import "tailwindcss";
+
+/* ============================================
+   ConexCoffee — Tema Personalizado
+   ============================================ */
+@theme {
+  /* ============================================
+     Colores Oficiales ConexCoffee (Definidos por el Usuario)
+     ============================================ */
+  --color-brand-terracota: #AD2E01;
+  --color-brand-orange: #F25433;
+  --color-brand-white: #FFFFFF;
+  --color-brand-black: #000000;
+
+  /* Colores primarios — Escala cromática oficial (#AD2E01 y #F25433) */
+  --color-primary-50: #fef5f2;
+  --color-primary-100: #fee8e3;
+  --color-primary-200: #fed4ca;
+  --color-primary-300: #fcb4a4;
+  --color-primary-400: #f7866f;
+  --color-primary-500: #F25433; /* Naranja Vibrante Oficial */
+  --color-primary-600: #de3c1b;
+  --color-primary-700: #AD2E01; /* Terracota / Café Fuego Oficial */
+  --color-primary-800: #8c2503;
+  --color-primary-900: #712108;
+  --color-primary-950: #3e0e02;
+
+  /* Colores secundarios — Terracota Profundo & Tostado Oficial (#AD2E01) */
+  --color-secondary-50: #fef5f2;
+  --color-secondary-100: #fee8e3;
+  --color-secondary-200: #fed4ca;
+  --color-secondary-300: #fcb4a4;
+  --color-secondary-400: #f7866f;
+  --color-secondary-500: #AD2E01;
+  --color-secondary-600: #8c2503;
+  --color-secondary-700: #712108;
+  --color-secondary-800: #551906;
+  --color-secondary-900: #3e0e02;
+  --color-secondary-950: #000000;
+
+  /* Colores de acento — Dorado */
+  --color-accent-50: #fffbeb;
+  --color-accent-100: #fef3c7;
+  --color-accent-200: #fde68a;
+  --color-accent-300: #fcd34d;
+  --color-accent-400: #fbbf24;
+  --color-accent-500: #f59e0b;
+  --color-accent-600: #d97706;
+  --color-accent-700: #b45309;
+  --color-accent-800: #92400e;
+  --color-accent-900: #78350f;
+  --color-accent-950: #451a03;
+
+  /* Surface / Fondos */
+  --color-surface-50: #fafaf9;
+  --color-surface-100: #f5f5f4;
+  --color-surface-200: #e7e5e4;
+  --color-surface-300: #d6d3d1;
+  --color-surface-400: #a8a29e;
+  --color-surface-500: #78716c;
+  --color-surface-600: #57534e;
+  --color-surface-700: #44403c;
+  --color-surface-800: #292524;
+  --color-surface-900: #1c1917;
+  --color-surface-950: #000000;
+
+  /* Estado — Danger */
+  --color-danger-50: #fef2f2;
+  --color-danger-500: #ef4444;
+  --color-danger-600: #dc2626;
+  --color-danger-700: #b91c1c;
+
+  /* Tipografía */
+  --font-sans: 'Inter', 'system-ui', '-apple-system', 'sans-serif';
+
+  /* Border radius — Regla global: 13px */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 13px;
+  --radius-xl: 13px;
+  --radius-2xl: 13px;
+  --radius-3xl: 13px;
+  --radius: 13px;
+}
+
+/* ============================================
+   Estilos base
+   ============================================ */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--color-surface-50);
+    color: var(--color-surface-900);
+  }
+
+  /* Scrollbar personalizado */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-surface-100);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-surface-400);
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-surface-500);
+  }
+}
+
+/* ============================================
+   Animación de Carrusel Continuo (Marquee Aliados)
+   ============================================ */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 28s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* ============================================
+   Animación FadeIn Suave (Hero Carrusel)
+   ============================================ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ============================================
+   Efecto Agua — HeroLiquidGlassBanner
+   Ondas de luz refractada sobre superficie líquida.
+   Se dispara remontando .water-layer (key trick de React).
+   ============================================ */
+
+/* Banda de luz amplia: movimiento diagonalmente de izq a der */
+@keyframes waterWave1 {
+  0% {
+    transform: translateX(-120%) skewX(-20deg);
+    opacity: 0;
+  }
+  15% { opacity: 1; }
+  75% { opacity: 0.5; }
+  100% {
+    transform: translateX(240%) skewX(-20deg);
+    opacity: 0;
+  }
+}
+
+/* Banda secundaria: más estrecha, ángulo opuesto, desplazada */
+@keyframes waterWave2 {
+  0% {
+    transform: translateX(-140%) skewX(12deg);
+    opacity: 0;
+  }
+  20% { opacity: 0.7; }
+  80% { opacity: 0.25; }
+  100% {
+    transform: translateX(260%) skewX(12deg);
+    opacity: 0;
+  }
+}
+
+/* Destello central expansivo — como luz que rebota en el agua */
+@keyframes waterWave3 {
+  0% {
+    transform: scale(0.3) translateX(-30%);
+    opacity: 0;
+  }
+  30% { opacity: 0.45; }
+  100% {
+    transform: scale(2.2) translateX(60%);
+    opacity: 0;
+  }
+}
+
+/* ── Capa contenedora ── */
+.water-layer {
+  z-index: 4;
+}
+
+/* ── Elemento base de onda ── */
+.water-wave {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 45%;
+  height: 100%;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* Onda 1 — gradiente diagonal ancho, color blanco-nacarado */
+.water-wave--1 {
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.0)  30%,
+    rgba(255, 255, 255, 0.13) 48%,
+    rgba(255, 255, 255, 0.22) 50%,
+    rgba(255, 255, 255, 0.13) 52%,
+    rgba(255, 255, 255, 0.0)  70%,
+    transparent 100%
+  );
+  animation: waterWave1 1.1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* Onda 2 — tono naranja muy sutil, distinto ángulo */
+.water-wave--2 {
+  width: 35%;
+  background: linear-gradient(
+    80deg,
+    transparent 0%,
+    rgba(242, 84, 51, 0.0)   35%,
+    rgba(242, 84, 51, 0.10)  49%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(242, 84, 51, 0.10)  51%,
+    rgba(242, 84, 51, 0.0)   65%,
+    transparent 100%
+  );
+  animation: waterWave2 1.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.12s forwards;
+}
+
+/* Onda 3 — destello central elíptico */
+.water-wave--3 {
+  top: -20%;
+  left: 20%;
+  width: 60%;
+  height: 140%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.05) 35%,
+    transparent 65%
+  );
+  animation: waterWave3 1.0s cubic-bezier(0.16, 1, 0.3, 1) 0.06s forwards;
+}
+
