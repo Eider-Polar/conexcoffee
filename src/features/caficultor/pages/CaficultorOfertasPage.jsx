@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  ShoppingCart,
   Search,
   Eye,
   Globe,
@@ -33,17 +32,9 @@ export default function CaficultorOfertasPage() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto py-2">
-      {/* Cabecera Oficial — Sin gradientes, con botón hacia la Página Web pública */}
+      {/* Cabecera Oficial */}
       <div className="bg-white rounded-2xl p-6 border border-stone-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="p-1.5 rounded-lg bg-amber-50 text-[#AD2E01]">
-              <ShoppingCart className="w-5 h-5" />
-            </span>
-            <span className="text-xs font-bold uppercase tracking-wider text-[#AD2E01]">
-              Módulo Caficultor
-            </span>
-          </div>
           <h1 className="text-2xl font-extrabold text-stone-900 tracking-tight">
             Ofertas de Café
           </h1>

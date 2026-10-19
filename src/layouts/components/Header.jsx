@@ -10,7 +10,7 @@ import { Menu, LogOut, User, Bell } from 'lucide-react';
 // ============================================
 
 export default function Header() {
-  const { user, clearAuth } = useAuthStore();
+  const { user, role, clearAuth } = useAuthStore();
   const { setSidebarOpen } = useUIStore();
   const navigate = useNavigate();
 
@@ -26,6 +26,13 @@ export default function Header() {
       navigate('/login');
     }
   };
+
+  const rolMostrar =
+    role === 'caficultor' || user?.role === 'caficultor'
+      ? 'Caficultor'
+      : role
+      ? role.charAt(0).toUpperCase() + role.slice(1)
+      : 'Caficultor';
 
   return (
     <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-lg border-b border-surface-200">
@@ -53,14 +60,19 @@ export default function Header() {
           {/* Profile */}
           <button
             onClick={() => navigate('/profile')}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-surface-100 transition-colors cursor-pointer"
+            className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl hover:bg-surface-100 transition-colors cursor-pointer"
           >
-            <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center">
-              <User className="h-4 w-4 text-primary-600" />
+            <div className="w-8 h-8 rounded-full bg-amber-100 text-[#AD2E01] flex items-center justify-center font-bold text-xs">
+              <User className="h-4 w-4" />
             </div>
-            <span className="hidden sm:block text-sm font-medium text-surface-700">
-              {user?.name || 'Usuario'}
-            </span>
+            <div className="hidden sm:flex flex-col text-left">
+              <span className="text-xs font-bold text-stone-900 leading-tight">
+                {user?.name || 'Finca La Esperanza'}
+              </span>
+              <span className="text-[11px] font-semibold text-[#AD2E01] leading-tight">
+                {rolMostrar}
+              </span>
+            </div>
           </button>
 
           {/* Logout */}
