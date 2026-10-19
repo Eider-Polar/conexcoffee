@@ -2,15 +2,10 @@ import { useState } from 'react';
 import ModuloCabecera from '../components/ModuloCabecera';
 import {
   Search,
-  Plus,
   Eye,
   Pencil,
   X,
   UserCheck,
-  MapPin,
-  Phone,
-  Mail,
-  Home,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { INITIAL_EMPRESA_TECNICOS } from '../data/empresaData';
@@ -161,29 +156,6 @@ export default function EmpresaTecnicosPage() {
             className="w-full pl-9 pr-4 py-2 text-xs border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-700/20"
           />
         </div>
-
-        <div className="flex items-center gap-3 w-full md:w-auto">
-          <button
-            type="button"
-            onClick={() => {
-              setCriterioConsulta('');
-              setResultadoConsulta(null);
-              setModalConsultar(true);
-            }}
-            className="px-3.5 py-2 border border-stone-200 text-stone-700 rounded-xl text-xs font-semibold hover:bg-stone-50 flex items-center gap-1.5"
-          >
-            <Search className="w-3.5 h-3.5 text-stone-500" />
-            Consultar
-          </button>
-          <button
-            type="button"
-            onClick={() => setModalRegistrar(true)}
-            className="px-4 py-2 bg-amber-800 text-white rounded-xl text-xs font-semibold hover:bg-amber-900 flex items-center gap-1.5 shadow-sm"
-          >
-            <Plus className="w-4 h-4" />
-            Registrar Técnico
-          </button>
-        </div>
       </div>
 
       {/* Tabla de Técnicos */}
@@ -228,24 +200,18 @@ export default function EmpresaTecnicosPage() {
                       </div>
                     </td>
                     <td className="py-4 px-4 space-y-0.5">
-                      <div className="flex items-center gap-1.5 text-stone-700">
-                        <Phone className="w-3.5 h-3.5 text-stone-400" />
+                      <div className="text-stone-700">
                         {item.telefono}
                       </div>
-                      <div className="flex items-center gap-1.5 text-stone-500 text-[11px]">
-                        <Mail className="w-3.5 h-3.5 text-stone-400" />
+                      <div className="text-stone-500 text-[11px]">
                         {item.correo}
                       </div>
                     </td>
                     <td className="py-4 px-4 font-medium text-stone-700">
-                      <span className="flex items-center gap-1.5">
-                        <MapPin className="w-3.5 h-3.5 text-amber-700" />
-                        {item.zona_asignada}
-                      </span>
+                      {item.zona_asignada}
                     </td>
                     <td className="py-4 px-4 text-center font-bold text-stone-900">
-                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-stone-100 text-stone-800 text-[11px]">
-                        <Home className="w-3 h-3 text-stone-500" />
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-lg bg-stone-100 text-stone-800 text-[11px]">
                         {item.fincas_a_cargo}
                       </span>
                     </td>

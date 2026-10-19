@@ -5,7 +5,6 @@ import {
   Eye,
   Pencil,
   X,
-  Package,
   EyeOff,
   ShoppingBag,
   Ship,
@@ -178,8 +177,6 @@ export default function EmpresaContenedoresPage() {
         mensaje="En este módulo podrás registrar y gestionar la información detallada de cada uno de tus contenedores de exportación."
         icono={Ship}
         totalRegistros={contenedores.length}
-        textoBotonRegistrar="Registrar Contenedor"
-        onRegistrar={() => setModalRegistrar(true)}
       />
 
       {/* Barra de Filtros y Búsqueda */}
@@ -250,10 +247,7 @@ export default function EmpresaContenedoresPage() {
                         {index + 1}
                       </td>
                       <td className="py-4 px-4 font-mono font-bold text-stone-900">
-                        <div className="flex items-center gap-2">
-                          <Package className="w-4 h-4 text-amber-700 shrink-0" />
-                          <span>{c.codigo}</span>
-                        </div>
+                        {c.codigo}
                       </td>
                       <td className="py-4 px-4 font-medium text-stone-700">
                         {c.pais_origen}

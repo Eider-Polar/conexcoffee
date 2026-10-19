@@ -75,10 +75,10 @@ const NAV_BY_ROLE = {
     { label: 'Página Web', path: '/', icon: Globe },
   ],
   [ROLES.CAFICULTOR]: [
-    { label: 'Dashboard',   path: '/caficultor/dashboard',   icon: LayoutDashboard },
+    { label: 'Bienvenida',  path: '/caficultor/dashboard',   icon: LayoutDashboard },
     { label: 'Mis Fincas',  path: '/caficultor/fincas',      icon: Coffee },
     { label: 'Mis Lotes',   path: '/caficultor/lots',         icon: Leaf },
-    { label: 'Pre-Ofertas', path: '/caficultor/pre-ofertas',  icon: Gift },
+    { label: 'Pre-Ofertas', path: '/caficultor/pre-ofertas',  icon: FileText },
     { label: 'Ofertas',     path: '/caficultor/ofertas',      icon: ShoppingCart },
     { label: 'Página Web',  path: '/',                        icon: Globe },
   ],

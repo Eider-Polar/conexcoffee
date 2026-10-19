@@ -50,7 +50,13 @@ import {
   EmpresaTecnicosPage,
 } from '@/features/empresa';
 import { BrokerDashboardPage } from '@/features/broker';
-import { CaficultorDashboardPage } from '@/features/caficultor';
+import {
+  CaficultorDashboardPage,
+  CaficultorFincasPage,
+  CaficultorLotesPage,
+  CaficultorPreOfertasPage,
+  CaficultorOfertasPage,
+} from '@/features/caficultor';
 import { CompradorDashboardPage, CompradorContenedoresPage, DetalleVariedadPage } from '@/features/comprador';
 import {
   LaboratorioDashboardPage,
@@ -210,8 +216,11 @@ const router = createBrowserRouter([
             element: <DashboardLayout />,
             children: [
               { path: '/caficultor/dashboard', element: <CaficultorDashboardPage /> },
-              // { path: '/caficultor/fincas', element: <FincasPage /> },
-              // { path: '/caficultor/lots', element: <LotsPage /> },
+              { path: '/caficultor/fincas', element: <CaficultorFincasPage /> },
+              { path: '/caficultor/lots', element: <CaficultorLotesPage /> },
+              { path: '/caficultor/lotes', element: <CaficultorLotesPage /> },
+              { path: '/caficultor/pre-ofertas', element: <CaficultorPreOfertasPage /> },
+              { path: '/caficultor/ofertas', element: <CaficultorOfertasPage /> },
             ],
           },
         ],

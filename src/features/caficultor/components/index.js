@@ -1,1 +1,11 @@
 export { default as LotesCaficultorTable } from './LotesCaficultorTable';
+export { default as RegistrarFincaModal } from './RegistrarFincaModal';
+export { default as EditarFincaModal } from './EditarFincaModal';
+export { default as DetalleFincaModal } from './DetalleFincaModal';
+export { default as RegistrarLoteModal } from './RegistrarLoteModal';
+export { default as EditarLoteModal } from './EditarLoteModal';
+export { default as DetalleLoteModal } from './DetalleLoteModal';
+export { default as RegistrarPreOfertaModal } from './RegistrarPreOfertaModal';
+export { default as EditarPreOfertaModal } from './EditarPreOfertaModal';
+export { default as DetallePreOfertaModal } from './DetallePreOfertaModal';
+export { default as DetalleOfertaModal } from './DetalleOfertaModal';

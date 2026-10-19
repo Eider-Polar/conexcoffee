@@ -6,8 +6,6 @@ import {
   X,
   Archive,
   FlaskConical,
-  Plus,
-  Droplets,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { INITIAL_EMPRESA_MUESTRAS, INITIAL_EMPRESA_LABORATORIOS } from '../data/empresaData';
@@ -123,15 +121,6 @@ export default function EmpresaMuestrasPage() {
             className="w-full pl-9 pr-4 py-2 text-xs border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-700/20"
           />
         </div>
-
-        <button
-          type="button"
-          onClick={() => setModalRegistrar(true)}
-          className="px-4 py-2 bg-amber-800 text-white rounded-xl text-xs font-semibold hover:bg-amber-900 flex items-center gap-1.5 shadow-sm"
-        >
-          <Plus className="w-4 h-4" />
-          Registrar Muestra
-        </button>
       </div>
 
       {/* Tabla Oficial de Muestras */}
@@ -176,16 +165,12 @@ export default function EmpresaMuestrasPage() {
                     <td className="py-4 px-4 text-center font-bold text-stone-900">
                       {m.peso_g} g
                     </td>
-                    <td className="py-4 px-4 text-center">
-                      <span className="inline-flex items-center gap-1 font-semibold text-stone-800">
-                        <Droplets className="w-3.5 h-3.5 text-sky-600" />
-                        {m.humedad}%
-                      </span>
+                    <td className="py-4 px-4 text-center font-semibold text-stone-800">
+                      {m.humedad}%
                     </td>
                     <td className="py-4 px-4">
-                      <div className="font-semibold text-stone-800 flex items-center gap-1.5">
-                        <FlaskConical className="w-3.5 h-3.5 text-amber-700 shrink-0" />
-                        <span>{m.laboratorio || 'Pendiente de asignar'}</span>
+                      <div className="font-semibold text-stone-800">
+                        {m.laboratorio || 'Pendiente de asignar'}
                       </div>
                     </td>
                     <td className="py-4 px-4 text-center">

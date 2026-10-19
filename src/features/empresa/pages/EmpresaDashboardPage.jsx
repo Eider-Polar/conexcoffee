@@ -10,7 +10,6 @@ import {
   Handshake,
   FlaskConical,
   UserCheck,
-  TrendingUp,
   Clock,
   CheckCircle2,
   AlertCircle,
@@ -135,10 +134,6 @@ export default function EmpresaDashboardPage() {
                 <span className="text-2xl sm:text-3xl font-black text-stone-900">
                   {kpi.valor}
                 </span>
-              </div>
-              <div className="mt-2 flex items-center gap-1 text-xs">
-                <TrendingUp className="w-3.5 h-3.5 text-emerald-600" />
-                <span className="text-stone-600 font-medium">{kpi.cambio}</span>
               </div>
             </div>
           );

@@ -6,8 +6,6 @@ import {
   Pencil,
   X,
   Leaf,
-  Plus,
-  Phone,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { INITIAL_EMPRESA_CAFICULTORES } from '../data/empresaData';
@@ -155,15 +153,6 @@ export default function EmpresaCaficultoresPage() {
             className="w-full pl-9 pr-4 py-2 text-xs border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-700/20"
           />
         </div>
-
-        <button
-          type="button"
-          onClick={() => setModalRegistrar(true)}
-          className="px-4 py-2 bg-amber-800 text-white rounded-xl text-xs font-semibold hover:bg-amber-900 flex items-center gap-1.5 shadow-sm"
-        >
-          <Plus className="w-4 h-4" />
-          Registrar Caficultor
-        </button>
       </div>
 
       {/* Tabla Oficial de Caficultores */}
@@ -204,10 +193,7 @@ export default function EmpresaCaficultoresPage() {
                       {c.primer_apellido} {c.segundo_apellido || ''}
                     </td>
                     <td className="py-4 px-4 font-medium text-stone-700">
-                      <span className="flex items-center gap-1.5">
-                        <Phone className="w-3.5 h-3.5 text-stone-400" />
-                        {c.telefono}
-                      </span>
+                      {c.telefono}
                     </td>
                     <td className="py-4 px-4 text-right">
                       <div className="flex items-center justify-end gap-1.5">
