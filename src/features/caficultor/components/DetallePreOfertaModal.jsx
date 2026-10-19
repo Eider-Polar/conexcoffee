@@ -1,4 +1,4 @@
-import { X } from 'lucide-react';
+import { X, FileCheck } from 'lucide-react';
 
 export default function DetallePreOfertaModal({ isOpen, onClose, preoferta }) {
   if (!isOpen || !preoferta) return null;
@@ -54,15 +54,9 @@ export default function DetallePreOfertaModal({ isOpen, onClose, preoferta }) {
             <span className="font-medium text-stone-800">{preoferta.sombrio}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-stone-500">Precio Estimado (COP/Kg):</span>
+            <span className="text-stone-500">Precio Estimado por Carga:</span>
             <span className="font-mono font-bold text-stone-900">
               ${preoferta.precioEstimadoCop.toLocaleString('es-CO')} COP
-            </span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-stone-500">Referencia Internacional:</span>
-            <span className="font-mono font-bold text-emerald-700">
-              ~ USD ${preoferta.precioEstimadoUsd} / lb
             </span>
           </div>
           {preoferta.tipoFermentacion && (
@@ -75,6 +69,15 @@ export default function DetallePreOfertaModal({ isOpen, onClose, preoferta }) {
             <div className="pt-2 border-t border-stone-200">
               <span className="text-stone-500 block mb-0.5 font-semibold">Descripción:</span>
               <p className="text-stone-700 italic">{preoferta.descripcion}</p>
+            </div>
+          )}
+          {preoferta.certificadoNombre && (
+            <div className="pt-2 border-t border-stone-200 flex justify-between items-center">
+              <span className="text-stone-500 font-semibold">Certificación:</span>
+              <span className="font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200/60 flex items-center gap-1.5 text-xs">
+                <FileCheck className="w-3.5 h-3.5 text-emerald-600" />
+                {preoferta.certificadoNombre}
+              </span>
             </div>
           )}
         </div>

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X } from 'lucide-react';
+import { X, Upload } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { PROCESOS_COSECHA } from '../data/caficultorData';
 
@@ -58,12 +58,12 @@ export default function EditarPreOfertaModal({ isOpen, onClose, preoferta, onGua
             </div>
             <div>
               <label className="block font-semibold text-stone-700 mb-1">
-                Precio Estimado ($ COP/Kg) *
+                Precio Estimado por Carga ($ COP) *
               </label>
               <input
                 type="number"
-                min="1000"
-                step="500"
+                min="100000"
+                step="10000"
                 required
                 value={preofertaEdicion.precioEstimadoCop}
                 onChange={(e) =>
@@ -115,6 +115,39 @@ export default function EditarPreOfertaModal({ isOpen, onClose, preoferta, onGua
               }
               className="w-full px-3 py-2 border border-stone-200 rounded-xl resize-none"
             />
+          </div>
+
+          {/* Certificación (Opcional - PDF o Imagen) */}
+          <div>
+            <label className="block font-semibold text-stone-700 mb-1">
+              Certificación de Café (Opcional - PDF o Imagen)
+            </label>
+            <div className="border border-dashed border-stone-300 rounded-xl p-3 flex items-center justify-between bg-stone-50">
+              <div className="flex items-center gap-2 overflow-hidden mr-2">
+                <Upload className="w-4 h-4 text-stone-400 shrink-0" />
+                <span className="text-xs text-stone-600 truncate">
+                  {preofertaEdicion.certificadoNombre || 'Seleccionar archivo PDF o Imagen...'}
+                </span>
+              </div>
+              <input
+                type="file"
+                accept=".pdf,image/*"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files[0]) {
+                    const file = e.target.files[0];
+                    setPreofertaEdicion({
+                      ...preofertaEdicion,
+                      certificadoNombre: file.name,
+                      certificadoArchivo: URL.createObjectURL(file),
+                    });
+                  }
+                }}
+                className="text-xs text-stone-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-stone-200 file:text-stone-700 hover:file:bg-stone-300 cursor-pointer"
+              />
+            </div>
+            <span className="text-[10px] text-stone-400 mt-1 block">
+              Formatos permitidos: PDF, JPG, PNG (no obligatorio)
+            </span>
           </div>
 
           <div className="flex items-center justify-end gap-3 pt-3 border-t border-stone-100">

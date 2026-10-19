@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, TrendingUp } from 'lucide-react';
+import { X, Upload } from 'lucide-react';
 import toast from 'react-hot-toast';
 import {
   VARIEDADES_POR_ESPECIE,
@@ -20,6 +20,8 @@ export default function RegistrarPreOfertaModal({ isOpen, onClose, lotes, onGuar
     procesoCosecha: 'Lavado con fermentación',
     precioEstimadoCop: '',
     descripcionProceso: '',
+    certificadoNombre: '',
+    certificadoArchivo: null,
   });
 
   if (!isOpen) return null;
@@ -37,10 +39,6 @@ export default function RegistrarPreOfertaModal({ isOpen, onClose, lotes, onGuar
       setFormData({ ...formData, loteId });
     }
   };
-
-  const precioCop = parseFloat(formData.precioEstimadoCop) || 0;
-  const precioUsdPorLibra =
-    precioCop > 0 ? ((precioCop / 4150) * 0.453592).toFixed(2) : '0.00';
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -67,8 +65,9 @@ export default function RegistrarPreOfertaModal({ isOpen, onClose, lotes, onGuar
       tipoFermentacion: formData.tipoFermentacion || 'Estándar',
       procesoCosecha: formData.procesoCosecha,
       precioEstimadoCop: parseFloat(formData.precioEstimadoCop) || 0,
-      precioEstimadoUsd: parseFloat(precioUsdPorLibra),
       descripcion: formData.descripcionProceso,
+      certificadoNombre: formData.certificadoNombre || '',
+      certificadoArchivo: formData.certificadoArchivo || '',
       estado: 'En Evaluación',
     };
 
@@ -247,38 +246,58 @@ export default function RegistrarPreOfertaModal({ isOpen, onClose, lotes, onGuar
             />
           </div>
 
-          {/* Precios: COP y Ref Internacional */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-stone-50 p-3.5 rounded-xl border border-stone-200">
-            <div>
-              <label className="block font-semibold text-stone-700 mb-1">
-                Precio Estimado por Kilo en Verde ($ COP) *
-              </label>
+          {/* Precio Estimado por Carga */}
+          <div>
+            <label className="block font-semibold text-stone-700 mb-1">
+              Precio Estimado por Carga ($ COP) *
+            </label>
+            <input
+              type="number"
+              min="100000"
+              step="10000"
+              required
+              value={formData.precioEstimadoCop}
+              onChange={(e) =>
+                setFormData({ ...formData, precioEstimadoCop: e.target.value })
+              }
+              placeholder="Ej. 2450000"
+              className="w-full px-3 py-2 border border-stone-200 rounded-xl bg-white font-mono font-bold text-stone-900"
+            />
+          </div>
+
+          {/* Certificación (Opcional - PDF o Imagen) */}
+          <div>
+            <label className="block font-semibold text-stone-700 mb-1">
+              Certificación de Café (Opcional - PDF o Imagen)
+            </label>
+            <div className="border border-dashed border-stone-300 rounded-xl p-3 flex items-center justify-between bg-stone-50">
+              <div className="flex items-center gap-2 overflow-hidden mr-2">
+                <Upload className="w-4 h-4 text-stone-400 shrink-0" />
+                <span className="text-xs text-stone-600 truncate">
+                  {formData.certificadoNombre
+                    ? formData.certificadoNombre
+                    : 'Subir certificado (Fairtrade, Rainforest, Orgánico, etc.)...'}
+                </span>
+              </div>
               <input
-                type="number"
-                min="1000"
-                step="500"
-                required
-                value={formData.precioEstimadoCop}
-                onChange={(e) =>
-                  setFormData({ ...formData, precioEstimadoCop: e.target.value })
-                }
-                placeholder="Ej. 34000"
-                className="w-full px-3 py-2 border border-stone-200 rounded-xl bg-white font-mono font-bold text-stone-900"
+                type="file"
+                accept=".pdf,image/*"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files[0]) {
+                    const file = e.target.files[0];
+                    setFormData({
+                      ...formData,
+                      certificadoNombre: file.name,
+                      certificadoArchivo: URL.createObjectURL(file),
+                    });
+                  }
+                }}
+                className="text-xs text-stone-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-stone-200 file:text-stone-700 hover:file:bg-stone-300 cursor-pointer"
               />
             </div>
-
-            <div>
-              <label className="block font-semibold text-stone-700 mb-1">
-                Indicador Precio Internacional (USD/lb)
-              </label>
-              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white border border-stone-200 font-mono font-bold text-emerald-800">
-                <TrendingUp className="w-4 h-4 text-emerald-600" />
-                <span>~ USD ${precioUsdPorLibra} / lb</span>
-              </div>
-              <span className="text-[10px] text-stone-400 mt-1 block">
-                Calculado automáticamente con base al mercado internacional
-              </span>
-            </div>
+            <span className="text-[10px] text-stone-400 mt-1 block">
+              Formatos permitidos: PDF, JPG, PNG (no obligatorio)
+            </span>
           </div>
 
           {/* Descripción breve (máx 500 caracteres) */}
