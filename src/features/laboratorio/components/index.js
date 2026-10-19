@@ -10,3 +10,4 @@ export { default as ModificarSensorialModal } from './ModificarSensorialModal';
 export { default as VerSensorialModal } from './VerSensorialModal';
 export { default as GenerarReporteModal } from './GenerarReporteModal';
 export { default as VerMuestraModal } from './VerMuestraModal';
+export { default as VerResultadoModal } from './VerResultadoModal';

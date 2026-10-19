@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import ModalBase from '@/components/modals/ModalBase';
 import { Button, Input } from '@/components/ui';
-import { Check, FlaskConical } from 'lucide-react';
+import { Check } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function ActualizarAnalisisModal({ isOpen, onClose, analisis, onSave }) {
@@ -41,7 +41,7 @@ export default function ActualizarAnalisisModal({ isOpen, onClose, analisis, onS
       ...formData,
       estado: 'Completado',
     });
-    toast.success('Análisis físico actualizado correctamente');
+    toast.success('Análisis físico registrado correctamente');
     onClose();
   };
 
@@ -49,7 +49,7 @@ export default function ActualizarAnalisisModal({ isOpen, onClose, analisis, onS
     <ModalBase
       isOpen={isOpen}
       onClose={onClose}
-      title={`Actualizar Análisis Físico — ${analisis?.codigo || ''}`}
+      title={`Realizar Análisis Físico — ${analisis?.codigo || ''}`}
       size="lg"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -120,7 +120,7 @@ export default function ActualizarAnalisisModal({ isOpen, onClose, analisis, onS
           </Button>
           <Button type="submit" variant="primary">
             <Check className="w-4 h-4" />
-            Actualizar Análisis
+            Registrar Análisis Físico
           </Button>
         </div>
       </form>

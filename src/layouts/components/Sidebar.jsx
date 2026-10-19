@@ -25,6 +25,7 @@ import {
   Tag,
   MapPin,
   ClipboardCheck,
+  Store,
 } from 'lucide-react';
 
 // ============================================
@@ -58,13 +59,14 @@ const NAV_BY_ROLE = {
   ],
   [ROLES.EMPRESA]: [
     { label: 'Dashboard', path: '/empresa/dashboard', icon: LayoutDashboard },
+    { label: 'Ofertas Libres', path: '/empresa/ofertas-libres', icon: Store },
+    { label: 'Pre-Ofertas', path: '/empresa/pre-ofertas', icon: Layers },
+    { label: 'Ofertas', path: '/empresa/ofertas', icon: Tag },
     { label: 'Brokers', path: '/empresa/brokers', icon: Handshake },
     { label: 'Caficultores', path: '/empresa/caficultores', icon: Leaf },
     { label: 'Contenedores', path: '/empresa/contenedores', icon: Package },
     { label: 'Laboratorios', path: '/empresa/laboratorios', icon: FlaskConical },
     { label: 'Muestras', path: '/empresa/muestras', icon: Archive },
-    { label: 'Pre-Ofertas', path: '/empresa/pre-ofertas', icon: Layers },
-    { label: 'Ofertas', path: '/empresa/ofertas', icon: Tag },
     { label: 'Técnicos', path: '/empresa/tecnicos', icon: UserCheck },
     { label: 'Página Web', path: '/', icon: Globe },
   ],
@@ -93,8 +95,7 @@ const NAV_BY_ROLE = {
     { label: 'Catadores',          path: '/laboratorio/catadores',          icon: Award },
     { label: 'Análisis Físico',    path: '/laboratorio/analisis-fisico',    icon: FlaskConical },
     { label: 'Análisis Sensorial', path: '/laboratorio/analisis-sensorial', icon: Coffee },
-    { label: 'Hojas de Catación',  path: '/laboratorio/hojas-catacion',     icon: FileText },
-    { label: 'Muestras',           path: '/laboratorio/muestras',           icon: Archive },
+    { label: 'Resultados',         path: '/laboratorio/resultados',         icon: ClipboardCheck },
     { label: 'Página Web',         path: '/',                               icon: Globe },
   ],
   [ROLES.TECNICO]: [

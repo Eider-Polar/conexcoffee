@@ -14,7 +14,6 @@ import {
   CheckCircle2,
   AlertCircle,
   ArrowRight,
-  Coffee,
 } from 'lucide-react';
 import {
   EMPRESA_KPIS,
@@ -87,22 +86,11 @@ export default function EmpresaDashboardPage() {
 
   return (
     <div className="space-y-6">
-      {/* Banner de Bienvenida Oficial — Replicando el saludo del sistema original */}
-      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-stone-900 via-amber-950 to-stone-900 p-6 sm:p-8 text-white shadow-sm border border-stone-800">
-        <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-[radial-gradient(circle_at_top_right,rgba(243,146,0,0.15),transparent)] pointer-events-none" />
-        <div className="relative z-10 max-w-2xl space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F39200]/20 border border-[#F39200]/30 text-[#F39200] text-xs font-bold uppercase tracking-wider">
-            <Coffee className="w-3.5 h-3.5" />
-            <span>Panel de Empresa Exportadora</span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-            ¡Te damos la bienvenida, Empresa!
-          </h1>
-          <p className="text-sm text-stone-300 leading-relaxed">
-            Gestiona de forma integral tus caficultores asociados, seguimiento a lotes y muestras de laboratorio,
-            asignación a contenedores marítimos y ofertas comerciales activas.
-          </p>
-        </div>
+      {/* Título de Bienvenida Limpio — Sin banner negro */}
+      <div className="py-2">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight">
+          ¡Te damos la bienvenida, Empresa!
+        </h1>
       </div>
 
       {/* Tarjetas KPI */}

@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Card, Button } from '@/components/ui';
-import { FlaskConical, RefreshCw, Eye, UserPlus, Calendar, UserCheck } from 'lucide-react';
+import { Card } from '@/components/ui';
+import { FlaskConical, Eye, UserPlus, Calendar } from 'lucide-react';
 import { ANALISIS_FISICOS_DATA, CATADORES_DATA } from '../data/laboratorioData';
 import {
   ActualizarAnalisisModal,
@@ -77,15 +77,15 @@ export default function LaboratorioAnalisisFisicoPage() {
                   </td>
                   <td className="py-3.5 px-4 text-center">
                     <div className="flex items-center justify-center gap-2">
-                      {/* Botón 1: Actualizar análisis físico */}
+                      {/* Botón 1: Realizar análisis físico */}
                       <button
                         type="button"
                         onClick={() => setAnalisisEditar(item)}
-                        title="Actualizar análisis físico"
-                        aria-label="Actualizar análisis físico"
+                        title="Realizar análisis físico"
+                        aria-label="Realizar análisis físico"
                         className="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-surface-200 bg-white text-surface-600 hover:text-primary-600 hover:border-primary-400 hover:bg-primary-50/50 transition-colors shadow-2xs cursor-pointer"
                       >
-                        <RefreshCw className="w-5 h-5 text-primary-600" />
+                        <FlaskConical className="w-5 h-5 text-primary-600" />
                       </button>
 
                       {/* Botón 2: Ver análisis físico */}
