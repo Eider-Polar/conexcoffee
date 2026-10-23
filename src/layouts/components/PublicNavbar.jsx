@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { animate, stagger } from 'animejs';
 import {
   PlusCircle,
   LogIn,
@@ -27,6 +28,8 @@ export default function PublicNavbar({ onOpenAddProduct }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
   const { isAuthenticated, role } = useAuthStore();
+  const mobileToggleRef = useRef(null);
+  const mobileMenuRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -35,6 +38,35 @@ export default function PublicNavbar({ onOpenAddProduct }) {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Animación escalonada al abrir el menú móvil público
+  useEffect(() => {
+    if (!mobileMenuRef.current || !mobileMenuOpen) return;
+    const links = mobileMenuRef.current.querySelectorAll('.public-mobile-item');
+    if (links.length === 0) return;
+
+    const anim = animate(links, {
+      opacity: [0, 1],
+      translateY: [-10, 0],
+      duration: 300,
+      ease: 'outExpo',
+      delay: stagger(30),
+    });
+
+    return () => anim.pause();
+  }, [mobileMenuOpen]);
+
+  const handleToggleMobile = () => {
+    if (mobileToggleRef.current) {
+      animate(mobileToggleRef.current, {
+        rotate: [0, 90, 0],
+        scale: [1, 0.88, 1],
+        duration: 300,
+        ease: 'outBack',
+      });
+    }
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
 
   return (
     <header
@@ -113,7 +145,8 @@ export default function PublicNavbar({ onOpenAddProduct }) {
           {/* Mobile Actions & Menu Toggle */}
           <div className="flex lg:hidden items-center gap-2">
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              ref={mobileToggleRef}
+              onClick={handleToggleMobile}
               type="button"
               className="p-2 rounded-lg text-white hover:bg-white/10 focus:outline-none cursor-pointer"
               aria-label={mobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
@@ -125,7 +158,10 @@ export default function PublicNavbar({ onOpenAddProduct }) {
 
         {/* Menú Desplegable Móvil */}
         {mobileMenuOpen && (
-          <div className="lg:hidden py-4 px-3 border-t border-white/10 bg-black/95 backdrop-blur-xl rounded-b-2xl shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200">
+          <div
+            ref={mobileMenuRef}
+            className="lg:hidden py-4 px-3 border-t border-white/10 bg-black/95 backdrop-blur-xl rounded-b-2xl shadow-2xl"
+          >
             <div className="flex flex-col gap-1 pb-3">
               {NAV_LINKS.map((link) => {
                 const isActive = location.pathname === link.path;
@@ -133,7 +169,7 @@ export default function PublicNavbar({ onOpenAddProduct }) {
                   <Link
                     key={link.label}
                     to={link.path}
-                    className={`px-3 py-2 text-base font-semibold rounded-lg transition-colors ${
+                    className={`public-mobile-item px-3 py-2 text-base font-semibold rounded-lg transition-colors ${
                       isActive
                         ? 'bg-brand-orange/20 text-brand-orange'
                         : 'text-white/85 hover:bg-white/10 hover:text-white'

@@ -1,4 +1,6 @@
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { animate, stagger } from 'animejs';
 import {
   Leaf,
   Layers,
@@ -20,12 +22,153 @@ import {
   useEmpresaActividad,
 } from '../hooks/useEmpresaData';
 
+function AnimatedCounter({ value, locationKey }) {
+  const spanRef = useRef(null);
+
+  useEffect(() => {
+    const numeric = parseFloat(value);
+    if (Number.isNaN(numeric) || !spanRef.current) return;
+
+    const counter = { val: 0 };
+    const anim = animate(counter, {
+      val: numeric,
+      duration: 850,
+      ease: 'outExpo',
+      onUpdate: () => {
+        if (spanRef.current) {
+          spanRef.current.textContent = Math.round(counter.val).toString();
+        }
+      },
+    });
+
+    return () => {
+      anim.pause();
+    };
+  }, [value, locationKey]);
+
+  return <span ref={spanRef}>{value}</span>;
+}
+
 export default function EmpresaDashboardPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const kpisQuery = useEmpresaKpis();
   const kpis = kpisQuery.data || [];
   const actividadQuery = useEmpresaActividad();
   const actividades = actividadQuery.data || [];
+
+  const kpisContainerRef = useRef(null);
+  const modulesContainerRef = useRef(null);
+
+  // Animación de desplazamiento escalonado para las tarjetas KPI (al montar o al presionar Dashboard)
+  useEffect(() => {
+    if (!kpisContainerRef.current || kpis.length === 0) return;
+    const cards = kpisContainerRef.current.querySelectorAll('.empresa-kpi-card');
+    if (cards.length === 0) return;
+
+    const anim = animate(cards, {
+      opacity: [0, 1],
+      translateY: [42, 0],
+      scale: [0.95, 1],
+      duration: 650,
+      ease: 'outExpo',
+      delay: stagger(75),
+    });
+
+    return () => {
+      anim.pause();
+    };
+  }, [kpis.length, location.key]);
+
+  // Animación de desplazamiento escalonado para las tarjetas de módulos
+  useEffect(() => {
+    if (!modulesContainerRef.current) return;
+    const cards = modulesContainerRef.current.querySelectorAll('.empresa-module-card');
+    if (cards.length === 0) return;
+
+    const anim = animate(cards, {
+      opacity: [0, 1],
+      translateY: [32, 0],
+      scale: [0.96, 1],
+      duration: 600,
+      ease: 'outExpo',
+      delay: stagger(45, { start: 130 }),
+    });
+
+    return () => {
+      anim.pause();
+    };
+  }, [location.key]);
+
+  const handleKpiMouseEnter = (e) => {
+    animate(e.currentTarget, {
+      translateY: -3,
+      scale: 1.01,
+      duration: 220,
+      ease: 'outCubic',
+    });
+    const icon = e.currentTarget.querySelector('.kpi-icon');
+    if (icon) {
+      animate(icon, {
+        scale: 1.14,
+        duration: 220,
+        ease: 'outBack',
+      });
+    }
+  };
+
+  const handleKpiMouseLeave = (e) => {
+    animate(e.currentTarget, {
+      translateY: 0,
+      scale: 1,
+      duration: 200,
+      ease: 'outCubic',
+    });
+    const icon = e.currentTarget.querySelector('.kpi-icon');
+    if (icon) {
+      animate(icon, {
+        scale: 1,
+        duration: 200,
+        ease: 'outCubic',
+      });
+    }
+  };
+
+  const handleModuleMouseEnter = (e) => {
+    animate(e.currentTarget, {
+      translateY: -4,
+      scale: 1.015,
+      duration: 250,
+      ease: 'outCubic',
+    });
+    const icon = e.currentTarget.querySelector('.module-icon');
+    if (icon) {
+      animate(icon, {
+        scale: 1.12,
+        rotate: 3,
+        duration: 250,
+        ease: 'outBack',
+      });
+    }
+  };
+
+  const handleModuleMouseLeave = (e) => {
+    animate(e.currentTarget, {
+      translateY: 0,
+      scale: 1,
+      duration: 220,
+      ease: 'outCubic',
+    });
+    const icon = e.currentTarget.querySelector('.module-icon');
+    if (icon) {
+      animate(icon, {
+        scale: 1,
+        rotate: 0,
+        duration: 200,
+        ease: 'outCubic',
+      });
+    }
+  };
 
   // Módulos rápidos de la empresa para acceso directo
   const modulosRapidos = [
@@ -98,7 +241,10 @@ export default function EmpresaDashboardPage() {
 
       {/* Tarjetas KPI */}
       <QueryState query={kpisQuery} />
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div
+        ref={kpisContainerRef}
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+      >
         {kpis.map((kpi) => {
           const Icono =
             kpi.iconoNombre === 'Leaf'
@@ -112,19 +258,21 @@ export default function EmpresaDashboardPage() {
           return (
             <div
               key={kpi.id}
-              className="bg-white rounded-2xl p-5 border border-stone-200 shadow-sm hover:shadow-md transition-shadow duration-200"
+              onMouseEnter={handleKpiMouseEnter}
+              onMouseLeave={handleKpiMouseLeave}
+              className="empresa-kpi-card bg-white rounded-2xl p-5 border border-stone-200 shadow-sm hover:shadow-md transition-shadow duration-200"
             >
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-stone-500 uppercase tracking-wider">
                   {kpi.titulo}
                 </span>
-                <div className="w-9 h-9 rounded-xl bg-amber-50 text-brand-terracota flex items-center justify-center">
+                <div className="kpi-icon w-9 h-9 rounded-xl bg-amber-50 text-brand-terracota flex items-center justify-center">
                   <Icono className="w-5 h-5" />
                 </div>
               </div>
               <div className="mt-3">
                 <span className="text-2xl sm:text-3xl font-black text-stone-900">
-                  {kpi.valor}
+                  <AnimatedCounter value={kpi.valor} locationKey={location.key} />
                 </span>
               </div>
             </div>
@@ -140,7 +288,10 @@ export default function EmpresaDashboardPage() {
           </h2>
           <span className="text-xs text-stone-500">7 módulos activos</span>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div
+          ref={modulesContainerRef}
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+        >
           {modulosRapidos.map((mod) => {
             const IconoMod = mod.icono;
             return (
@@ -148,11 +299,13 @@ export default function EmpresaDashboardPage() {
                 key={mod.titulo}
                 type="button"
                 onClick={() => navigate(mod.ruta)}
-                className="bg-white rounded-2xl p-4 border border-stone-200 hover:border-amber-700/40 text-left shadow-sm hover:shadow-md transition-all duration-200 group cursor-pointer flex flex-col justify-between min-h-[140px]"
+                onMouseEnter={handleModuleMouseEnter}
+                onMouseLeave={handleModuleMouseLeave}
+                className="empresa-module-card bg-white rounded-2xl p-4 border border-stone-200 hover:border-amber-700/40 text-left shadow-sm hover:shadow-md transition-shadow duration-200 group cursor-pointer flex flex-col justify-between min-h-[140px]"
               >
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${mod.color} text-white flex items-center justify-center shadow-sm`}>
+                    <div className={`module-icon w-10 h-10 rounded-xl bg-gradient-to-br ${mod.color} text-white flex items-center justify-center shadow-sm`}>
                       <IconoMod className="w-5 h-5" />
                     </div>
                     <ArrowRight className="w-4 h-4 text-stone-300 group-hover:text-amber-800 group-hover:translate-x-1 transition-all duration-200" />

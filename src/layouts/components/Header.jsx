@@ -1,4 +1,6 @@
+import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { animate } from 'animejs';
 import useAuthStore from '@/store/useAuthStore';
 import useUIStore from '@/store/useUIStore';
 import { Menu, LogOut, User, Bell } from 'lucide-react';
@@ -11,8 +13,41 @@ import { Menu, LogOut, User, Bell } from 'lucide-react';
 
 export default function Header() {
   const { user, role, clearAuth } = useAuthStore();
-  const { setSidebarOpen } = useUIStore();
+  const { sidebarOpen, toggleSidebar } = useUIStore();
   const navigate = useNavigate();
+  const menuBtnRef = useRef(null);
+
+  const handleToggleMenu = () => {
+    if (menuBtnRef.current) {
+      animate(menuBtnRef.current, {
+        rotate: [0, 90, 0],
+        scale: [1, 0.85, 1.08, 1],
+        duration: 380,
+        ease: 'outBack',
+      });
+    }
+    toggleSidebar();
+  };
+
+  const handleMenuHover = () => {
+    if (menuBtnRef.current) {
+      animate(menuBtnRef.current, {
+        scale: 1.12,
+        duration: 200,
+        ease: 'outCubic',
+      });
+    }
+  };
+
+  const handleMenuLeave = () => {
+    if (menuBtnRef.current) {
+      animate(menuBtnRef.current, {
+        scale: 1,
+        duration: 200,
+        ease: 'outCubic',
+      });
+    }
+  };
 
   const handleLogout = async () => {
     try {
@@ -37,10 +72,16 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-lg border-b border-surface-200">
       <div className="flex items-center justify-between h-16 px-6">
-        {/* Left: Mobile menu button */}
+        {/* Left: Hamburger menu button — Animado y heredado para todos los roles */}
         <button
-          onClick={() => setSidebarOpen(true)}
-          className="lg:hidden p-2 rounded-lg text-surface-600 hover:bg-surface-100 cursor-pointer"
+          ref={menuBtnRef}
+          type="button"
+          onClick={handleToggleMenu}
+          onMouseEnter={handleMenuHover}
+          onMouseLeave={handleMenuLeave}
+          className="p-2 rounded-xl text-surface-600 hover:text-stone-900 hover:bg-surface-100 transition-colors cursor-pointer flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-brand-terracota/30"
+          title={sidebarOpen ? 'Colapsar menú lateral' : 'Expandir menú lateral'}
+          aria-label="Menú principal"
         >
           <Menu className="h-5 w-5" />
         </button>

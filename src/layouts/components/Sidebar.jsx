@@ -1,4 +1,6 @@
+import { useEffect, useRef } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
+import { animate, stagger } from 'animejs';
 import useAuthStore from '@/store/useAuthStore';
 import useUIStore from '@/store/useUIStore';
 import { ROLES } from '@/lib/constants';
@@ -118,15 +120,62 @@ export default function Sidebar() {
   const { role } = useAuthStore();
   const { sidebarOpen, toggleSidebar, setSidebarOpen } = useUIStore();
   const location = useLocation();
+  const navRef = useRef(null);
+  const closeBtnRef = useRef(null);
+  const collapseBtnRef = useRef(null);
 
   const navItems = NAV_BY_ROLE[role] || [];
+
+  // Efecto Anime.js en cascada limpia al abrir el menú o cambiar de rol
+  useEffect(() => {
+    if (!navRef.current || !sidebarOpen) return;
+    const items = navRef.current.querySelectorAll('.sidebar-nav-item');
+    if (items.length === 0) return;
+
+    const anim = animate(items, {
+      opacity: [0, 1],
+      translateX: [-18, 0],
+      duration: 380,
+      ease: 'outExpo',
+      delay: stagger(28, { start: 40 }),
+    });
+
+    return () => {
+      anim.pause();
+    };
+  }, [sidebarOpen, role]);
+
+  const handleCloseMobile = () => {
+    if (closeBtnRef.current) {
+      animate(closeBtnRef.current, {
+        rotate: [0, 90],
+        scale: [1, 0.85],
+        duration: 200,
+        ease: 'outCubic',
+        onComplete: () => setSidebarOpen(false),
+      });
+    } else {
+      setSidebarOpen(false);
+    }
+  };
+
+  const handleCollapseToggle = () => {
+    if (collapseBtnRef.current) {
+      animate(collapseBtnRef.current, {
+        scale: [1, 0.85, 1],
+        duration: 250,
+        ease: 'outBack',
+      });
+    }
+    toggleSidebar();
+  };
 
   return (
     <>
       {/* Overlay mobile */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity duration-300"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -162,16 +211,22 @@ export default function Sidebar() {
 
           {/* Close button (mobile) */}
           <button
-            onClick={() => setSidebarOpen(false)}
-            className="lg:hidden p-1 rounded-lg text-surface-400 hover:text-surface-600 hover:bg-surface-100 cursor-pointer"
+            ref={closeBtnRef}
+            type="button"
+            onClick={handleCloseMobile}
+            className="lg:hidden p-1.5 rounded-lg text-surface-400 hover:text-surface-700 hover:bg-surface-100 cursor-pointer"
+            aria-label="Cerrar menú"
           >
             <X className="h-5 w-5" />
           </button>
 
           {/* Collapse button (desktop) */}
           <button
-            onClick={toggleSidebar}
-            className="hidden lg:flex p-1 rounded-lg text-surface-400 hover:text-surface-600 hover:bg-surface-100 cursor-pointer"
+            ref={collapseBtnRef}
+            type="button"
+            onClick={handleCollapseToggle}
+            className="hidden lg:flex p-1.5 rounded-lg text-surface-400 hover:text-surface-700 hover:bg-surface-100 cursor-pointer"
+            title={sidebarOpen ? 'Colapsar barra lateral' : 'Expandir barra lateral'}
           >
             <ChevronLeft
               className={`h-5 w-5 transition-transform duration-300 ${
@@ -182,7 +237,7 @@ export default function Sidebar() {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+        <nav ref={navRef} className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;
             const Icon = item.icon;
@@ -193,7 +248,7 @@ export default function Sidebar() {
                 to={item.path}
                 title={!sidebarOpen ? item.label : undefined}
                 className={`
-                  flex items-center gap-3 px-3 py-2.5 rounded-xl
+                  sidebar-nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl
                   text-sm font-medium transition-all duration-200
                   ${
                     isActive
