@@ -3,7 +3,14 @@ import { Toaster } from 'react-hot-toast';
 import { QueryClientProvider } from '@tanstack/react-query';
 import queryClient from '@/lib/queryClient';
 import useAuth from '@/features/auth/hooks/useAuth';
+import useAuthStore from '@/store/useAuthStore';
+import { setUnauthorizedHandler } from '@/lib/axios';
 import { startKeepAliveRobot } from '@/lib/keepAliveBot';
+
+// Registrar el callback de 401 en Axios (Inversión de dependencias)
+setUnauthorizedHandler(() => {
+  useAuthStore.getState().clearAuth();
+});
 
 // ============================================
 // AppProviders — Wrapper de todos los providers globales

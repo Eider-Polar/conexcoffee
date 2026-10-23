@@ -20,8 +20,8 @@ export default function PrivacyPage() {
             </Button>
           </Link>
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#fee8e3] rounded-xl">
-              <ShieldCheck className="h-6 w-6 text-[#AD2E01]" />
+            <div className="p-2 bg-primary-100 rounded-xl">
+              <ShieldCheck className="h-6 w-6 text-brand-terracota" />
             </div>
             <div>
               <h1 className="text-2xl font-bold text-surface-900">

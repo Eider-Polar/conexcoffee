@@ -130,7 +130,7 @@ export default function OfertasPage() {
             onClick={() => setPestanaActiva('ofertas')}
             className={`flex items-center gap-2 px-5 py-3 text-sm font-bold border-b-2 transition-all cursor-pointer ${
               pestanaActiva === 'ofertas'
-                ? 'border-[#AD2E01] text-[#AD2E01]'
+                ? 'border-brand-terracota text-brand-terracota'
                 : 'border-transparent text-surface-500 hover:text-surface-800'
             }`}
           >
@@ -142,7 +142,7 @@ export default function OfertasPage() {
             onClick={() => setPestanaActiva('preofertas')}
             className={`flex items-center gap-2 px-5 py-3 text-sm font-bold border-b-2 transition-all cursor-pointer ${
               pestanaActiva === 'preofertas'
-                ? 'border-[#AD2E01] text-[#AD2E01]'
+                ? 'border-brand-terracota text-brand-terracota'
                 : 'border-transparent text-surface-500 hover:text-surface-800'
             }`}
           >
@@ -161,7 +161,7 @@ export default function OfertasPage() {
             placeholder="Buscar por código, variedad o estado…"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-surface-200 focus:outline-none focus:ring-2 focus:ring-[#AD2E01]/20 focus:border-[#AD2E01]"
+            className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-surface-200 focus:outline-none focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
           />
         </div>
       </div>
@@ -206,7 +206,7 @@ export default function OfertasPage() {
                         <span className="text-[11px] text-surface-500">{o.proceso}</span>
                       </td>
                       <td className="px-5 py-3.5 text-center">
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-xs font-extrabold bg-[#FFF1ED] text-[#AD2E01] border border-[#AD2E01]/30">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-xs font-extrabold bg-brand-tint text-brand-terracota border border-brand-terracota/30">
                           <Award className="h-3 w-3" />
                           {o.puntajeSca} pts
                         </span>
@@ -238,7 +238,7 @@ export default function OfertasPage() {
                             type="button"
                             onClick={() => descargarFichaPdf(o)}
                             title="Descargar Ficha Técnica PDF"
-                            className="p-1.5 rounded-lg border border-surface-200 bg-white text-surface-600 hover:text-[#AD2E01] hover:border-[#AD2E01]/30 hover:bg-[#FFF1ED] transition-colors cursor-pointer shadow-2xs"
+                            className="p-1.5 rounded-lg border border-surface-200 bg-white text-surface-600 hover:text-brand-terracota hover:border-brand-terracota/30 hover:bg-brand-tint transition-colors cursor-pointer shadow-2xs"
                           >
                             <FileDown className="h-4 w-4" />
                           </button>
@@ -309,7 +309,7 @@ export default function OfertasPage() {
           <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-surface-200">
             <div className="flex items-center justify-between pb-3 border-b border-surface-200">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-xl bg-[#FFF1ED] text-[#AD2E01] flex items-center justify-center">
+                <div className="h-10 w-10 rounded-xl bg-brand-tint text-brand-terracota flex items-center justify-center">
                   <Gift className="h-5 w-5" />
                 </div>
                 <div>
@@ -337,7 +337,7 @@ export default function OfertasPage() {
                 </div>
                 <div>
                   <span className="text-surface-500 block">Puntaje Catación SCA</span>
-                  <span className="font-bold text-[#AD2E01]">{ofertaActual.puntajeSca} puntos</span>
+                  <span className="font-bold text-brand-terracota">{ofertaActual.puntajeSca} puntos</span>
                 </div>
                 <div>
                   <span className="text-surface-500 block">Precio / kg</span>
@@ -365,7 +365,7 @@ export default function OfertasPage() {
               <button
                 type="button"
                 onClick={() => descargarFichaPdf(ofertaActual)}
-                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#AD2E01] hover:bg-[#8D2501] text-white text-xs font-semibold shadow-sm cursor-pointer"
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-brand-terracota hover:bg-brand-terracota-dark text-white text-xs font-semibold shadow-sm cursor-pointer"
               >
                 <FileDown className="h-4 w-4" />
                 Descargar Ficha PDF

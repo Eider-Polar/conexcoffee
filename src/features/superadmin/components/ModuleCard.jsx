@@ -7,8 +7,8 @@ export default function ModuleCard({ mod }) {
   return (
     <div className="bg-white rounded-2xl border border-surface-200 p-5 hover:shadow-lg hover:-translate-y-1 transition-all duration-200 group flex flex-col justify-between gap-4">
       <div className="flex items-start gap-3">
-        <div className="p-3 bg-[#FFF1ED] rounded-xl shrink-0 group-hover:bg-[#AD2E01] transition-colors duration-200">
-          <Icon className="h-5 w-5 text-[#AD2E01] group-hover:text-white transition-colors duration-200" />
+        <div className="p-3 bg-brand-tint rounded-xl shrink-0 group-hover:bg-brand-terracota transition-colors duration-200">
+          <Icon className="h-5 w-5 text-brand-terracota group-hover:text-white transition-colors duration-200" />
         </div>
         <div>
           <h3 className="text-sm font-bold text-surface-900">{mod.title}</h3>
@@ -23,7 +23,7 @@ export default function ModuleCard({ mod }) {
           </div>
         ))}
       </div>
-      <Link to={mod.path} className="flex items-center justify-between text-xs font-semibold text-[#AD2E01] hover:text-[#F25433] transition-colors">
+      <Link to={mod.path} className="flex items-center justify-between text-xs font-semibold text-brand-terracota hover:text-brand-orange transition-colors">
         <span>Gestionar</span>
         <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform duration-200" />
       </Link>

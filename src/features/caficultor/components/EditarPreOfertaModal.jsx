@@ -160,7 +160,7 @@ export default function EditarPreOfertaModal({ isOpen, onClose, preoferta, onGua
             </button>
             <button
               type="submit"
-              className="px-5 py-2 bg-[#AD2E01] hover:bg-[#8D2501] text-white font-bold rounded-xl shadow-xs cursor-pointer"
+              className="px-5 py-2 bg-brand-terracota hover:bg-brand-terracota-dark text-white font-bold rounded-xl shadow-xs cursor-pointer"
             >
               Guardar Cambios
             </button>

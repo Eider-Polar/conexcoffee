@@ -15,12 +15,12 @@ import { Flame } from 'lucide-react';
 // ============================================
 
 const ROAST_LEVELS = [
-  { level: 1, label: 'Muy Claro', code: 'Canela', color: 'bg-[#C89D7C]', border: 'border-[#B08564]' },
-  { level: 2, label: 'Claro', code: 'Light', color: 'bg-[#B07D54]', border: 'border-[#99653D]' },
-  { level: 3, label: 'Medio-Claro', code: 'American', color: 'bg-[#986036]', border: 'border-[#7E4922]' },
-  { level: 4, label: 'Medio', code: 'City', color: 'bg-[#7E461E]', border: 'border-[#663513]' },
-  { level: 5, label: 'Medio-Oscuro', code: 'Full City', color: 'bg-[#5C2F10]', border: 'border-[#452009]' },
-  { level: 6, label: 'Oscuro', code: 'Dark', color: 'bg-[#361706]', border: 'border-[#220B02]' },
+  { level: 1, label: 'Muy Claro', code: 'Canela', color: 'bg-roast-1', border: 'border-roast-2' },
+  { level: 2, label: 'Claro', code: 'Light', color: 'bg-roast-3', border: 'border-roast-4' },
+  { level: 3, label: 'Medio-Claro', code: 'American', color: 'bg-roast-5', border: 'border-roast-6' },
+  { level: 4, label: 'Medio', code: 'City', color: 'bg-roast-7', border: 'border-roast-8' },
+  { level: 5, label: 'Medio-Oscuro', code: 'Full City', color: 'bg-roast-9', border: 'border-roast-10' },
+  { level: 6, label: 'Oscuro', code: 'Dark', color: 'bg-roast-11', border: 'border-roast-12' },
 ];
 
 export default function RoastLevelBar({

@@ -8,14 +8,14 @@ import { BookOpen, Users, Phone, Package } from 'lucide-react';
 export default function PublicFooter() {
   return (
     <footer
-      className="relative text-white pt-16 pb-8 px-4 sm:px-6 lg:px-8 overflow-hidden shadow-2xl border-t-2 border-[#F25433] bg-cover bg-center"
+      className="relative text-white pt-16 pb-8 px-4 sm:px-6 lg:px-8 overflow-hidden shadow-2xl border-t-2 border-brand-orange bg-cover bg-center"
       style={{
         backgroundImage: "url('/images/pagina-web/background-footer.png')",
         backgroundColor: '#3b1206',
       }}
     >
       {/* Overlay sólido sin gradientes */}
-      <div className="absolute inset-0 bg-[#AD2E01]/85 backdrop-blur-[1px]" />
+      <div className="absolute inset-0 bg-brand-terracota/85 backdrop-blur-[1px]" />
       <div className="relative max-w-7xl mx-auto z-10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-14 pb-12 items-start">
           {/* Columna 1: Logo Oficial Conexcoffee y descripción (5 cols) */}
@@ -92,9 +92,9 @@ export default function PublicFooter() {
               <Link to="/destinos" className="inline-block">
                 <button
                   type="button"
-                  className="inline-flex items-center justify-center gap-3 px-8 py-3 bg-white text-[#AD2E01] hover:bg-surface-50 font-extrabold text-sm sm:text-base tracking-wider rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer border border-white/50"
+                  className="inline-flex items-center justify-center gap-3 px-8 py-3 bg-white text-brand-terracota hover:bg-surface-50 font-extrabold text-sm sm:text-base tracking-wider rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer border border-white/50"
                 >
-                  <Package className="h-5 w-5 text-[#AD2E01]" />
+                  <Package className="h-5 w-5 text-brand-terracota" />
                   <span>CONÓCELOS</span>
                 </button>
               </Link>

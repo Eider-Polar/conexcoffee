@@ -1,6 +1,8 @@
-import { MIS_LOTES_DATA } from '../data/caficultorData';
+import { useCaficultorLotes } from '../hooks/useCaficultorData';
 
-export default function LotesCaficultorTable() {
+export default function LotesCaficultorTable({ lotes: propLotes }) {
+  const lotesQuery = useCaficultorLotes();
+  const lotes = propLotes || lotesQuery.data || [];
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm text-left">
@@ -16,7 +18,7 @@ export default function LotesCaficultorTable() {
           </tr>
         </thead>
         <tbody className="divide-y divide-surface-200">
-          {MIS_LOTES_DATA.map((lote) => (
+          {lotes.map((lote) => (
             <tr key={lote.id} className="hover:bg-surface-50 transition-colors">
               <td className="py-3 px-4 font-mono font-medium text-surface-900">{lote.id}</td>
               <td className="py-3 px-4 font-medium text-surface-900">{lote.finca}</td>

@@ -81,7 +81,7 @@ export default function CaficultorLotesPage() {
         <button
           type="button"
           onClick={() => setModalRegistroLote(true)}
-          className="px-4 py-2.5 rounded-xl bg-[#AD2E01] hover:bg-[#8D2501] text-white text-xs font-bold transition-colors flex items-center gap-2 shadow-xs cursor-pointer self-start sm:self-auto"
+          className="px-4 py-2.5 rounded-xl bg-brand-terracota hover:bg-brand-terracota-dark text-white text-xs font-bold transition-colors flex items-center gap-2 shadow-xs cursor-pointer self-start sm:self-auto"
         >
           <Plus className="w-4 h-4" />
           <span>Registrar Lote</span>
@@ -103,7 +103,7 @@ export default function CaficultorLotesPage() {
 
         <div className="text-xs text-stone-500 font-semibold self-end md:self-auto">
           Total de registros:{' '}
-          <span className="font-extrabold text-[#AD2E01]">{lotesFiltrados.length}</span>
+          <span className="font-extrabold text-brand-terracota">{lotesFiltrados.length}</span>
         </div>
       </div>
 

@@ -221,7 +221,7 @@ export default function FincasPage() {
             onClick={() => setPestanaActiva('fincas')}
             className={`flex items-center gap-2 px-5 py-3 text-sm font-bold border-b-2 transition-all cursor-pointer ${
               pestanaActiva === 'fincas'
-                ? 'border-[#AD2E01] text-[#AD2E01]'
+                ? 'border-brand-terracota text-brand-terracota'
                 : 'border-transparent text-surface-500 hover:text-surface-800'
             }`}
           >
@@ -233,7 +233,7 @@ export default function FincasPage() {
             onClick={() => setPestanaActiva('lotes')}
             className={`flex items-center gap-2 px-5 py-3 text-sm font-bold border-b-2 transition-all cursor-pointer ${
               pestanaActiva === 'lotes'
-                ? 'border-[#AD2E01] text-[#AD2E01]'
+                ? 'border-brand-terracota text-brand-terracota'
                 : 'border-transparent text-surface-500 hover:text-surface-800'
             }`}
           >
@@ -256,7 +256,7 @@ export default function FincasPage() {
             }
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-surface-200 focus:outline-none focus:ring-2 focus:ring-[#AD2E01]/20 focus:border-[#AD2E01]"
+            className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-surface-200 focus:outline-none focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
           />
         </div>
       </div>
@@ -291,7 +291,7 @@ export default function FincasPage() {
                       </td>
                       <td className="px-5 py-3.5">
                         <div className="flex items-center gap-2.5">
-                          <div className="h-8 w-8 rounded-lg bg-[#FFF1ED] text-[#AD2E01] flex items-center justify-center shrink-0">
+                          <div className="h-8 w-8 rounded-lg bg-brand-tint text-brand-terracota flex items-center justify-center shrink-0">
                             <Coffee className="h-4 w-4" />
                           </div>
                           <div>
@@ -361,7 +361,7 @@ export default function FincasPage() {
                     <td className="px-5 py-3.5 text-surface-600 text-xs">
                       {l.finca}
                     </td>
-                    <td className="px-5 py-3.5 font-medium text-[#AD2E01]">
+                    <td className="px-5 py-3.5 font-medium text-brand-terracota">
                       {l.variedadCafe}
                     </td>
                     <td className="px-5 py-3.5 text-surface-600 text-xs">
@@ -389,7 +389,7 @@ export default function FincasPage() {
           <div className="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-surface-200 my-8">
             <div className="flex items-center justify-between pb-4 border-b border-surface-200">
               <div className="flex items-center gap-2.5">
-                <div className="h-9 w-9 rounded-xl bg-[#FFF1ED] text-[#AD2E01] flex items-center justify-center">
+                <div className="h-9 w-9 rounded-xl bg-brand-tint text-brand-terracota flex items-center justify-center">
                   <Coffee className="h-5 w-5" />
                 </div>
                 <div>
@@ -482,7 +482,7 @@ export default function FincasPage() {
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-[#AD2E01] hover:bg-[#8D2501] text-white text-sm font-semibold shadow-md cursor-pointer"
+                  className="px-5 py-2 rounded-xl bg-brand-terracota hover:bg-brand-terracota-dark text-white text-sm font-semibold shadow-md cursor-pointer"
                 >
                   Guardar Finca
                 </button>
@@ -498,7 +498,7 @@ export default function FincasPage() {
           <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-surface-200">
             <div className="flex items-center justify-between pb-3 border-b border-surface-200">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-xl bg-[#FFF1ED] text-[#AD2E01] flex items-center justify-center">
+                <div className="h-10 w-10 rounded-xl bg-brand-tint text-brand-terracota flex items-center justify-center">
                   <Coffee className="h-5 w-5" />
                 </div>
                 <div>
@@ -522,7 +522,7 @@ export default function FincasPage() {
                 </div>
                 <div>
                   <span className="text-surface-500 block">Altimetría</span>
-                  <span className="font-semibold text-[#AD2E01]">{fincaActual.altura} msnm</span>
+                  <span className="font-semibold text-brand-terracota">{fincaActual.altura} msnm</span>
                 </div>
                 <div>
                   <span className="text-surface-500 block">Área Café</span>
@@ -538,7 +538,7 @@ export default function FincasPage() {
                 <span className="text-xs font-bold text-surface-700 block mb-1">Variedades Sembradas</span>
                 <div className="flex flex-wrap gap-1.5">
                   {fincaActual.variedades.map((v) => (
-                    <span key={v} className="px-2.5 py-1 rounded-lg text-xs font-medium bg-[#FFF1ED] text-[#AD2E01] border border-[#AD2E01]/20">
+                    <span key={v} className="px-2.5 py-1 rounded-lg text-xs font-medium bg-brand-tint text-brand-terracota border border-brand-terracota/20">
                       {v}
                     </span>
                   ))}
@@ -564,7 +564,7 @@ export default function FincasPage() {
           <div className="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-surface-200 my-8">
             <div className="flex items-center justify-between pb-4 border-b border-surface-200">
               <div className="flex items-center gap-2.5">
-                <div className="h-9 w-9 rounded-xl bg-[#FFF1ED] text-[#AD2E01] flex items-center justify-center">
+                <div className="h-9 w-9 rounded-xl bg-brand-tint text-brand-terracota flex items-center justify-center">
                   <Layers className="h-5 w-5" />
                 </div>
                 <div>
@@ -660,7 +660,7 @@ export default function FincasPage() {
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-[#AD2E01] hover:bg-[#8D2501] text-white text-sm font-semibold shadow-md cursor-pointer"
+                  className="px-5 py-2 rounded-xl bg-brand-terracota hover:bg-brand-terracota-dark text-white text-sm font-semibold shadow-md cursor-pointer"
                 >
                   Guardar Lote
                 </button>

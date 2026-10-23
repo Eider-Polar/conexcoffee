@@ -74,7 +74,7 @@ export default function AddProductPage() {
           </Card>
 
           <Card className="p-6 text-center">
-            <div className="w-12 h-12 rounded-xl bg-[#fee8e3] flex items-center justify-center mx-auto mb-4 text-[#AD2E01]">
+            <div className="w-12 h-12 rounded-xl bg-primary-100 flex items-center justify-center mx-auto mb-4 text-brand-terracota">
               <ShieldCheck className="h-6 w-6" />
             </div>
             <h2 className="text-base font-bold text-surface-900 mb-2">2. Validación Sensorial</h2>
@@ -99,15 +99,15 @@ export default function AddProductPage() {
           <h2 className="text-xl font-bold text-surface-900 mb-4">Requisitos para Vendedores</h2>
           <div className="space-y-3 text-sm text-surface-600">
             <div className="flex items-center gap-3">
-              <CheckCircle2 className="h-4 w-4 text-[#AD2E01] shrink-0" />
+              <CheckCircle2 className="h-4 w-4 text-brand-terracota shrink-0" />
               <span>Tener cuenta verificada como Productor o Empresa en ConexCoffee.</span>
             </div>
             <div className="flex items-center gap-3">
-              <CheckCircle2 className="h-4 w-4 text-[#AD2E01] shrink-0" />
+              <CheckCircle2 className="h-4 w-4 text-brand-terracota shrink-0" />
               <span>Contar con registro de origen o predio cafetero georreferenciado.</span>
             </div>
             <div className="flex items-center gap-3">
-              <CheckCircle2 className="h-4 w-4 text-[#AD2E01] shrink-0" />
+              <CheckCircle2 className="h-4 w-4 text-brand-terracota shrink-0" />
               <span>Disponer de lotes mínimos negociables (desde microlotes de 5 sacos hasta contenedores).</span>
             </div>
           </div>

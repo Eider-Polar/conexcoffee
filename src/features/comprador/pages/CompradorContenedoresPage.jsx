@@ -1,26 +1,33 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Package, MapPin, Calendar, Coffee, Eye, ChevronRight, X } from 'lucide-react';
-import ModalBase from '@/components/modals/ModalBase';
+import { Package, MapPin, Calendar, Coffee, Eye, ChevronRight } from 'lucide-react';
+import { QueryState } from '@/components/feedback';
 import VariedadesModal from '../components/VariedadesModal';
-import { MOCK_CONTENEDORES, PAISES_DISPONIBLES } from '../data/mockData';
-
+import { useContenedoresComprador, usePaisesDisponibles } from '../hooks/useCompradorData';
 
 // ============================================
 // ContenedoresPage — Lista de contenedores disponibles
 // ============================================
 
 export default function CompradorContenedoresPage() {
+  const query = useContenedoresComprador();
+  const contenedores = query.data ?? [];
+  const paisesDisponibles = usePaisesDisponibles(contenedores);
+
   const [paisFiltro, setPaisFiltro] = useState('');
   const [contenedorSeleccionado, setContenedorSeleccionado] = useState(null);
   const navigate = useNavigate();
 
   const contenedoresFiltrados = paisFiltro
-    ? MOCK_CONTENEDORES.filter((c) => c.paisDestino === paisFiltro)
-    : MOCK_CONTENEDORES;
+    ? contenedores.filter((c) => c.paisDestino === paisFiltro)
+    : contenedores;
 
   const porcentajeDisponible = (c) =>
     Math.round((c.kgDisponibles / c.totalKg) * 100);
+
+  if (query.isLoading || query.isError) {
+    return <QueryState query={query} />;
+  }
 
   return (
     <div className="p-6 space-y-6">
@@ -43,7 +50,7 @@ export default function CompradorContenedoresPage() {
             className="border border-surface-300 rounded-lg px-3 py-2 text-sm text-surface-700 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500 bg-white"
           >
             <option value="">Todos los países</option>
-            {PAISES_DISPONIBLES.map((p) => (
+            {paisesDisponibles.map((p) => (
               <option key={p} value={p}>{p}</option>
             ))}
           </select>

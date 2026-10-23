@@ -283,7 +283,7 @@ export default function CaficultoresPage() {
             placeholder="Buscar por cédula, nombre, teléfono…"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-surface-200 focus:outline-none focus:ring-2 focus:ring-[#AD2E01]/20 focus:border-[#AD2E01]"
+            className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-surface-200 focus:outline-none focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
           />
         </div>
 
@@ -292,7 +292,7 @@ export default function CaficultoresPage() {
           <select
             value={filtroEmpresa}
             onChange={(e) => setFiltroEmpresa(e.target.value)}
-            className="px-3 py-2 text-sm rounded-xl border border-surface-200 bg-white text-surface-700 focus:outline-none focus:ring-2 focus:ring-[#AD2E01]/20 cursor-pointer"
+            className="px-3 py-2 text-sm rounded-xl border border-surface-200 bg-white text-surface-700 focus:outline-none focus:ring-2 focus:ring-brand-terracota/20 cursor-pointer"
           >
             <option value="todos">Todos los caficultores</option>
             <option value="asignada">Con empresa asignada</option>
@@ -372,7 +372,7 @@ export default function CaficultoresPage() {
                           type="button"
                           onClick={() => abrirModalEditar(c)}
                           title="Editar"
-                          className="p-1.5 rounded-lg border border-surface-200 bg-white text-surface-600 hover:text-[#AD2E01] hover:border-[#AD2E01]/30 hover:bg-[#FFF1ED] transition-colors cursor-pointer shadow-2xs"
+                          className="p-1.5 rounded-lg border border-surface-200 bg-white text-surface-600 hover:text-brand-terracota hover:border-brand-terracota/30 hover:bg-brand-tint transition-colors cursor-pointer shadow-2xs"
                         >
                           <Pencil className="h-4 w-4" />
                         </button>
@@ -414,7 +414,7 @@ export default function CaficultoresPage() {
           <div className="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-surface-200 animate-in fade-in duration-200 my-8">
             <div className="flex items-center justify-between pb-4 border-b border-surface-200">
               <div className="flex items-center gap-2.5">
-                <div className="h-9 w-9 rounded-xl bg-[#FFF1ED] text-[#AD2E01] flex items-center justify-center">
+                <div className="h-9 w-9 rounded-xl bg-brand-tint text-brand-terracota flex items-center justify-center">
                   <Leaf className="h-5 w-5" />
                 </div>
                 <div>
@@ -441,7 +441,7 @@ export default function CaficultoresPage() {
                     type="text"
                     value={formData.numeroIdentificacion}
                     onChange={(e) => setFormData({ ...formData, numeroIdentificacion: e.target.value })}
-                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-[#AD2E01]/20 focus:border-[#AD2E01]"
+                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
                     placeholder="Ej. 12345678"
                   />
                 </div>
@@ -453,7 +453,7 @@ export default function CaficultoresPage() {
                     type="text"
                     value={formData.telefono}
                     onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
-                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-[#AD2E01]/20 focus:border-[#AD2E01]"
+                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
                     placeholder="Ej. 3112344546"
                   />
                 </div>
@@ -465,7 +465,7 @@ export default function CaficultoresPage() {
                     type="text"
                     value={formData.primerNombre}
                     onChange={(e) => setFormData({ ...formData, primerNombre: e.target.value.toUpperCase() })}
-                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-[#AD2E01]/20 focus:border-[#AD2E01]"
+                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
                   />
                 </div>
 
@@ -475,7 +475,7 @@ export default function CaficultoresPage() {
                     type="text"
                     value={formData.segundoNombre}
                     onChange={(e) => setFormData({ ...formData, segundoNombre: e.target.value.toUpperCase() })}
-                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-[#AD2E01]/20 focus:border-[#AD2E01]"
+                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
                   />
                 </div>
 
@@ -486,7 +486,7 @@ export default function CaficultoresPage() {
                     type="text"
                     value={formData.primerApellido}
                     onChange={(e) => setFormData({ ...formData, primerApellido: e.target.value.toUpperCase() })}
-                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-[#AD2E01]/20 focus:border-[#AD2E01]"
+                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
                   />
                 </div>
 
@@ -496,7 +496,7 @@ export default function CaficultoresPage() {
                     type="text"
                     value={formData.segundoApellido}
                     onChange={(e) => setFormData({ ...formData, segundoApellido: e.target.value.toUpperCase() })}
-                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-[#AD2E01]/20 focus:border-[#AD2E01]"
+                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
                   />
                 </div>
 
@@ -506,7 +506,7 @@ export default function CaficultoresPage() {
                     type="date"
                     value={formData.fechaNacimiento}
                     onChange={(e) => setFormData({ ...formData, fechaNacimiento: e.target.value })}
-                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-[#AD2E01]/20 focus:border-[#AD2E01]"
+                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
                   />
                 </div>
 
@@ -515,7 +515,7 @@ export default function CaficultoresPage() {
                   <select
                     value={formData.genero}
                     onChange={(e) => setFormData({ ...formData, genero: e.target.value })}
-                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-[#AD2E01]/20"
+                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20"
                   >
                     <option value="M">Masculino</option>
                     <option value="F">Femenino</option>
@@ -529,7 +529,7 @@ export default function CaficultoresPage() {
                     type="text"
                     value={formData.municipio}
                     onChange={(e) => setFormData({ ...formData, municipio: e.target.value })}
-                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-[#AD2E01]/20"
+                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20"
                     placeholder="Ej. Pitalito, Huila"
                   />
                 </div>
@@ -539,7 +539,7 @@ export default function CaficultoresPage() {
                   <select
                     value={formData.empresa}
                     onChange={(e) => setFormData({ ...formData, empresa: e.target.value })}
-                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-[#AD2E01]/20"
+                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20"
                   >
                     <option value="">Sin Asignar</option>
                     {EMPRESAS_DISPONIBLES.map((emp) => (
@@ -555,7 +555,7 @@ export default function CaficultoresPage() {
                   type="text"
                   value={formData.direccion}
                   onChange={(e) => setFormData({ ...formData, direccion: e.target.value })}
-                  className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-[#AD2E01]/20"
+                  className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20"
                   placeholder="Vereda, Finca o dirección de residencia"
                 />
               </div>
@@ -566,7 +566,7 @@ export default function CaficultoresPage() {
                   rows={2}
                   value={formData.historia}
                   onChange={(e) => setFormData({ ...formData, historia: e.target.value })}
-                  className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-[#AD2E01]/20"
+                  className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20"
                   placeholder="Historia que conectará con los compradores en la tienda..."
                 />
               </div>
@@ -581,7 +581,7 @@ export default function CaficultoresPage() {
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-[#AD2E01] hover:bg-[#8D2501] text-white text-sm font-semibold shadow-md cursor-pointer"
+                  className="px-5 py-2 rounded-xl bg-brand-terracota hover:bg-brand-terracota-dark text-white text-sm font-semibold shadow-md cursor-pointer"
                 >
                   Guardar Caficultor
                 </button>
@@ -751,7 +751,7 @@ export default function CaficultoresPage() {
                 <img
                   src={caficultorActual.avatar}
                   alt={caficultorActual.primerNombre}
-                  className="h-12 w-12 rounded-full object-cover border-2 border-[#AD2E01]"
+                  className="h-12 w-12 rounded-full object-cover border-2 border-brand-terracota"
                   onError={(e) => {
                     e.currentTarget.src = '/images/users/user-dummy-img.jpg';
                   }}
@@ -774,28 +774,28 @@ export default function CaficultoresPage() {
             <div className="mt-4 space-y-4 text-sm">
               <div className="grid grid-cols-2 gap-3 bg-surface-50 p-3.5 rounded-xl border border-surface-200">
                 <div className="flex items-center gap-2">
-                  <Phone className="h-4 w-4 text-[#AD2E01]" />
+                  <Phone className="h-4 w-4 text-brand-terracota" />
                   <div>
                     <div className="text-[11px] text-surface-500 font-medium">Teléfono</div>
                     <div className="font-semibold text-surface-800">{caficultorActual.telefono}</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Mail className="h-4 w-4 text-[#AD2E01]" />
+                  <Mail className="h-4 w-4 text-brand-terracota" />
                   <div>
                     <div className="text-[11px] text-surface-500 font-medium">Correo</div>
                     <div className="font-semibold text-surface-800 truncate max-w-[150px]">{caficultorActual.correo || 'No registrado'}</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-[#AD2E01]" />
+                  <MapPin className="h-4 w-4 text-brand-terracota" />
                   <div>
                     <div className="text-[11px] text-surface-500 font-medium">Ubicación</div>
                     <div className="font-semibold text-surface-800">{caficultorActual.municipio}, {caficultorActual.departamento}</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Building2 className="h-4 w-4 text-[#AD2E01]" />
+                  <Building2 className="h-4 w-4 text-brand-terracota" />
                   <div>
                     <div className="text-[11px] text-surface-500 font-medium">Empresa</div>
                     <div className="font-semibold text-surface-800">{caficultorActual.empresa || 'Sin empresa'}</div>
@@ -822,8 +822,8 @@ export default function CaficultoresPage() {
               </div>
 
               <div className="grid grid-cols-2 gap-3 pt-2">
-                <div className="bg-[#FFF1ED] p-3 rounded-xl border border-[#AD2E01]/20 text-center">
-                  <span className="text-2xl font-extrabold text-[#AD2E01]">{caficultorActual.fincasCount}</span>
+                <div className="bg-brand-tint p-3 rounded-xl border border-brand-terracota/20 text-center">
+                  <span className="text-2xl font-extrabold text-brand-terracota">{caficultorActual.fincasCount}</span>
                   <div className="text-xs font-semibold text-surface-600">Fincas Registradas</div>
                 </div>
                 <div className="bg-surface-50 p-3 rounded-xl border border-surface-200 text-center">

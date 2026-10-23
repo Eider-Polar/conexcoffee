@@ -133,7 +133,7 @@ export default function ContenedorRealistaViewer({ contenedor }) {
         {/* Barra de Control de la Cámara de Inspección */}
         <div className="relative z-40 px-6 py-4 bg-surface-900/95 backdrop-blur-md border-b border-surface-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-2.5">
-            <div className="h-2 w-2 rounded-full bg-[#F25433] animate-ping" />
+            <div className="h-2 w-2 rounded-full bg-brand-orange animate-ping" />
             <span className="text-xs font-mono text-primary-300 font-bold uppercase tracking-wider flex items-center gap-1.5">
               <Camera className="h-3.5 w-3.5 text-primary-400" />
               <span>{isDoorOpen ? 'Interior Abierto • Lotes de Café' : 'Compuertas Selladas • Vista Exterior'}</span>
@@ -146,7 +146,7 @@ export default function ContenedorRealistaViewer({ contenedor }) {
           <button
             onClick={() => setIsDoorOpen(!isDoorOpen)}
             type="button"
-            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all duration-300 cursor-pointer shadow-xl bg-[#F25433] hover:bg-[#AD2E01] text-white active:scale-95 border border-white/20"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all duration-300 cursor-pointer shadow-xl bg-brand-orange hover:bg-brand-terracota text-white active:scale-95 border border-white/20"
           >
             {isDoorOpen ? (
               <>
@@ -223,7 +223,7 @@ export default function ContenedorRealistaViewer({ contenedor }) {
                     <span
                       className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
                         currentVariety.disponible
-                          ? 'bg-[#fee8e3] text-[#AD2E01] border border-[#fed4ca]'
+                          ? 'bg-primary-100 text-brand-terracota border border-primary-200'
                           : 'bg-surface-700 text-surface-400'
                       }`}
                     >

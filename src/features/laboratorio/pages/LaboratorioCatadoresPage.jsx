@@ -1,7 +1,12 @@
 import { useState } from 'react';
 import { Card, Button } from '@/components/ui';
 import { Search, UserPlus, Eye, Edit2, Phone, Award } from 'lucide-react';
-import { CATADORES_DATA } from '../data/laboratorioData';
+import { QueryState } from '@/components/feedback';
+import {
+  useCatadores,
+  useCrearCatador,
+  useActualizarCatador,
+} from '../hooks/useLaboratorioData';
 import {
   RegistrarCatadorModal,
   EditarCatadorModal,
@@ -10,21 +15,27 @@ import {
 } from '../components';
 
 export default function LaboratorioCatadoresPage() {
-  const [catadores, setCatadores] = useState(CATADORES_DATA);
+  const query = useCatadores();
+  const catadores = query.data ?? [];
+  const crearCatador = useCrearCatador();
+  const actualizarCatador = useActualizarCatador();
+
   const [showRegistrar, setShowRegistrar] = useState(false);
   const [showConsultar, setShowConsultar] = useState(false);
   const [catadorVer, setCatadorVer] = useState(null);
   const [catadorEditar, setCatadorEditar] = useState(null);
 
   const handleAddCatador = (nuevo) => {
-    setCatadores((prev) => [nuevo, ...prev]);
+    crearCatador.mutate(nuevo);
   };
 
   const handleUpdateCatador = (actualizado) => {
-    setCatadores((prev) =>
-      prev.map((c) => (c.id === actualizado.id ? actualizado : c))
-    );
+    actualizarCatador.mutate(actualizado);
   };
+
+  if (query.isLoading || query.isError) {
+    return <QueryState query={query} />;
+  }
 
   return (
     <div className="space-y-6">

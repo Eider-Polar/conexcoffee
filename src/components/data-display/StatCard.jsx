@@ -32,7 +32,7 @@ export default function StatCard({
           {trend && (
             <p
               className={`text-sm mt-2 font-medium ${
-                trendUp ? 'text-[#AD2E01]' : 'text-danger-600'
+                trendUp ? 'text-brand-terracota' : 'text-danger-600'
               }`}
             >
               {trendUp ? '↑' : '↓'} {trend}

@@ -163,7 +163,7 @@ export default function MuestrasPage() {
             placeholder="Buscar por código, caficultor o variedad…"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-surface-200 focus:outline-none focus:ring-2 focus:ring-[#AD2E01]/20 focus:border-[#AD2E01]"
+            className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-surface-200 focus:outline-none focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
           />
         </div>
       </div>
@@ -263,7 +263,7 @@ export default function MuestrasPage() {
           <div className="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-surface-200 my-8">
             <div className="flex items-center justify-between pb-4 border-b border-surface-200">
               <div className="flex items-center gap-2.5">
-                <div className="h-9 w-9 rounded-xl bg-[#FFF1ED] text-[#AD2E01] flex items-center justify-center">
+                <div className="h-9 w-9 rounded-xl bg-brand-tint text-brand-terracota flex items-center justify-center">
                   <Archive className="h-5 w-5" />
                 </div>
                 <div>
@@ -372,7 +372,7 @@ export default function MuestrasPage() {
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-[#AD2E01] hover:bg-[#8D2501] text-white text-sm font-semibold shadow-md cursor-pointer"
+                  className="px-5 py-2 rounded-xl bg-brand-terracota hover:bg-brand-terracota-dark text-white text-sm font-semibold shadow-md cursor-pointer"
                 >
                   Guardar Muestra
                 </button>
@@ -428,7 +428,7 @@ export default function MuestrasPage() {
           <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-surface-200">
             <div className="flex items-center justify-between pb-3 border-b border-surface-200">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-xl bg-[#FFF1ED] text-[#AD2E01] flex items-center justify-center">
+                <div className="h-10 w-10 rounded-xl bg-brand-tint text-brand-terracota flex items-center justify-center">
                   <Archive className="h-5 w-5" />
                 </div>
                 <div>

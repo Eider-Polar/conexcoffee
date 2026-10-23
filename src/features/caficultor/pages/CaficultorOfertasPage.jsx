@@ -75,7 +75,7 @@ export default function CaficultorOfertasPage() {
 
         <div className="text-xs text-stone-500 font-semibold self-end md:self-auto">
           Total de registros:{' '}
-          <span className="font-extrabold text-[#AD2E01]">{ofertasFiltradas.length}</span>
+          <span className="font-extrabold text-brand-terracota">{ofertasFiltradas.length}</span>
         </div>
       </div>
 

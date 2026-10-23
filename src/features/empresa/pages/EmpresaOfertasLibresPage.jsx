@@ -11,15 +11,20 @@ import {
   Clock,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { QueryState } from '@/components/feedback';
 import {
-  INITIAL_EMPRESA_OFERTAS_LIBRES,
-  INITIAL_EMPRESA_PREOFERTAS,
-} from '../data/empresaData';
+  useEmpresaOfertasLibres,
+  useActualizarEmpresaOfertaLibre,
+  useCrearEmpresaPreoferta,
+} from '../hooks/useEmpresaData';
 import DetalleOfertaLibreModal from '../components/DetalleOfertaLibreModal';
 
 export default function EmpresaOfertasLibresPage() {
   const navigate = useNavigate();
-  const [ofertas, setOfertas] = useState(INITIAL_EMPRESA_OFERTAS_LIBRES);
+  const ofertasQuery = useEmpresaOfertasLibres();
+  const ofertas = ofertasQuery.data || [];
+  const actualizarOfertaLibre = useActualizarEmpresaOfertaLibre();
+  const crearPreoferta = useCrearEmpresaPreoferta();
   const [searchTerm, setSearchTerm] = useState('');
   const [departamentoFiltro, setDepartamentoFiltro] = useState('Todos');
 
@@ -30,7 +35,7 @@ export default function EmpresaOfertasLibresPage() {
   // Departamentos únicos para el filtro
   const departamentos = [
     'Todos',
-    ...Array.from(new Set(INITIAL_EMPRESA_OFERTAS_LIBRES.map((o) => o.departamento))),
+    ...Array.from(new Set(ofertas.map((o) => o.departamento))),
   ];
 
   const ofertasFiltradas = ofertas.filter((o) => {
@@ -53,87 +58,74 @@ export default function EmpresaOfertasLibresPage() {
   };
 
   const handleReservarCarga = (oferta) => {
-    setOfertas((prev) =>
-      prev.map((item) =>
-        item.id === oferta.id
-          ? { ...item, estado: 'Reservada', dias_reserva: 3 }
-          : item
-      )
-    );
-    setOfertaSeleccionada((prev) =>
-      prev ? { ...prev, estado: 'Reservada', dias_reserva: 3 } : null
-    );
-
-    toast.success(
-      `¡Lote de ${oferta.finca_nombre} reservado por 3 días! Queda apartado de otras empresas mientras gestionas con el caficultor.`,
-      { duration: 4500 }
+    actualizarOfertaLibre.mutate(
+      { ...oferta, estado: 'Reservada', dias_reserva: 3 },
+      {
+        onSuccess: () => {
+          setOfertaSeleccionada((prev) =>
+            prev ? { ...prev, estado: 'Reservada', dias_reserva: 3 } : null
+          );
+          toast.success(
+            `¡Lote de ${oferta.finca_nombre} reservado por 3 días! Queda apartado de otras empresas mientras gestionas con el caficultor.`,
+            { duration: 4500 }
+          );
+        },
+      }
     );
   };
 
   const handleAceptarCarga = (oferta) => {
-    // 1. Marcar la oferta como aceptada en el Marketplace local
-    setOfertas((prev) =>
-      prev.map((item) =>
-        item.id === oferta.id ? { ...item, estado: 'Aceptada' } : item
-      )
-    );
+    // 1. Marcar la oferta como aceptada
+    actualizarOfertaLibre.mutate({ ...oferta, estado: 'Aceptada' });
 
-    // 2. Insertar automáticamente en la lista de Pre-Ofertas de la empresa
-    const existeEnPreofertas = INITIAL_EMPRESA_PREOFERTAS.some(
-      (p) => p.codigo === oferta.codigo
-    );
-
-    if (!existeEnPreofertas) {
-      INITIAL_EMPRESA_PREOFERTAS.unshift({
-        id: Date.now(),
-        codigo: oferta.codigo,
-        cantidad_kg: oferta.cantidad_kg,
-        variedad: oferta.variedad,
-        especie: oferta.especie || 'Arábica',
-        fecha_creacion: new Date().toISOString().split('T')[0],
-        fecha_produccion: '2026-09-10',
-        secado: oferta.secado || 'Marquesina solar protegida',
-        sombrio: 'Si',
-        tipo_sombrio: 'Árboles nativos y frutales',
-        descripcion_fermentacion: oferta.proceso,
-        descripcion_proceso: `Carga aceptada desde Ofertas Libres para gestión directa con el caficultor.`,
-        proceso_postcosecha: oferta.proceso,
-        precio_estimado_cop: oferta.precio_estimado_cop || 19500000,
-        precio_kg_usd: oferta.precio_kg_usd || 7.50,
-        estado: 'Pendiente', // Lista para asignación de asistente técnico
-        tecnico_asignado: null,
-        caficultor: {
-          nombre: oferta.caficultor_nombre,
-          telefono: oferta.caficultor_telefono,
-          correo: oferta.caficultor_correo || 'contacto@caficultor.co',
-          direccion: oferta.ubicacion,
-          pais: 'Colombia',
-          municipio: `${oferta.municipio}, ${oferta.departamento}`,
-        },
-        finca: {
-          nombre: oferta.finca_nombre,
-          vereda: oferta.vereda || 'Vereda Central',
-          altura_msnm: oferta.altura_msnm || 1750,
-          asociacion: oferta.asociacion || 'Asociación Local',
-          area_cafe_ha: 3.5,
-          area_otros_cultivos_ha: 1.0,
-          area_conservacion_ha: 1.5,
-          cedula_numero: '1098234551',
-        },
-      });
-    }
-
-    setModalDetalle(false);
-
-    toast.success(
-      `¡Carga de ${oferta.finca_nombre} aceptada! Se transfirió a Pre-Ofertas. Redirigiendo para asignar asistente técnico...`,
-      { duration: 4000 }
-    );
-
-    // Redirección automática a Pre-Ofertas para asignar técnico
-    setTimeout(() => {
-      navigate('/empresa/pre-ofertas');
-    }, 1500);
+    // 2. Insertar en la lista de Pre-Ofertas de la empresa a través del hook
+    crearPreoferta.mutate({
+      codigo: oferta.codigo,
+      cantidad_kg: oferta.cantidad_kg,
+      variedad: oferta.variedad,
+      especie: oferta.especie || 'Arábica',
+      fecha_creacion: new Date().toISOString().split('T')[0],
+      fecha_produccion: '2026-09-10',
+      secado: oferta.secado || 'Marquesina solar protegida',
+      sombrio: 'Si',
+      tipo_sombrio: 'Árboles nativos y frutales',
+      descripcion_fermentacion: oferta.proceso,
+      descripcion_proceso: `Carga aceptada desde Ofertas Libres para gestión directa con el caficultor.`,
+      proceso_postcosecha: oferta.proceso,
+      precio_estimado_cop: oferta.precio_estimado_cop || 19500000,
+      precio_kg_usd: oferta.precio_kg_usd || 7.50,
+      estado: 'Pendiente',
+      tecnico_asignado: null,
+      caficultor: {
+        nombre: oferta.caficultor_nombre,
+        telefono: oferta.caficultor_telefono,
+        correo: oferta.caficultor_correo || 'contacto@caficultor.co',
+        direccion: oferta.ubicacion,
+        pais: 'Colombia',
+        municipio: `${oferta.municipio}, ${oferta.departamento}`,
+      },
+      finca: {
+        nombre: oferta.finca_nombre,
+        vereda: oferta.vereda || 'Vereda Central',
+        altura_msnm: oferta.altura_msnm || 1750,
+        asociacion: oferta.asociacion || 'Asociación Local',
+        area_cafe_ha: 3.5,
+        area_otros_cultivos_ha: 1.0,
+        area_conservacion_ha: 1.5,
+        cedula_numero: '1098234551',
+      },
+    }, {
+      onSuccess: () => {
+        setModalDetalle(false);
+        toast.success(
+          `¡Carga de ${oferta.finca_nombre} aceptada! Se transfirió a Pre-Ofertas. Redirigiendo para asignar asistente técnico...`,
+          { duration: 4000 }
+        );
+        setTimeout(() => {
+          navigate('/empresa/pre-ofertas');
+        }, 1500);
+      },
+    });
   };
 
   return (
@@ -142,10 +134,10 @@ export default function EmpresaOfertasLibresPage() {
       <div className="bg-white rounded-2xl p-6 border border-stone-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="p-1.5 rounded-lg bg-amber-50 text-[#AD2E01]">
+            <span className="p-1.5 rounded-lg bg-amber-50 text-brand-terracota">
               <Store className="w-5 h-5" />
             </span>
-            <span className="text-xs font-bold uppercase tracking-wider text-[#AD2E01]">
+            <span className="text-xs font-bold uppercase tracking-wider text-brand-terracota">
               Marketplace B2B
             </span>
           </div>
@@ -163,7 +155,7 @@ export default function EmpresaOfertasLibresPage() {
           onClick={() => navigate('/empresa/pre-ofertas')}
           className="px-4 py-2.5 rounded-xl border border-stone-200 hover:bg-stone-50 text-stone-700 text-xs font-bold transition-colors flex items-center gap-2 cursor-pointer self-start sm:self-auto"
         >
-          <Layers className="w-4 h-4 text-[#AD2E01]" />
+          <Layers className="w-4 h-4 text-brand-terracota" />
           <span>Ver Mis Pre-Ofertas</span>
           <ArrowRight className="w-3.5 h-3.5 text-stone-400" />
         </button>
@@ -206,13 +198,14 @@ export default function EmpresaOfertasLibresPage() {
         {/* Contador */}
         <div className="text-xs text-stone-500 font-semibold self-end md:self-auto">
           Lotes disponibles:{' '}
-          <span className="font-extrabold text-[#AD2E01]">
+          <span className="font-extrabold text-brand-terracota">
             {ofertasFiltradas.filter((o) => o.estado === 'Disponible').length}
           </span>
         </div>
       </div>
 
       {/* Grid de Tarjetas de Ofertas Libres */}
+      <QueryState query={ofertasQuery} />
       {ofertasFiltradas.length === 0 ? (
         <div className="bg-white rounded-2xl border border-stone-200 p-12 text-center text-stone-400 text-xs">
           No se encontraron ofertas libres que coincidan con los criterios de búsqueda.
@@ -249,7 +242,7 @@ export default function EmpresaOfertasLibresPage() {
                         </span>
                       ) : estaReservada ? (
                         <span className="text-[11px] font-bold text-amber-900 bg-amber-100/95 backdrop-blur-xs px-2.5 py-1 rounded-lg border border-amber-300 flex items-center gap-1 shadow-xs">
-                          <Clock className="w-3.5 h-3.5 text-[#AD2E01]" />
+                          <Clock className="w-3.5 h-3.5 text-brand-terracota" />
                           Reservado (3 días)
                         </span>
                       ) : (

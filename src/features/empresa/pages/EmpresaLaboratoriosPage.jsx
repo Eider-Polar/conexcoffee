@@ -7,11 +7,18 @@ import {
   X,
   FlaskConical,
 } from 'lucide-react';
-import toast from 'react-hot-toast';
-import { INITIAL_EMPRESA_LABORATORIOS } from '../data/empresaData';
+import { QueryState } from '@/components/feedback';
+import {
+  useEmpresaLaboratorios,
+  useCrearEmpresaLaboratorio,
+  useActualizarEmpresaLaboratorio,
+} from '../hooks/useEmpresaData';
 
 export default function EmpresaLaboratoriosPage() {
-  const [laboratorios, setLaboratorios] = useState(INITIAL_EMPRESA_LABORATORIOS);
+  const labsQuery = useEmpresaLaboratorios();
+  const laboratorios = labsQuery.data || [];
+  const crearMutation = useCrearEmpresaLaboratorio();
+  const actualizarMutation = useActualizarEmpresaLaboratorio();
   const [searchTerm, setSearchTerm] = useState('');
 
   // Modales
@@ -63,19 +70,21 @@ export default function EmpresaLaboratoriosPage() {
       activo: true,
     };
 
-    setLaboratorios([nuevo, ...laboratorios]);
-    toast.success('Laboratorio registrado exitosamente');
-    setModalRegistrar(false);
-    setNuevoLab({
-      nit: '',
-      nombre: '',
-      telefono: '',
-      correo: '',
-      direccion: '',
-      municipio: 'Cajibío',
-      departamento: 'Cauca',
-      certificaciones: 'CQI Q-Venue Certified / SCAA Campus',
-      q_graders_activos: 2,
+    crearMutation.mutate(nuevo, {
+      onSuccess: () => {
+        setModalRegistrar(false);
+        setNuevoLab({
+          nit: '',
+          nombre: '',
+          telefono: '',
+          correo: '',
+          direccion: '',
+          municipio: 'Cajibío',
+          departamento: 'Cauca',
+          certificaciones: 'CQI Q-Venue Certified / SCAA Campus',
+          q_graders_activos: 2,
+        });
+      },
     });
   };
 
@@ -83,11 +92,11 @@ export default function EmpresaLaboratoriosPage() {
     e.preventDefault();
     if (!laboratorioEdicion) return;
 
-    setLaboratorios((prev) =>
-      prev.map((l) => (l.id === laboratorioEdicion.id ? laboratorioEdicion : l))
-    );
-    toast.success('Laboratorio actualizado con éxito');
-    setModalEditar(false);
+    actualizarMutation.mutate(laboratorioEdicion, {
+      onSuccess: () => {
+        setModalEditar(false);
+      },
+    });
   };
 
   const handleEjecutarConsulta = (e) => {
@@ -150,6 +159,7 @@ export default function EmpresaLaboratoriosPage() {
       </div>
 
       {/* Tabla Oficial de Laboratorios */}
+      <QueryState query={labsQuery} />
       {/* Columnas: N°, NIT, Nombre, Teléfono, Acciones (Editar, Ver) */}
       <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">

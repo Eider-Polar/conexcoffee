@@ -12,11 +12,14 @@ import {
   Sliders,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { EVALUACIONES_PENDIENTES } from '../data/evaluacionData';
+import { QueryState } from '@/components/feedback';
+import { useEvaluaciones, useActualizarEvaluacion } from '../hooks/useCatadorData';
 import { EvaluacionModal } from '../components';
 
 export default function EvaluacionPage() {
-  const [evaluaciones, setEvaluaciones] = useState(EVALUACIONES_PENDIENTES);
+  const query = useEvaluaciones();
+  const evaluaciones = query.data ?? [];
+  const actualizar = useActualizarEvaluacion();
   const [searchTerm, setSearchTerm] = useState('');
   const [evaluacionActiva, setEvaluacionActiva] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,17 +28,11 @@ export default function EvaluacionPage() {
   const handleUnirse = (item) => {
     // Si aún no está unido, lo unimos
     if (!item.unido) {
-      setEvaluaciones((prev) =>
-        prev.map((ev) =>
-          ev.id === item.id
-            ? {
-                ...ev,
-                unido: true,
-                cantidadParticipantes: ev.cantidadParticipantes + 1,
-              }
-            : ev
-        )
-      );
+      actualizar.mutate({
+        ...item,
+        unido: true,
+        cantidadParticipantes: (item.cantidadParticipantes || 0) + 1,
+      });
       toast.success(`Te has unido a "${item.nombre}". Se abrirá la hoja de evaluación.`);
     }
 
@@ -44,21 +41,22 @@ export default function EvaluacionPage() {
     setIsModalOpen(true);
   };
 
+  if (query.isLoading || query.isError) {
+    return <QueryState query={query} />;
+  }
+
   // Cancelar la participación
   const handleSalir = (e, id) => {
     e.stopPropagation();
-    setEvaluaciones((prev) =>
-      prev.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              unido: false,
-              cantidadParticipantes: Math.max(0, item.cantidadParticipantes - 1),
-            }
-          : item
-      )
-    );
-    toast('Has salido de la sesión de evaluación');
+    const item = evaluaciones.find((ev) => ev.id === id);
+    if (item) {
+      actualizar.mutate({
+        ...item,
+        unido: false,
+        cantidadParticipantes: Math.max(0, (item.cantidadParticipantes || 1) - 1),
+      });
+      toast('Has salido de la sesión de evaluación');
+    }
   };
 
   // Al finalizar y enviar la evaluación desde el modal

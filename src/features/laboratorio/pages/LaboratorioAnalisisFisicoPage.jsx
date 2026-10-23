@@ -1,7 +1,12 @@
 import { useState } from 'react';
 import { Card } from '@/components/ui';
 import { FlaskConical, Eye, UserPlus, Calendar } from 'lucide-react';
-import { ANALISIS_FISICOS_DATA, CATADORES_DATA } from '../data/laboratorioData';
+import { QueryState } from '@/components/feedback';
+import {
+  useAnalisisFisicos,
+  useActualizarAnalisisFisico,
+  useCatadores,
+} from '../hooks/useLaboratorioData';
 import {
   ActualizarAnalisisModal,
   VerAnalisisModal,
@@ -9,24 +14,31 @@ import {
 } from '../components';
 
 export default function LaboratorioAnalisisFisicoPage() {
-  const [analisisList, setAnalisisList] = useState(ANALISIS_FISICOS_DATA);
+  const query = useAnalisisFisicos();
+  const analisisList = query.data ?? [];
+  const actualizar = useActualizarAnalisisFisico();
+  const catadoresQuery = useCatadores();
+  const catadores = catadoresQuery.data ?? [];
+
   const [analisisEditar, setAnalisisEditar] = useState(null);
   const [analisisVer, setAnalisisVer] = useState(null);
   const [analisisAsignar, setAnalisisAsignar] = useState(null);
 
   const handleUpdate = (actualizado) => {
-    setAnalisisList((prev) =>
-      prev.map((a) => (a.id === actualizado.id ? actualizado : a))
-    );
+    actualizar.mutate(actualizado);
   };
 
   const handleAsignar = (item, catadorNombre) => {
-    setAnalisisList((prev) =>
-      prev.map((a) =>
-        a.id === item.id ? { ...a, catadorAsignado: catadorNombre, estado: 'Catador Asignado' } : a
-      )
-    );
+    actualizar.mutate({
+      ...item,
+      catadorAsignado: catadorNombre,
+      estado: 'Catador Asignado',
+    });
   };
+
+  if (query.isLoading || query.isError) {
+    return <QueryState query={query} />;
+  }
 
   return (
     <div className="space-y-6">
@@ -136,7 +148,7 @@ export default function LaboratorioAnalisisFisicoPage() {
         isOpen={!!analisisAsignar}
         onClose={() => setAnalisisAsignar(null)}
         analisis={analisisAsignar}
-        catadores={CATADORES_DATA}
+        catadores={catadores}
         onAsignar={handleAsignar}
       />
     </div>

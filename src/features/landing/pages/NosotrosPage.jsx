@@ -37,14 +37,14 @@ export default function NosotrosPage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
             {/* Columna Texto Hero */}
             <div className="lg:col-span-6 text-left space-y-6">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#AD2E01]/30 border border-[#F25433]/50 text-[#F25433] text-xs font-bold uppercase tracking-wider">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-terracota/30 border border-brand-orange/50 text-brand-orange text-xs font-bold uppercase tracking-wider">
                 <Sparkles className="h-3.5 w-3.5" />
                 <span>Sobre ConexCoffee & Agenda Cafetera</span>
               </div>
 
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight uppercase leading-tight">
                 ¿Quiénes <br className="hidden sm:inline" />
-                <span className="text-[#F25433]">Somos?</span>
+                <span className="text-brand-orange">Somos?</span>
               </h1>
 
               <p className="text-surface-200 text-base sm:text-lg leading-relaxed max-w-xl">
@@ -56,15 +56,15 @@ export default function NosotrosPage() {
               {/* Sellos de confianza en el Hero */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
                 <div className="flex items-center gap-2.5 p-3 rounded-xl bg-stone-900/80 border border-stone-800">
-                  <CheckCircle2 className="h-4 w-4 text-[#F25433] shrink-0" />
+                  <CheckCircle2 className="h-4 w-4 text-brand-orange shrink-0" />
                   <span className="text-xs font-semibold text-white">100% Origen Colombiano</span>
                 </div>
                 <div className="flex items-center gap-2.5 p-3 rounded-xl bg-stone-900/80 border border-stone-800">
-                  <FlaskConical className="h-4 w-4 text-[#F25433] shrink-0" />
+                  <FlaskConical className="h-4 w-4 text-brand-orange shrink-0" />
                   <span className="text-xs font-semibold text-white">Evaluación SCA</span>
                 </div>
                 <div className="flex items-center gap-2.5 p-3 rounded-xl bg-stone-900/80 border border-stone-800">
-                  <Ship className="h-4 w-4 text-[#F25433] shrink-0" />
+                  <Ship className="h-4 w-4 text-brand-orange shrink-0" />
                   <span className="text-xs font-semibold text-white">Logística Global</span>
                 </div>
               </div>
@@ -84,7 +84,7 @@ export default function NosotrosPage() {
                 </div>
                 <div className="flex items-center justify-between px-3 pt-3 pb-1 text-xs text-surface-400">
                   <span className="font-semibold text-white flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-[#F25433] inline-block animate-pulse" />
+                    <span className="w-2 h-2 rounded-full bg-brand-orange inline-block animate-pulse" />
                     Conoce nuestra historia en video
                   </span>
                   <span>Agenda Cafetera</span>
@@ -111,7 +111,7 @@ export default function NosotrosPage() {
 
               {/* Badge flotante inferior */}
               <div className="absolute -bottom-6 -right-3 sm:right-6 bg-white p-4 rounded-xl border border-surface-200 shadow-lg max-w-xs flex items-center gap-3.5">
-                <div className="w-12 h-12 rounded-xl bg-[#fee8e3] text-[#AD2E01] flex items-center justify-center shrink-0">
+                <div className="w-12 h-12 rounded-xl bg-primary-100 text-brand-terracota flex items-center justify-center shrink-0">
                   <HeartHandshake className="h-6 w-6" />
                 </div>
                 <div>
@@ -125,20 +125,20 @@ export default function NosotrosPage() {
           {/* Texto de Nuestra Historia distribuido en 3 pasos legibles */}
           <div className="lg:col-span-7 order-1 lg:order-2 space-y-6">
             <div>
-              <span className="text-[#AD2E01] font-bold text-xs uppercase tracking-widest block mb-2">
+              <span className="text-brand-terracota font-bold text-xs uppercase tracking-widest block mb-2">
                 Orígenes & Propósito
               </span>
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-surface-900 tracking-tight">
                 NUESTRA HISTORIA
               </h2>
-              <div className="w-16 h-1 bg-[#F25433] rounded-full mt-3" />
+              <div className="w-16 h-1 bg-brand-orange rounded-full mt-3" />
             </div>
 
             {/* Párrafos estructurados con micro-bloques */}
             <div className="space-y-4 pt-2">
               <div className="p-4 rounded-xl bg-white border border-surface-200 shadow-xs">
                 <h3 className="text-sm font-bold text-surface-900 mb-1.5 flex items-center gap-2">
-                  <FlaskConical className="h-4 w-4 text-[#AD2E01]" />
+                  <FlaskConical className="h-4 w-4 text-brand-terracota" />
                   <span>Laboratorio y Análisis de Calidad</span>
                 </h3>
                 <p className="text-sm text-surface-600 leading-relaxed">
@@ -151,7 +151,7 @@ export default function NosotrosPage() {
 
               <div className="p-4 rounded-xl bg-white border border-surface-200 shadow-xs">
                 <h3 className="text-sm font-bold text-surface-900 mb-1.5 flex items-center gap-2">
-                  <Globe2 className="h-4 w-4 text-[#AD2E01]" />
+                  <Globe2 className="h-4 w-4 text-brand-terracota" />
                   <span>Comercialización Internacional en Contenedores</span>
                 </h3>
                 <p className="text-sm text-surface-600 leading-relaxed">
@@ -164,7 +164,7 @@ export default function NosotrosPage() {
 
               <div className="p-4 rounded-xl bg-white border border-surface-200 shadow-xs">
                 <h3 className="text-sm font-bold text-surface-900 mb-1.5 flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4 text-[#AD2E01]" />
+                  <TrendingUp className="h-4 w-4 text-brand-terracota" />
                   <span>Empoderamiento y Valor Real para el Caficultor</span>
                 </h3>
                 <p className="text-sm text-surface-600 leading-relaxed">
@@ -186,17 +186,17 @@ export default function NosotrosPage() {
             {/* Contenido de la Promesa */}
             <div className="lg:col-span-7 space-y-6">
               <div>
-                <span className="text-[#F25433] font-bold text-xs uppercase tracking-widest block mb-2">
+                <span className="text-brand-orange font-bold text-xs uppercase tracking-widest block mb-2">
                   Nuestro Compromiso Inquebrantable
                 </span>
                 <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight">
                   PROMESA DE VALOR
                 </h2>
-                <div className="w-16 h-1 bg-[#F25433] rounded-full mt-3" />
+                <div className="w-16 h-1 bg-brand-orange rounded-full mt-3" />
               </div>
 
               {/* Frase textual oficial destacada en bloque */}
-              <div className="p-6 rounded-xl bg-black/60 border-l-4 border-[#F25433] border-r border-t border-b border-stone-800">
+              <div className="p-6 rounded-xl bg-black/60 border-l-4 border-brand-orange border-r border-t border-b border-stone-800">
                 <p className="text-base sm:text-lg text-surface-100 font-medium leading-relaxed italic">
                   &ldquo;Facilitamos la conexión entre pequeños caficultores de cafés de especialidad en Colombia
                   y compradores internacionales, asegurando una experiencia basada en calidad, transparencia,
@@ -208,7 +208,7 @@ export default function NosotrosPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                 <div className="p-4 rounded-xl bg-stone-800/80 border border-stone-700">
                   <div className="flex items-center gap-3 mb-2">
-                    <div className="p-2 rounded-lg bg-[#AD2E01]/30 text-[#F25433]">
+                    <div className="p-2 rounded-lg bg-brand-terracota/30 text-brand-orange">
                       <Award className="h-5 w-5" />
                     </div>
                     <h3 className="text-sm font-bold text-white">Calidad Certificada</h3>
@@ -220,7 +220,7 @@ export default function NosotrosPage() {
 
                 <div className="p-4 rounded-xl bg-stone-800/80 border border-stone-700">
                   <div className="flex items-center gap-3 mb-2">
-                    <div className="p-2 rounded-lg bg-[#AD2E01]/30 text-[#F25433]">
+                    <div className="p-2 rounded-lg bg-brand-terracota/30 text-brand-orange">
                       <ShieldCheck className="h-5 w-5" />
                     </div>
                     <h3 className="text-sm font-bold text-white">Transparencia Total</h3>
@@ -232,7 +232,7 @@ export default function NosotrosPage() {
 
                 <div className="p-4 rounded-xl bg-stone-800/80 border border-stone-700">
                   <div className="flex items-center gap-3 mb-2">
-                    <div className="p-2 rounded-lg bg-[#AD2E01]/30 text-[#F25433]">
+                    <div className="p-2 rounded-lg bg-brand-terracota/30 text-brand-orange">
                       <Scale className="h-5 w-5" />
                     </div>
                     <h3 className="text-sm font-bold text-white">Precio Justo</h3>
@@ -244,7 +244,7 @@ export default function NosotrosPage() {
 
                 <div className="p-4 rounded-xl bg-stone-800/80 border border-stone-700">
                   <div className="flex items-center gap-3 mb-2">
-                    <div className="p-2 rounded-lg bg-[#AD2E01]/30 text-[#F25433]">
+                    <div className="p-2 rounded-lg bg-brand-terracota/30 text-brand-orange">
                       <Ship className="h-5 w-5" />
                     </div>
                     <h3 className="text-sm font-bold text-white">Entrega a Destino</h3>
@@ -269,7 +269,7 @@ export default function NosotrosPage() {
 
                 {/* Badge flotante inferior */}
                 <div className="absolute -bottom-6 -left-3 sm:left-6 bg-stone-900 p-4 rounded-xl border border-stone-700 shadow-2xl max-w-xs flex items-center gap-3.5">
-                  <div className="w-12 h-12 rounded-xl bg-[#AD2E01] text-white flex items-center justify-center shrink-0">
+                  <div className="w-12 h-12 rounded-xl bg-brand-terracota text-white flex items-center justify-center shrink-0">
                     <Ship className="h-6 w-6" />
                   </div>
                   <div>
@@ -286,7 +286,7 @@ export default function NosotrosPage() {
       {/* 4. MISIÓN Y VISIÓN */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <span className="text-[#AD2E01] font-bold text-xs uppercase tracking-widest block mb-2">
+          <span className="text-brand-terracota font-bold text-xs uppercase tracking-widest block mb-2">
             Nuestros Fundamentos
           </span>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-surface-900 tracking-tight">
@@ -300,7 +300,7 @@ export default function NosotrosPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="bg-white p-8 rounded-xl border border-surface-200 shadow-xs flex flex-col justify-between">
             <div>
-              <div className="w-12 h-12 rounded-xl bg-[#fee8e3] text-[#AD2E01] flex items-center justify-center mb-6">
+              <div className="w-12 h-12 rounded-xl bg-primary-100 text-brand-terracota flex items-center justify-center mb-6">
                 <TrendingUp className="h-6 w-6" />
               </div>
               <h3 className="text-xl font-bold text-surface-900 mb-3">Nuestra Misión</h3>
@@ -310,7 +310,7 @@ export default function NosotrosPage() {
                 internacionales cafés excepcionales con trazabilidad y laboratorio garantizados.
               </p>
             </div>
-            <div className="pt-6 mt-6 border-t border-surface-100 flex items-center gap-2 text-xs font-semibold text-[#AD2E01]">
+            <div className="pt-6 mt-6 border-t border-surface-100 flex items-center gap-2 text-xs font-semibold text-brand-terracota">
               <span>Rigor • Equidad • Calidad</span>
             </div>
           </div>
@@ -338,7 +338,7 @@ export default function NosotrosPage() {
       <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pb-24">
         <div className="bg-stone-900 text-white p-8 sm:p-12 rounded-xl border border-stone-800 text-center relative overflow-hidden">
           {/* Acento lateral decorativo */}
-          <div className="absolute top-0 left-0 bottom-0 w-2 bg-[#F25433]" />
+          <div className="absolute top-0 left-0 bottom-0 w-2 bg-brand-orange" />
 
           <div className="max-w-3xl mx-auto space-y-5">
             <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
@@ -351,7 +351,7 @@ export default function NosotrosPage() {
 
             <div className="pt-4 flex flex-wrap gap-4 justify-center">
               <Link to="/register">
-                <Button variant="primary" size="md" className="gap-2 bg-[#F25433] hover:bg-[#AD2E01] text-white">
+                <Button variant="primary" size="md" className="gap-2 bg-brand-orange hover:bg-brand-terracota text-white">
                   <span>Registrarme Ahora</span>
                   <ArrowRight className="h-4 w-4" />
                 </Button>
@@ -361,7 +361,7 @@ export default function NosotrosPage() {
                   type="button"
                   className="inline-flex items-center justify-center gap-2 font-semibold rounded-lg px-4 py-2 text-sm border border-stone-600 bg-stone-800 text-white hover:bg-stone-700 hover:border-stone-500 transition-colors cursor-pointer"
                 >
-                  <Ship className="h-4 w-4 text-[#F25433]" />
+                  <Ship className="h-4 w-4 text-brand-orange" />
                   <span>Conocer Nuestros Destinos</span>
                 </button>
               </Link>

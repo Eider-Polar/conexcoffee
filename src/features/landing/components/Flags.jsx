@@ -124,7 +124,7 @@ export function CountryFlag({ codigoIso = '', pais = '', className = 'w-9 h-6' }
       // Fallback universal para cualquier país nuevo registrado dinámicamente por el SuperAdmin
       return (
         <div
-          className={`${className} flex items-center justify-center bg-[#AD2E01] text-white font-black text-xs rounded-xs uppercase tracking-wider shadow-inner select-none`}
+          className={`${className} flex items-center justify-center bg-brand-terracota text-white font-black text-xs rounded-xs uppercase tracking-wider shadow-inner select-none`}
           title={pais || code}
         >
           {code.slice(0, 2) || (pais ? pais.slice(0, 2).toUpperCase() : 'GL')}

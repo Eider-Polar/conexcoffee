@@ -248,11 +248,11 @@ export default function EmpresasRegionalesModal({ isOpen, onClose }) {
         {/* Cabecera del Modal */}
         <div className="px-6 py-4 bg-stone-900 text-white flex items-center justify-between border-b border-stone-800 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-[#AD2E01] text-white flex items-center justify-center">
+            <div className="w-9 h-9 rounded-lg bg-brand-terracota text-white flex items-center justify-center">
               <Building2 className="h-5 w-5" />
             </div>
             <div>
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#F25433] block">
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-brand-orange block">
                 Plataforma de Conexión Caficultor — Empresa Regional
               </span>
               <h2 className="text-base sm:text-lg font-bold text-white">
@@ -293,10 +293,10 @@ export default function EmpresasRegionalesModal({ isOpen, onClose }) {
           {viewStep === 'map' && (
             <div className="space-y-6">
               {/* Aviso explicativo para el caficultor */}
-              <div className="p-4 rounded-xl bg-[#fee8e3] border-l-4 border-[#AD2E01] flex items-start gap-3">
-                <AlertCircle className="h-5 w-5 text-[#AD2E01] shrink-0 mt-0.5" />
+              <div className="p-4 rounded-xl bg-primary-100 border-l-4 border-brand-terracota flex items-start gap-3">
+                <AlertCircle className="h-5 w-5 text-brand-terracota shrink-0 mt-0.5" />
                 <div className="text-xs sm:text-sm text-surface-800">
-                  <p className="font-bold text-[#AD2E01]">
+                  <p className="font-bold text-brand-terracota">
                     ¿Cómo funciona la venta directa de tu cosecha?
                   </p>
                   <p className="mt-0.5 leading-relaxed text-surface-700">
@@ -312,7 +312,7 @@ export default function EmpresasRegionalesModal({ isOpen, onClose }) {
                 {/* LADO IZQUIERDO: Mapa SVG estilizado de Colombia con Pines */}
                 <div className="lg:col-span-5 bg-stone-900 p-5 rounded-xl border border-stone-800 shadow-md flex flex-col justify-between">
                   <div className="flex items-center justify-between mb-3 text-xs text-white">
-                    <span className="font-bold uppercase tracking-wider flex items-center gap-1.5 text-[#F25433]">
+                    <span className="font-bold uppercase tracking-wider flex items-center gap-1.5 text-brand-orange">
                       <Compass className="h-4 w-4" />
                       Mapa de Empresas en Colombia
                     </span>
@@ -376,13 +376,13 @@ export default function EmpresasRegionalesModal({ isOpen, onClose }) {
                           <div className="relative flex items-center justify-center">
                             {/* Onda de pulso si está seleccionada */}
                             {isSelected && (
-                              <span className="absolute w-8 h-8 rounded-full bg-[#F25433] opacity-60 animate-ping" />
+                              <span className="absolute w-8 h-8 rounded-full bg-brand-orange opacity-60 animate-ping" />
                             )}
                             <div
                               className={`w-6 h-6 rounded-full flex items-center justify-center shadow-lg border-2 ${
                                 isSelected
-                                  ? 'bg-[#F25433] border-white text-white'
-                                  : 'bg-[#AD2E01] border-stone-900 text-white group-hover:bg-[#F25433]'
+                                  ? 'bg-brand-orange border-white text-white'
+                                  : 'bg-brand-terracota border-stone-900 text-white group-hover:bg-brand-orange'
                               }`}
                             >
                               <MapPin className="h-3.5 w-3.5" />
@@ -414,7 +414,7 @@ export default function EmpresasRegionalesModal({ isOpen, onClose }) {
                         const found = EMPRESAS_REGIONALES.find((emp) => emp.id === e.target.value);
                         if (found) setSelectedEmpresa(found);
                       }}
-                      className="w-full text-xs px-3 py-2 rounded-lg bg-stone-800 text-white border border-stone-700 focus:outline-none focus:ring-1 focus:ring-[#F25433]"
+                      className="w-full text-xs px-3 py-2 rounded-lg bg-stone-800 text-white border border-stone-700 focus:outline-none focus:ring-1 focus:ring-brand-orange"
                     >
                       {EMPRESAS_REGIONALES.map((emp) => (
                         <option key={emp.id} value={emp.id}>
@@ -430,7 +430,7 @@ export default function EmpresasRegionalesModal({ isOpen, onClose }) {
                   {/* Cabecera Empresa */}
                   <div className="space-y-3">
                     <div className="flex flex-wrap items-center justify-between gap-2">
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#fee8e3] text-[#AD2E01] text-xs font-extrabold uppercase tracking-wide">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-100 text-brand-terracota text-xs font-extrabold uppercase tracking-wide">
                         <MapPin className="h-3.5 w-3.5" />
                         Región {selectedEmpresa.department}
                       </span>
@@ -479,14 +479,14 @@ export default function EmpresasRegionalesModal({ isOpen, onClose }) {
 
                   {/* Requisitos para Aprobación */}
                   <div className="space-y-2">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-[#AD2E01] flex items-center gap-1.5">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-brand-terracota flex items-center gap-1.5">
                       <ShieldCheck className="h-4 w-4" />
                       Requisitos de Compra para Aprobación
                     </h4>
                     <div className="space-y-1.5">
                       {selectedEmpresa.requirements.map((req, idx) => (
                         <div key={idx} className="flex items-start gap-2 text-xs text-surface-600">
-                          <CheckCircle2 className="h-3.5 w-3.5 text-[#AD2E01] shrink-0 mt-0.5" />
+                          <CheckCircle2 className="h-3.5 w-3.5 text-brand-terracota shrink-0 mt-0.5" />
                           <span>{req}</span>
                         </div>
                       ))}
@@ -504,7 +504,7 @@ export default function EmpresasRegionalesModal({ isOpen, onClose }) {
                       variant="primary"
                       size="md"
                       onClick={() => setViewStep('form')}
-                      className="w-full sm:w-auto gap-2 bg-[#F25433] hover:bg-[#AD2E01] text-white font-bold"
+                      className="w-full sm:w-auto gap-2 bg-brand-orange hover:bg-brand-terracota text-white font-bold"
                     >
                       <span>Contactar Empresa / Enviar Oferta</span>
                       <ArrowRight className="h-4 w-4" />
@@ -523,11 +523,11 @@ export default function EmpresasRegionalesModal({ isOpen, onClose }) {
               {/* Resumen de la Empresa Destino */}
               <div className="p-4 rounded-xl bg-stone-900 text-white flex flex-col sm:flex-row items-center justify-between gap-4 border border-stone-800">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-[#AD2E01] text-white flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-lg bg-brand-terracota text-white flex items-center justify-center shrink-0">
                     <Building2 className="h-5 w-5" />
                   </div>
                   <div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#F25433]">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-brand-orange">
                       Empresa Seleccionada
                     </span>
                     <h4 className="text-sm sm:text-base font-bold text-white">
@@ -547,8 +547,8 @@ export default function EmpresasRegionalesModal({ isOpen, onClose }) {
 
               {/* 1. Datos del Caficultor */}
               <div className="bg-white p-5 sm:p-6 rounded-xl border border-surface-200 shadow-xs space-y-4">
-                <h3 className="text-sm font-bold text-surface-900 uppercase tracking-wider flex items-center gap-2 text-[#AD2E01]">
-                  <span className="w-6 h-6 rounded-full bg-[#fee8e3] text-[#AD2E01] text-xs flex items-center justify-center font-extrabold">
+                <h3 className="text-sm font-bold text-surface-900 uppercase tracking-wider flex items-center gap-2 text-brand-terracota">
+                  <span className="w-6 h-6 rounded-full bg-primary-100 text-brand-terracota text-xs flex items-center justify-center font-extrabold">
                     1
                   </span>
                   Datos del Caficultor / Productor
@@ -592,7 +592,7 @@ export default function EmpresasRegionalesModal({ isOpen, onClose }) {
                       onChange={(e) =>
                         setFormData({ ...formData, tipoProductor: e.target.value })
                       }
-                      className="w-full px-3.5 py-2.5 rounded-lg border border-surface-300 bg-white text-surface-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#F25433]"
+                      className="w-full px-3.5 py-2.5 rounded-lg border border-surface-300 bg-white text-surface-900 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange"
                     >
                       <option value="Propietario de Finca">Propietario de Finca</option>
                       <option value="Administrador / Encargado">Administrador / Encargado</option>
@@ -639,8 +639,8 @@ export default function EmpresasRegionalesModal({ isOpen, onClose }) {
               {/* 2. Ubicación de la Finca & Geolocalización */}
               <div className="bg-white p-5 sm:p-6 rounded-xl border border-surface-200 shadow-xs space-y-4">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <h3 className="text-sm font-bold text-surface-900 uppercase tracking-wider flex items-center gap-2 text-[#AD2E01]">
-                    <span className="w-6 h-6 rounded-full bg-[#fee8e3] text-[#AD2E01] text-xs flex items-center justify-center font-extrabold">
+                  <h3 className="text-sm font-bold text-surface-900 uppercase tracking-wider flex items-center gap-2 text-brand-terracota">
+                    <span className="w-6 h-6 rounded-full bg-primary-100 text-brand-terracota text-xs flex items-center justify-center font-extrabold">
                       2
                     </span>
                     Ubicación de la Finca & Geolocalización
@@ -653,7 +653,7 @@ export default function EmpresasRegionalesModal({ isOpen, onClose }) {
                     disabled={capturingGps}
                     className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold bg-stone-900 hover:bg-stone-800 text-white border border-stone-700 transition-colors cursor-pointer"
                   >
-                    <Navigation className={`h-3.5 w-3.5 text-[#F25433] ${capturingGps ? 'animate-spin' : ''}`} />
+                    <Navigation className={`h-3.5 w-3.5 text-brand-orange ${capturingGps ? 'animate-spin' : ''}`} />
                     <span>{capturingGps ? 'Obteniendo GPS...' : '📍 Capturar Mi Ubicación Actual'}</span>
                   </button>
                 </div>
@@ -662,12 +662,12 @@ export default function EmpresasRegionalesModal({ isOpen, onClose }) {
                 {gpsLocation && (
                   <div className="p-3 rounded-lg bg-stone-100 border border-stone-300 flex items-center justify-between text-xs text-stone-800">
                     <div className="flex items-center gap-2">
-                      <CheckCircle2 className="h-4 w-4 text-[#AD2E01]" />
+                      <CheckCircle2 className="h-4 w-4 text-brand-terracota" />
                       <span>
                         <strong>Coordenadas GPS fijadas:</strong> Latitud: {gpsLocation.lat}, Longitud: {gpsLocation.lng} (Margen: ±{gpsLocation.accuracy}m)
                       </span>
                     </div>
-                    <span className="text-[11px] font-bold text-[#AD2E01] uppercase">Verificado</span>
+                    <span className="text-[11px] font-bold text-brand-terracota uppercase">Verificado</span>
                   </div>
                 )}
 
@@ -748,8 +748,8 @@ export default function EmpresasRegionalesModal({ isOpen, onClose }) {
 
               {/* 3. Datos Técnicos de la Cosecha */}
               <div className="bg-white p-5 sm:p-6 rounded-xl border border-surface-200 shadow-xs space-y-4">
-                <h3 className="text-sm font-bold text-surface-900 uppercase tracking-wider flex items-center gap-2 text-[#AD2E01]">
-                  <span className="w-6 h-6 rounded-full bg-[#fee8e3] text-[#AD2E01] text-xs flex items-center justify-center font-extrabold">
+                <h3 className="text-sm font-bold text-surface-900 uppercase tracking-wider flex items-center gap-2 text-brand-terracota">
+                  <span className="w-6 h-6 rounded-full bg-primary-100 text-brand-terracota text-xs flex items-center justify-center font-extrabold">
                     3
                   </span>
                   Datos del Café & Volumen Producido
@@ -765,7 +765,7 @@ export default function EmpresasRegionalesModal({ isOpen, onClose }) {
                       onChange={(e) =>
                         setFormData({ ...formData, variedadCafe: e.target.value })
                       }
-                      className="w-full px-3.5 py-2.5 rounded-lg border border-surface-300 bg-white text-surface-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#F25433]"
+                      className="w-full px-3.5 py-2.5 rounded-lg border border-surface-300 bg-white text-surface-900 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange"
                     >
                       <option value="Castillo">Castillo</option>
                       <option value="Caturra">Caturra</option>
@@ -789,7 +789,7 @@ export default function EmpresasRegionalesModal({ isOpen, onClose }) {
                       onChange={(e) =>
                         setFormData({ ...formData, procesoBeneficio: e.target.value })
                       }
-                      className="w-full px-3.5 py-2.5 rounded-lg border border-surface-300 bg-white text-surface-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#F25433]"
+                      className="w-full px-3.5 py-2.5 rounded-lg border border-surface-300 bg-white text-surface-900 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange"
                     >
                       <option value="Lavado Tradicional">Lavado Tradicional</option>
                       <option value="Yellow / Red Honey">Yellow / Red Honey</option>
@@ -807,7 +807,7 @@ export default function EmpresasRegionalesModal({ isOpen, onClose }) {
                       onChange={(e) =>
                         setFormData({ ...formData, estadoCafe: e.target.value })
                       }
-                      className="w-full px-3.5 py-2.5 rounded-lg border border-surface-300 bg-white text-surface-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#F25433]"
+                      className="w-full px-3.5 py-2.5 rounded-lg border border-surface-300 bg-white text-surface-900 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange"
                     >
                       <option value="Pergamino Seco Listo para Despacho">
                         Pergamino Seco Listo para Despacho
@@ -846,7 +846,7 @@ export default function EmpresasRegionalesModal({ isOpen, onClose }) {
                       onChange={(e) =>
                         setFormData({ ...formData, unidadMedida: e.target.value })
                       }
-                      className="w-full px-3.5 py-2.5 rounded-lg border border-surface-300 bg-white text-surface-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#F25433]"
+                      className="w-full px-3.5 py-2.5 rounded-lg border border-surface-300 bg-white text-surface-900 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange"
                     >
                       <option value="Cargas (125 kg)">Cargas (125 kg pergamino)</option>
                       <option value="Sacos (60 kg)">Sacos (60 kg)</option>
@@ -873,8 +873,8 @@ export default function EmpresasRegionalesModal({ isOpen, onClose }) {
               {/* 4. Adjuntar Certificados & Estudios (Facilitar Aprobación) */}
               <div className="bg-white p-5 sm:p-6 rounded-xl border border-surface-200 shadow-xs space-y-4">
                 <div>
-                  <h3 className="text-sm font-bold text-surface-900 uppercase tracking-wider flex items-center gap-2 text-[#AD2E01]">
-                    <span className="w-6 h-6 rounded-full bg-[#fee8e3] text-[#AD2E01] text-xs flex items-center justify-center font-extrabold">
+                  <h3 className="text-sm font-bold text-surface-900 uppercase tracking-wider flex items-center gap-2 text-brand-terracota">
+                    <span className="w-6 h-6 rounded-full bg-primary-100 text-brand-terracota text-xs flex items-center justify-center font-extrabold">
                       4
                     </span>
                     Certificados & Documentos de Apoyo
@@ -890,14 +890,14 @@ export default function EmpresasRegionalesModal({ isOpen, onClose }) {
                     <label className="block text-xs font-bold text-surface-800 mb-1">
                       Análisis Sensorial / Catación SCA (Opcional)
                     </label>
-                    <label className="flex flex-col items-center justify-center p-3 rounded-lg border border-dashed border-surface-300 hover:border-[#F25433] bg-surface-50 text-surface-600 text-xs cursor-pointer transition-colors text-center">
+                    <label className="flex flex-col items-center justify-center p-3 rounded-lg border border-dashed border-surface-300 hover:border-brand-orange bg-surface-50 text-surface-600 text-xs cursor-pointer transition-colors text-center">
                       <input
                         type="file"
                         accept=".pdf,.png,.jpg,.jpeg"
                         onChange={(e) => setFileScaName(e.target.files?.[0]?.name || '')}
                         className="hidden"
                       />
-                      <FileCheck className="h-5 w-5 text-[#AD2E01] mb-1" />
+                      <FileCheck className="h-5 w-5 text-brand-terracota mb-1" />
                       <span className="truncate max-w-full font-semibold">
                         {fileScaName || 'Subir reporte de catación'}
                       </span>
@@ -910,14 +910,14 @@ export default function EmpresasRegionalesModal({ isOpen, onClose }) {
                     <label className="block text-xs font-bold text-surface-800 mb-1">
                       Registro de Predio o Cédula Cafetera (Opcional)
                     </label>
-                    <label className="flex flex-col items-center justify-center p-3 rounded-lg border border-dashed border-surface-300 hover:border-[#F25433] bg-surface-50 text-surface-600 text-xs cursor-pointer transition-colors text-center">
+                    <label className="flex flex-col items-center justify-center p-3 rounded-lg border border-dashed border-surface-300 hover:border-brand-orange bg-surface-50 text-surface-600 text-xs cursor-pointer transition-colors text-center">
                       <input
                         type="file"
                         accept=".pdf,.png,.jpg,.jpeg"
                         onChange={(e) => setFilePredioName(e.target.files?.[0]?.name || '')}
                         className="hidden"
                       />
-                      <FileText className="h-5 w-5 text-[#AD2E01] mb-1" />
+                      <FileText className="h-5 w-5 text-brand-terracota mb-1" />
                       <span className="truncate max-w-full font-semibold">
                         {filePredioName || 'Subir cédula cafetera / ICA'}
                       </span>
@@ -930,14 +930,14 @@ export default function EmpresasRegionalesModal({ isOpen, onClose }) {
                     <label className="block text-xs font-bold text-surface-800 mb-1">
                       Certificación Orgánica / Sello (Opcional)
                     </label>
-                    <label className="flex flex-col items-center justify-center p-3 rounded-lg border border-dashed border-surface-300 hover:border-[#F25433] bg-surface-50 text-surface-600 text-xs cursor-pointer transition-colors text-center">
+                    <label className="flex flex-col items-center justify-center p-3 rounded-lg border border-dashed border-surface-300 hover:border-brand-orange bg-surface-50 text-surface-600 text-xs cursor-pointer transition-colors text-center">
                       <input
                         type="file"
                         accept=".pdf,.png,.jpg,.jpeg"
                         onChange={(e) => setFileCertExtraName(e.target.files?.[0]?.name || '')}
                         className="hidden"
                       />
-                      <Award className="h-5 w-5 text-[#AD2E01] mb-1" />
+                      <Award className="h-5 w-5 text-brand-terracota mb-1" />
                       <span className="truncate max-w-full font-semibold">
                         {fileCertExtraName || 'Fairtrade, Rainforest, etc.'}
                       </span>
@@ -957,7 +957,7 @@ export default function EmpresasRegionalesModal({ isOpen, onClose }) {
                       setFormData({ ...formData, notasAdicionales: e.target.value })
                     }
                     placeholder="Menciona detalles de beneficiadero, días de secado, horas de fermentación o disponibilidad..."
-                    className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border border-surface-300 bg-white text-surface-900 focus:outline-none focus:ring-2 focus:ring-[#F25433]"
+                    className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-lg border border-surface-300 bg-white text-surface-900 focus:outline-none focus:ring-2 focus:ring-brand-orange"
                   />
                 </div>
               </div>
@@ -986,7 +986,7 @@ export default function EmpresasRegionalesModal({ isOpen, onClose }) {
                   variant="primary"
                   size="lg"
                   loading={submitting}
-                  className="w-full sm:w-auto gap-2 bg-[#F25433] hover:bg-[#AD2E01] text-white font-extrabold"
+                  className="w-full sm:w-auto gap-2 bg-brand-orange hover:bg-brand-terracota text-white font-extrabold"
                 >
                   <UploadCloud className="h-5 w-5" />
                   <span>ENVIAR OFERTA A LA EMPRESA</span>
@@ -1000,12 +1000,12 @@ export default function EmpresasRegionalesModal({ isOpen, onClose }) {
               ==================================================== */}
           {viewStep === 'success' && (
             <div className="py-8 px-4 text-center max-w-lg mx-auto space-y-5">
-              <div className="w-16 h-16 rounded-full bg-[#fee8e3] text-[#AD2E01] flex items-center justify-center mx-auto shadow-md">
+              <div className="w-16 h-16 rounded-full bg-primary-100 text-brand-terracota flex items-center justify-center mx-auto shadow-md">
                 <CheckCircle2 className="h-8 w-8" />
               </div>
 
               <div>
-                <span className="text-xs font-extrabold uppercase tracking-widest text-[#AD2E01] block mb-1">
+                <span className="text-xs font-extrabold uppercase tracking-widest text-brand-terracota block mb-1">
                   Oferta Transmitida
                 </span>
                 <h3 className="text-2xl font-extrabold text-surface-900">
@@ -1022,14 +1022,14 @@ export default function EmpresasRegionalesModal({ isOpen, onClose }) {
                 <span className="text-[10px] text-stone-400 uppercase tracking-widest block">
                   Número de Radicado Oficial
                 </span>
-                <span className="text-lg font-mono font-extrabold text-[#F25433] tracking-wider block mt-0.5">
+                <span className="text-lg font-mono font-extrabold text-brand-orange tracking-wider block mt-0.5">
                   {radicadoCode}
                 </span>
               </div>
 
               <div className="p-4 rounded-xl bg-surface-100 text-left text-xs text-surface-700 space-y-2 border border-surface-200">
                 <div className="flex items-center gap-2 font-bold text-surface-900">
-                  <ShieldCheck className="h-4 w-4 text-[#AD2E01]" />
+                  <ShieldCheck className="h-4 w-4 text-brand-terracota" />
                   <span>Siguientes Pasos:</span>
                 </div>
                 <p>
@@ -1049,7 +1049,7 @@ export default function EmpresasRegionalesModal({ isOpen, onClose }) {
                   variant="primary"
                   size="md"
                   onClick={handleResetModal}
-                  className="bg-[#F25433] hover:bg-[#AD2E01] text-white"
+                  className="bg-brand-orange hover:bg-brand-terracota text-white"
                 >
                   Finalizar y Cerrar
                 </Button>

@@ -1,8 +1,8 @@
 import { CheckCircle2, AlertTriangle, Activity, Clock } from 'lucide-react';
 
 const STATUS_MAP = {
-  success: { icon: CheckCircle2, color: 'text-[#AD2E01]', bg: 'bg-[#FFF1ED]' },
-  warning: { icon: AlertTriangle, color: 'text-[#F25433]', bg: 'bg-[#FFF5F2]' },
+  success: { icon: CheckCircle2, color: 'text-brand-terracota', bg: 'bg-brand-tint' },
+  warning: { icon: AlertTriangle, color: 'text-brand-orange', bg: 'bg-brand-tint-soft' },
   info:    { icon: Activity,      color: 'text-surface-500', bg: 'bg-surface-100' },
 };
 

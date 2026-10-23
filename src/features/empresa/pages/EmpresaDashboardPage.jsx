@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Leaf,
@@ -15,14 +14,18 @@ import {
   AlertCircle,
   ArrowRight,
 } from 'lucide-react';
+import { QueryState } from '@/components/feedback';
 import {
-  EMPRESA_KPIS,
-  EMPRESA_ACTIVIDAD_RECIENTE,
-} from '../data/empresaData';
+  useEmpresaKpis,
+  useEmpresaActividad,
+} from '../hooks/useEmpresaData';
 
 export default function EmpresaDashboardPage() {
   const navigate = useNavigate();
-  const [actividades] = useState(EMPRESA_ACTIVIDAD_RECIENTE);
+  const kpisQuery = useEmpresaKpis();
+  const kpis = kpisQuery.data || [];
+  const actividadQuery = useEmpresaActividad();
+  const actividades = actividadQuery.data || [];
 
   // Módulos rápidos de la empresa para acceso directo
   const modulosRapidos = [
@@ -94,8 +97,9 @@ export default function EmpresaDashboardPage() {
       </div>
 
       {/* Tarjetas KPI */}
+      <QueryState query={kpisQuery} />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {EMPRESA_KPIS.map((kpi) => {
+        {kpis.map((kpi) => {
           const Icono =
             kpi.iconoNombre === 'Leaf'
               ? Leaf
@@ -114,7 +118,7 @@ export default function EmpresaDashboardPage() {
                 <span className="text-xs font-bold text-stone-500 uppercase tracking-wider">
                   {kpi.titulo}
                 </span>
-                <div className="w-9 h-9 rounded-xl bg-amber-50 text-[#AD2E01] flex items-center justify-center">
+                <div className="w-9 h-9 rounded-xl bg-amber-50 text-brand-terracota flex items-center justify-center">
                   <Icono className="w-5 h-5" />
                 </div>
               </div>

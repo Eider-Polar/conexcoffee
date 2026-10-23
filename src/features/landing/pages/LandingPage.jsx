@@ -134,9 +134,8 @@ export default function LandingPage() {
         {HERO_SLIDES.map((slide, idx) => (
           <div
             key={slide.id}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-              idx === currentSlide ? 'opacity-100 z-0 scale-100' : 'opacity-0 -z-10 scale-105 pointer-events-none'
-            }`}
+            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${idx === currentSlide ? 'opacity-100 z-0 scale-100' : 'opacity-0 -z-10 scale-105 pointer-events-none'
+              }`}
             style={{ transitionProperty: 'opacity, transform' }}
           >
             <img
@@ -157,7 +156,7 @@ export default function LandingPage() {
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight mb-3 sm:mb-4 leading-snug uppercase text-left">
               {current.titleLine1}{' '}
               {current.titleLine2 && <span className="hidden sm:inline">{current.titleLine2} </span>}
-              <span className="text-[#F25433] block sm:inline">{current.titleHighlight}</span>
+              <span className="text-brand-orange block sm:inline">{current.titleHighlight}</span>
             </h1>
 
             <p className="text-xs sm:text-sm lg:text-base text-surface-200/90 mb-5 leading-relaxed font-normal max-w-2xl text-left">
@@ -176,7 +175,7 @@ export default function LandingPage() {
                   type="button"
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider bg-white/10 hover:bg-white/20 text-white border border-white/25 backdrop-blur-xs transition-all shadow-md cursor-pointer"
                 >
-                  <MapPin className="h-4 w-4 text-[#F25433]" />
+                  <MapPin className="h-4 w-4 text-brand-orange" />
                   <span>{current.secondaryBtn.text}</span>
                 </button>
               </Link>
@@ -190,7 +189,7 @@ export default function LandingPage() {
           type="button"
           onClick={prevSlide}
           aria-label="Diapositiva anterior"
-          className="absolute left-3 sm:left-6 top-[42%] -translate-y-1/2 z-30 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-black/40 hover:bg-[#F25433] text-white border border-white/20 flex items-center justify-center backdrop-blur-md transition-all duration-200 cursor-pointer shadow-xl hover:scale-110"
+          className="absolute left-3 sm:left-6 top-[42%] -translate-y-1/2 z-30 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-black/40 hover:bg-brand-orange text-white border border-white/20 flex items-center justify-center backdrop-blur-md transition-all duration-200 cursor-pointer shadow-xl hover:scale-110"
         >
           <ChevronLeft className="h-6 w-6" />
         </button>
@@ -200,7 +199,7 @@ export default function LandingPage() {
           type="button"
           onClick={nextSlide}
           aria-label="Diapositiva siguiente"
-          className="absolute right-3 sm:right-6 top-[42%] -translate-y-1/2 z-30 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-black/40 hover:bg-[#F25433] text-white border border-white/20 flex items-center justify-center backdrop-blur-md transition-all duration-200 cursor-pointer shadow-xl hover:scale-110"
+          className="absolute right-3 sm:right-6 top-[42%] -translate-y-1/2 z-30 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-black/40 hover:bg-brand-orange text-white border border-white/20 flex items-center justify-center backdrop-blur-md transition-all duration-200 cursor-pointer shadow-xl hover:scale-110"
         >
           <ChevronRight className="h-6 w-6" />
         </button>
@@ -216,7 +215,7 @@ export default function LandingPage() {
           ============================================ */}
       <section
         id="destinos"
-        className="relative py-7 sm:py-8 px-4 sm:px-6 lg:px-8 overflow-hidden shadow-md border-y border-[#AD2E01] bg-cover bg-center"
+        className="relative py-7 sm:py-8 px-4 sm:px-6 lg:px-8 overflow-hidden shadow-md border-y border-brand-terracota bg-cover bg-center"
         style={{
           backgroundImage: "url('/images/pagina-web/background-cafe-conexcoffee-two.png')",
           backgroundColor: '#F25433',
@@ -229,10 +228,10 @@ export default function LandingPage() {
           <Link to="/destinos" className="shrink-0">
             <button
               type="button"
-              className="inline-flex items-center gap-2 px-6 py-2.5 bg-white text-[#AD2E01] hover:bg-surface-50 font-black text-xs sm:text-sm uppercase tracking-wider rounded-xl shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer group"
+              className="inline-flex items-center gap-2 px-6 py-2.5 bg-white text-brand-terracota hover:bg-surface-50 font-black text-xs sm:text-sm uppercase tracking-wider rounded-xl shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer group"
             >
               <span>Click aquí</span>
-              <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform text-[#F25433]" />
+              <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform text-brand-orange" />
             </button>
           </Link>
         </div>
@@ -302,11 +301,11 @@ export default function LandingPage() {
             {/* Imagen de Café */}
             <div className="relative">
               <div className="relative mx-auto rounded-xl overflow-hidden shadow-2xl border-4 border-white bg-black p-8 sm:p-12 text-white min-h-[380px] flex flex-col justify-end">
-                <div className="absolute top-6 right-6 w-20 h-20 bg-[#F25433]/20 rounded-full blur-2xl pointer-events-none" />
-                <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-[#AD2E01]/20 rounded-full blur-3xl pointer-events-none" />
+                <div className="absolute top-6 right-6 w-20 h-20 bg-brand-orange/20 rounded-full blur-2xl pointer-events-none" />
+                <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-brand-terracota/20 rounded-full blur-3xl pointer-events-none" />
 
                 <div className="relative z-10">
-                  <div className="w-14 h-14 rounded-xl bg-[#AD2E01] text-white flex items-center justify-center mb-6 shadow-lg">
+                  <div className="w-14 h-14 rounded-xl bg-brand-terracota text-white flex items-center justify-center mb-6 shadow-lg">
                     <Coffee className="h-8 w-8" />
                   </div>
                   <span className="text-xs font-bold uppercase tracking-widest text-primary-300">
@@ -329,11 +328,11 @@ export default function LandingPage() {
       {/* ============================================
           4. Cinta de Métricas: Clientes Satisfechos, Ofertas, Caficultores, Empleados
           ============================================ */}
-      <section className="py-12 bg-black text-white border-y border-[#AD2E01] shadow-inner">
+      <section className="py-12 bg-black text-white border-y border-brand-terracota shadow-inner">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-surface-800">
             <div className="pt-4 md:pt-0 px-4">
-              <div className="w-10 h-10 rounded-xl bg-[#1c1917] border border-surface-800 flex items-center justify-center mx-auto mb-3 text-[#F25433]">
+              <div className="w-10 h-10 rounded-xl bg-surface-900 border border-surface-800 flex items-center justify-center mx-auto mb-3 text-brand-orange">
                 <Smile className="h-5 w-5" />
               </div>
               <p className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">+2,850</p>
@@ -343,7 +342,7 @@ export default function LandingPage() {
             </div>
 
             <div className="pt-4 md:pt-0 px-4">
-              <div className="w-10 h-10 rounded-xl bg-[#1c1917] border border-surface-800 flex items-center justify-center mx-auto mb-3 text-[#F25433]">
+              <div className="w-10 h-10 rounded-xl bg-surface-900 border border-surface-800 flex items-center justify-center mx-auto mb-3 text-brand-orange">
                 <Tag className="h-5 w-5" />
               </div>
               <p className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">+420</p>
@@ -353,7 +352,7 @@ export default function LandingPage() {
             </div>
 
             <div className="pt-4 md:pt-0 px-4">
-              <div className="w-10 h-10 rounded-xl bg-[#1c1917] border border-surface-800 flex items-center justify-center mx-auto mb-3 text-[#F25433]">
+              <div className="w-10 h-10 rounded-xl bg-surface-900 border border-surface-800 flex items-center justify-center mx-auto mb-3 text-brand-orange">
                 <Coffee className="h-5 w-5" />
               </div>
               <p className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">+1,450</p>
@@ -363,7 +362,7 @@ export default function LandingPage() {
             </div>
 
             <div className="pt-4 md:pt-0 px-4">
-              <div className="w-10 h-10 rounded-xl bg-[#1c1917] border border-surface-800 flex items-center justify-center mx-auto mb-3 text-[#F25433]">
+              <div className="w-10 h-10 rounded-xl bg-surface-900 border border-surface-800 flex items-center justify-center mx-auto mb-3 text-brand-orange">
                 <Briefcase className="h-5 w-5" />
               </div>
               <p className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">+95</p>
@@ -395,9 +394,9 @@ export default function LandingPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-surface-50 border border-surface-200 rounded-xl overflow-hidden hover:border-[#F25433] hover:shadow-lg transition-all duration-300 flex flex-col justify-between">
+            <div className="bg-surface-50 border border-surface-200 rounded-xl overflow-hidden hover:border-brand-orange hover:shadow-lg transition-all duration-300 flex flex-col justify-between">
               <div>
-                <div className="h-48 bg-[#AD2E01] flex flex-col items-center justify-center p-6 text-white text-center relative">
+                <div className="h-48 bg-brand-terracota flex flex-col items-center justify-center p-6 text-white text-center relative">
                   <div className="w-14 h-14 rounded-xl bg-white/10 backdrop-blur-xs flex items-center justify-center mb-3">
                     <Mountain className="h-7 w-7 text-white" />
                   </div>
@@ -419,7 +418,7 @@ export default function LandingPage() {
               <div className="p-6 pt-0">
                 <Link
                   to="/register"
-                  className="text-xs font-bold text-[#AD2E01] hover:text-[#8c2503] inline-flex items-center gap-1"
+                  className="text-xs font-bold text-brand-terracota hover:text-primary-800 inline-flex items-center gap-1"
                 >
                   <span>Registrar como Productor</span>
                   <ArrowRight className="h-3.5 w-3.5" />
@@ -427,16 +426,16 @@ export default function LandingPage() {
               </div>
             </div>
 
-            <div className="bg-surface-50 border-2 border-[#F25433] rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col justify-between relative shadow-md">
-              <div className="absolute top-3 right-3 bg-[#F25433] text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
+            <div className="bg-surface-50 border-2 border-brand-orange rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col justify-between relative shadow-md">
+              <div className="absolute top-3 right-3 bg-brand-orange text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
                 Núcleo Digital
               </div>
               <div>
-                <div className="h-48 bg-black flex flex-col items-center justify-center p-6 text-white text-center relative border-b border-[#F25433]">
-                  <div className="w-14 h-14 rounded-xl bg-[#F25433]/20 backdrop-blur-xs flex items-center justify-center mb-3">
-                    <Calendar className="h-7 w-7 text-[#F25433]" />
+                <div className="h-48 bg-black flex flex-col items-center justify-center p-6 text-white text-center relative border-b border-brand-orange">
+                  <div className="w-14 h-14 rounded-xl bg-brand-orange/20 backdrop-blur-xs flex items-center justify-center mb-3">
+                    <Calendar className="h-7 w-7 text-brand-orange" />
                   </div>
-                  <span className="text-xs font-semibold uppercase tracking-wider text-[#F25433]">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-brand-orange">
                     Gestión & Trazabilidad
                   </span>
                 </div>
@@ -454,7 +453,7 @@ export default function LandingPage() {
               <div className="p-6 pt-0">
                 <Link
                   to="/destinos"
-                  className="text-xs font-bold text-[#AD2E01] hover:text-[#8c2503] inline-flex items-center gap-1"
+                  className="text-xs font-bold text-brand-terracota hover:text-primary-800 inline-flex items-center gap-1"
                 >
                   <span>Explorar el Ecosistema</span>
                   <ArrowRight className="h-3.5 w-3.5" />
@@ -462,11 +461,11 @@ export default function LandingPage() {
               </div>
             </div>
 
-            <div className="bg-surface-50 border border-surface-200 rounded-xl overflow-hidden hover:border-[#F25433] hover:shadow-lg transition-all duration-300 flex flex-col justify-between">
+            <div className="bg-surface-50 border border-surface-200 rounded-xl overflow-hidden hover:border-brand-orange hover:shadow-lg transition-all duration-300 flex flex-col justify-between">
               <div>
-                <div className="h-48 bg-[#1c1917] flex flex-col items-center justify-center p-6 text-white text-center relative border-b border-surface-700">
+                <div className="h-48 bg-surface-900 flex flex-col items-center justify-center p-6 text-white text-center relative border-b border-surface-700">
                   <div className="w-14 h-14 rounded-xl bg-white/10 backdrop-blur-xs flex items-center justify-center mb-3">
-                    <Coffee className="h-7 w-7 text-[#F25433]" />
+                    <Coffee className="h-7 w-7 text-brand-orange" />
                   </div>
                   <span className="text-xs font-semibold uppercase tracking-wider text-surface-300">
                     Destino & Experiencia
@@ -519,7 +518,7 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
             <div className="lg:col-span-2 bg-black rounded-xl p-6 sm:p-10 text-white relative overflow-hidden shadow-xl min-h-[440px] flex items-center justify-center border border-surface-800">
 
-              <div className="relative w-full max-w-md h-80 border-2 border-[#AD2E01] rounded-xl bg-[#1c1917] p-4">
+              <div className="relative w-full max-w-md h-80 border-2 border-brand-terracota rounded-xl bg-surface-900 p-4">
                 <div className="text-[11px] font-mono text-primary-400 uppercase tracking-wider mb-2 flex justify-between">
                   <span>Cartografía Cafetera Colombia</span>
                   <span className="text-surface-400">GPS Coords Activas</span>
@@ -575,7 +574,7 @@ export default function LandingPage() {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-surface-400">Estado de cosecha:</span>
-                  <span className="font-bold text-[#AD2E01]">En recolección óptima</span>
+                  <span className="font-bold text-brand-terracota">En recolección óptima</span>
                 </div>
               </div>
 
@@ -617,11 +616,11 @@ export default function LandingPage() {
 
               <div className="flex flex-wrap gap-4">
                 <div className="p-4 bg-surface-50 rounded-xl border border-surface-200">
-                  <p className="text-xl font-bold text-[#AD2E01]">100%</p>
+                  <p className="text-xl font-bold text-brand-terracota">100%</p>
                   <p className="text-xs text-surface-500 font-medium">Asistencia Personalizada</p>
                 </div>
                 <div className="p-4 bg-surface-50 rounded-xl border border-surface-200">
-                  <p className="text-xl font-bold text-[#AD2E01]">Q-Graders</p>
+                  <p className="text-xl font-bold text-brand-terracota">Q-Graders</p>
                   <p className="text-xs text-surface-500 font-medium">Catación Certificada</p>
                 </div>
               </div>
@@ -630,7 +629,7 @@ export default function LandingPage() {
             <div className="relative">
               <div className="rounded-xl overflow-hidden shadow-2xl border-4 border-white bg-black p-8 sm:p-12 text-white min-h-[380px] flex flex-col justify-end relative">
                 <div className="relative z-10">
-                  <div className="w-12 h-12 rounded-xl bg-[#AD2E01] flex items-center justify-center mb-4 text-white">
+                  <div className="w-12 h-12 rounded-xl bg-brand-terracota flex items-center justify-center mb-4 text-white">
                     <Users className="h-6 w-6" />
                   </div>
                   <span className="text-xs font-bold uppercase tracking-wider text-primary-300">
@@ -666,7 +665,7 @@ export default function LandingPage() {
             {[...ALIADOS, ...ALIADOS].map((aliado, idx) => (
               <div
                 key={`${aliado.id}-${idx}`}
-                className="bg-white border border-surface-200/80 rounded-xl px-8 py-4 flex items-center justify-center min-w-[200px] h-[95px] shadow-xs hover:border-[#F25433] hover:shadow-md transition-all duration-300 group select-none shrink-0"
+                className="bg-white border border-surface-200/80 rounded-xl px-8 py-4 flex items-center justify-center min-w-[200px] h-[95px] shadow-xs hover:border-brand-orange hover:shadow-md transition-all duration-300 group select-none shrink-0"
                 title={aliado.nombre}
               >
                 <img

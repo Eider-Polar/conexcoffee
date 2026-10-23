@@ -1,11 +1,18 @@
 import { useState } from 'react';
 import { Card } from '@/components/ui';
 import { Coffee, Edit3, Eye, Award, Sparkles } from 'lucide-react';
-import { ANALISIS_SENSORIALES_DATA } from '../data/laboratorioData';
+import { QueryState } from '@/components/feedback';
+import {
+  useAnalisisSensoriales,
+  useActualizarAnalisisSensorial,
+} from '../hooks/useLaboratorioData';
 import { ModificarSensorialModal, VerSensorialModal } from '../components';
 
 export default function LaboratorioAnalisisSensorialPage() {
-  const [sensorialList, setSensorialList] = useState(ANALISIS_SENSORIALES_DATA);
+  const query = useAnalisisSensoriales();
+  const sensorialList = query.data ?? [];
+  const actualizar = useActualizarAnalisisSensorial();
+
   const [sensorialEditar, setSensorialEditar] = useState(null);
   const [sensorialVer, setSensorialVer] = useState(null);
 
@@ -13,10 +20,12 @@ export default function LaboratorioAnalisisSensorialPage() {
   const [activeTooltip, setActiveTooltip] = useState(null);
 
   const handleUpdate = (actualizado) => {
-    setSensorialList((prev) =>
-      prev.map((s) => (s.id === actualizado.id ? actualizado : s))
-    );
+    actualizar.mutate(actualizado);
   };
+
+  if (query.isLoading || query.isError) {
+    return <QueryState query={query} />;
+  }
 
   const handleMouseEnterPill = (e, item) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -79,7 +88,7 @@ export default function LaboratorioAnalisisSensorialPage() {
 
                   {/* Puntaje */}
                   <td className="py-3.5 px-4 text-center">
-                    <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-amber-50 text-[#AD2E01] font-mono font-bold rounded-lg border border-amber-200/60 text-xs shadow-2xs">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-amber-50 text-brand-terracota font-mono font-bold rounded-lg border border-amber-200/60 text-xs shadow-2xs">
                       <Award className="w-3.5 h-3.5 text-amber-500" />
                       {item.puntajeSca || item.puntajeTotal} pts
                     </span>
@@ -90,9 +99,9 @@ export default function LaboratorioAnalisisSensorialPage() {
                     <div
                       onMouseEnter={(e) => handleMouseEnterPill(e, item)}
                       onMouseLeave={handleMouseLeavePill}
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100/90 border border-amber-200 hover:border-amber-400 text-stone-800 hover:text-[#AD2E01] transition-all shadow-2xs cursor-help select-none group"
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100/90 border border-amber-200 hover:border-amber-400 text-stone-800 hover:text-brand-terracota transition-all shadow-2xs cursor-help select-none group"
                     >
-                      <Coffee className="w-3.5 h-3.5 text-[#AD2E01] shrink-0" />
+                      <Coffee className="w-3.5 h-3.5 text-brand-terracota shrink-0" />
                       <span className="font-semibold text-xs max-w-[170px] truncate">
                         {item.tituloPerfil || 'Perfil Sensorial'}
                       </span>
@@ -153,7 +162,7 @@ export default function LaboratorioAnalisisSensorialPage() {
           {/* Cabecera del Tooltip */}
           <div className="flex items-center justify-between pb-2 border-b border-stone-700/70 mb-2">
             <div className="flex items-center gap-1.5">
-              <span className="p-1 rounded-md bg-[#AD2E01] text-white">
+              <span className="p-1 rounded-md bg-brand-terracota text-white">
                 <Coffee className="w-3.5 h-3.5" />
               </span>
               <span className="text-[11px] font-bold uppercase tracking-wider text-amber-400">

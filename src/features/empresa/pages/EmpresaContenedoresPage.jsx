@@ -11,17 +11,24 @@ import {
   Plus,
   Users,
 } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { QueryState } from '@/components/feedback';
 import {
-  INITIAL_EMPRESA_CONTENEDORES,
-  INITIAL_EMPRESA_OFERTAS,
-  INITIAL_EMPRESA_BROKERS,
-} from '../data/empresaData';
+  useEmpresaContenedores,
+  useCrearEmpresaContenedor,
+  useActualizarEmpresaContenedor,
+  useEmpresaOfertas,
+  useEmpresaBrokers,
+} from '../hooks/useEmpresaData';
 
 export default function EmpresaContenedoresPage() {
-  const [contenedores, setContenedores] = useState(INITIAL_EMPRESA_CONTENEDORES);
-  const [ofertasDisponibles] = useState(INITIAL_EMPRESA_OFERTAS);
-  const [brokersDisponibles] = useState(INITIAL_EMPRESA_BROKERS);
+  const contenedoresQuery = useEmpresaContenedores();
+  const contenedores = contenedoresQuery.data || [];
+  const ofertasQuery = useEmpresaOfertas();
+  const ofertasDisponibles = ofertasQuery.data || [];
+  const brokersQuery = useEmpresaBrokers();
+  const brokersDisponibles = brokersQuery.data || [];
+  const crearMutation = useCrearEmpresaContenedor();
+  const actualizarMutation = useActualizarEmpresaContenedor();
   const [searchTerm, setSearchTerm] = useState('');
   const [filtroEstado, setFiltroEstado] = useState('todos');
 
@@ -81,20 +88,22 @@ export default function EmpresaContenedoresPage() {
       brokers_asignados: [nuevoContenedor.broker],
     };
 
-    setContenedores([nuevo, ...contenedores]);
-    toast.success(`Contenedor marítimo ${nuevo.codigo} registrado con éxito`);
-    setModalRegistrar(false);
-    setNuevoContenedor({
-      codigo: '',
-      pais_origen: 'Colombia (Puerto Buenaventura)',
-      pais_destino: 'Alemania (Puerto de Hamburgo)',
-      cantidad_cafe_kg: 19000,
-      capacidad_total_kg: 19000,
-      fecha_apertura: new Date().toISOString().split('T')[0],
-      fecha_cierre_estimada: '2026-10-30',
-      fecha_envio: '2026-11-05',
-      fecha_entrega_estimada: '2026-12-01',
-      broker: 'OSCAR VALVERDE',
+    crearMutation.mutate(nuevo, {
+      onSuccess: () => {
+        setModalRegistrar(false);
+        setNuevoContenedor({
+          codigo: '',
+          pais_origen: 'Colombia (Puerto Buenaventura)',
+          pais_destino: 'Alemania (Puerto de Hamburgo)',
+          cantidad_cafe_kg: 19000,
+          capacidad_total_kg: 19000,
+          fecha_apertura: new Date().toISOString().split('T')[0],
+          fecha_cierre_estimada: '2026-10-30',
+          fecha_envio: '2026-11-05',
+          fecha_entrega_estimada: '2026-12-01',
+          broker: 'OSCAR VALVERDE',
+        });
+      },
     });
   };
 
@@ -102,23 +111,16 @@ export default function EmpresaContenedoresPage() {
     e.preventDefault();
     if (!contenedorEdicion) return;
 
-    setContenedores((prev) =>
-      prev.map((c) => (c.id === contenedorEdicion.id ? contenedorEdicion : c))
-    );
-    toast.success(`Contenedor ${contenedorEdicion.codigo} actualizado con éxito`);
-    setModalEditar(false);
+    actualizarMutation.mutate(contenedorEdicion, {
+      onSuccess: () => {
+        setModalEditar(false);
+      },
+    });
   };
 
   const handleTogglePublicacion = (contenedor) => {
     const nuevoEstado = contenedor.estado === 'Publicado' ? 'Oculto' : 'Publicado';
-    setContenedores((prev) =>
-      prev.map((c) => (c.id === contenedor.id ? { ...c, estado: nuevoEstado } : c))
-    );
-    toast.success(
-      `Contenedor ${contenedor.codigo} ${
-        nuevoEstado === 'Publicado' ? 'publicado para ofertas' : 'ocultado'
-      }`
-    );
+    actualizarMutation.mutate({ ...contenedor, estado: nuevoEstado });
   };
 
   const handleAsignarOferta = (e) => {
@@ -146,21 +148,19 @@ export default function EmpresaContenedoresPage() {
       peso_kg: oferta.cantidad_kg,
     };
 
-    setContenedores((prev) =>
-      prev.map((c) =>
-        c.id === contenedorSeleccionado.id
-          ? {
-              ...c,
-              cantidad_cafe_kg: pesoNuevo,
-              ofertas_asignadas: [...ofertasPrevias, nuevaOfertaObj],
-            }
-          : c
-      )
+    actualizarMutation.mutate(
+      {
+        ...contenedorSeleccionado,
+        cantidad_cafe_kg: pesoNuevo,
+        ofertas_asignadas: [...ofertasPrevias, nuevaOfertaObj],
+      },
+      {
+        onSuccess: () => {
+          setModalAsignar(false);
+          setOfertaParaAsignarId('');
+        },
+      }
     );
-
-    toast.success(`Oferta ${oferta.codigo} asignada con éxito al contenedor`);
-    setModalAsignar(false);
-    setOfertaParaAsignarId('');
   };
 
   const abrirEdicion = (c) => {
@@ -215,6 +215,7 @@ export default function EmpresaContenedoresPage() {
       </div>
 
       {/* Tabla Oficial de Contenedores */}
+      <QueryState query={contenedoresQuery} />
       {/* Columnas: N°, País origen, País destino, Fecha apertura, Cantidad café (Kg), Estado, Acciones */}
       <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">

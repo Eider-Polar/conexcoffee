@@ -52,16 +52,26 @@ pages/ & components/   →   hooks/   →   api/   →   src/lib/axios.js
    - When the backend exists: remove the `seed`, delete `data/` mocks, set `VITE_ENABLE_DEMO=false`. Pages and hooks must not need changes.
    - `VITE_ENABLE_KEEPALIVE` is opt-in; prefer an external cron over the in-app keep-alive bot.
 
-### 5. Security Compliance
+### 5. Security & Network Compliance
    - NEVER store JWT tokens or session credentials in `localStorage` or `sessionStorage`.
    - All HTTP communication must use `src/lib/axios.js` (`withCredentials: true` for HttpOnly cookies). No `fetch`, no other axios instance.
+   - **Infrastructure Decoupling (Dependency Inversion):** `src/lib/axios.js` must NEVER import `store/` or UI layers. 401 unauthorization handling is injected via `setUnauthorizedHandler(fn)` registered in `src/app/AppProviders.jsx`.
    - Requests where a 401 is expected (e.g. `getMe`, health pings) must pass `skipAuthRedirect: true`.
    - Any sensitive form (login, register) must include `src/components/ui/Captcha.jsx`.
    - Route guards are UX only. Real authorization is enforced by the backend; never rely on hiding UI for security.
    - HTML from the server or users must go through `sanitizeHTML()` / `<SafeHTML />`.
    - Never log tokens, payment data, or personal data with `console.*`.
 
-### 6. Feature-Based Architecture
+### 6. Centralized Color & Design System (ZERO Arbitrary Hex)
+   - PROHIBITED: Hardcoded hex classes in Tailwind (e.g. `bg-[#AD2E01]`, `text-[#F25433]`, `border-[#...]`).
+   - ALL colors must use semantic design tokens defined in `src/styles/index.css` (`@theme`) and configured in `src/lib/colors.js`:
+     - Primary Terracota: `bg-brand-terracota`, `text-brand-terracota`, `border-brand-terracota` (with hover `bg-brand-terracota-dark` or `bg-brand-orange`)
+     - Light Tint: `bg-brand-tint` (`#FFF5F2`)
+     - Accents: `brand-amber`, `brand-gold`, `brand-teal`
+     - Coffee Roast Palette: `--color-roast-1` to `--color-roast-12`
+   - Any re-branding or palette modifications MUST be performed strictly in `src/styles/index.css` and `src/lib/colors.js`.
+
+### 7. Feature-Based Architecture
    - New pages or modules for any role (`superadmin`, `empresa`, `broker`, `caficultor`, `laboratorio`, `tecnico`, `catador`, `comprador`) must be placed in `src/features/<role>/<feature>/` with `api/`, `hooks/`, `components/`, `pages/`.
    - Export pages through `src/features/<role>/index.js`.
    - Register the route in `src/app/router.jsx` as a **lazy page** (`lazyPage(...)` + `page(...)`) inside the role's `roleRoutes(ROLES.X, [...])` block. Use `ROLES` constants, never raw role strings.
@@ -70,18 +80,18 @@ pages/ & components/   →   hooks/   →   api/   →   src/lib/axios.js
    - `src/components/` holds generic UI only. Domain-specific modals/components belong to their feature.
    - Do not duplicate components across roles (e.g. `ModuloCabecera`); promote them to `src/components`.
 
-### 7. Size & Quality Limits
+### 8. Size & Quality Limits
    - Pages should stay under ~300 lines; split into components and hooks beyond that. Existing pages over 600 lines are technical debt: do not add to them, refactor when touched.
    - Do not copy-paste CRUD screens between roles; extract shared components.
    - Keep routes unique: no duplicate paths pointing to the same page (use `<Navigate>` redirects).
 
-### 8. Zero White Screens
+### 9. Zero White Screens
    - Global 404 catch-all is handled by `src/features/auth/pages/NotFoundPage.jsx`.
    - Route groups use `errorElement={<RouteError />}` (`src/components/feedback/RouteError.jsx`).
    - Fatal exceptions are caught by `src/components/feedback/ErrorBoundary.jsx`.
    - Lazy pages always render inside `<Suspense>` (provided by the `page()` helper).
 
-### 9. Build Verification
+### 10. Build Verification
    - Always run `npm run build` to verify clean compilation before concluding changes.
    - `npm run lint` must not show new errors. Run `npm run find:unused` (knip) after removing or moving code.
    - Update `reporte.md` when an architecture finding is resolved.

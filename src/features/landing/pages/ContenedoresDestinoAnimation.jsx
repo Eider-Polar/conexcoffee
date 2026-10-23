@@ -198,7 +198,7 @@ export default function ContenedoresDestinoAnimation() {
                 <div className="pt-2 border-t border-surface-100 space-y-1.5 text-xs">
                   <div className="flex items-center justify-between text-surface-600">
                     <span className="text-surface-400 flex items-center gap-1">
-                      <Calendar className="h-3 w-3 text-[#F25433]" />
+                      <Calendar className="h-3 w-3 text-brand-orange" />
                       <span>Apertura:</span>
                     </span>
                     <span className="font-semibold text-surface-800">{pais.fechaApertura}</span>

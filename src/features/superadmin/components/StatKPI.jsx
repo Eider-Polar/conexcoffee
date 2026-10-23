@@ -11,10 +11,10 @@ export default function StatKPI({ stat }) {
           <p className="text-3xl font-extrabold text-surface-900 mt-1 tabular-nums">{stat.value}</p>
           <div className="flex items-center gap-1 mt-2">
             {stat.up
-              ? <TrendingUp className="h-3.5 w-3.5 text-[#AD2E01]" />
+              ? <TrendingUp className="h-3.5 w-3.5 text-brand-terracota" />
               : <TrendingDown className="h-3.5 w-3.5 text-danger-500" />
             }
-            <span className={`text-xs font-semibold ${stat.up ? 'text-[#AD2E01]' : 'text-danger-500'}`}>
+            <span className={`text-xs font-semibold ${stat.up ? 'text-brand-terracota' : 'text-danger-500'}`}>
               {stat.change} este mes
             </span>
           </div>

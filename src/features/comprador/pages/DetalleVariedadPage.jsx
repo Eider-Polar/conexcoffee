@@ -7,8 +7,7 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import RadarChart from '../components/RadarChart';
-import { MOCK_CONTENEDORES } from '../data/mockData';
-
+import { useContenedoresComprador } from '../hooks/useCompradorData';
 
 // ============================================
 // DetalleVariedadPage — Vista completa de una variedad de café
@@ -19,14 +18,17 @@ export default function DetalleVariedadPage() {
   const navigate = useNavigate();
   const { variedadId } = useParams();
 
-  // Recuperar datos desde state de navegación o buscar en mock
+  const contenedoresQuery = useContenedoresComprador();
+  const contenedores = contenedoresQuery.data ?? [];
+
+  // Recuperar datos desde state de navegación o buscar en query
   const { variedad: variedadState, contenedor: contenedorState } = location.state || {};
   let variedad = variedadState;
   let contenedor = contenedorState;
 
   if (!variedad) {
-    for (const cnt of MOCK_CONTENEDORES) {
-      const found = cnt.variedades.find((v) => v.id === variedadId);
+    for (const cnt of contenedores) {
+      const found = cnt.variedades?.find((v) => v.id === variedadId);
       if (found) { variedad = found; contenedor = cnt; break; }
     }
   }

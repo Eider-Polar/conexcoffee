@@ -185,7 +185,7 @@ export default function UsuariosPage() {
             placeholder="Buscar por nombre, correo o rol…"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-surface-200 focus:outline-none focus:ring-2 focus:ring-[#AD2E01]/20 focus:border-[#AD2E01]"
+            className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-surface-200 focus:outline-none focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
           />
         </div>
 
@@ -194,7 +194,7 @@ export default function UsuariosPage() {
           <select
             value={filtroRol}
             onChange={(e) => setFiltroRol(e.target.value)}
-            className="px-3 py-2 text-sm rounded-xl border border-surface-200 bg-white text-surface-700 focus:outline-none focus:ring-2 focus:ring-[#AD2E01]/20 cursor-pointer"
+            className="px-3 py-2 text-sm rounded-xl border border-surface-200 bg-white text-surface-700 focus:outline-none focus:ring-2 focus:ring-brand-terracota/20 cursor-pointer"
           >
             <option value="todos">Todos los roles</option>
             {ROLES_DISPONIBLES.map((r) => (
@@ -249,7 +249,7 @@ export default function UsuariosPage() {
                       {u.email}
                     </td>
                     <td className="px-5 py-3.5 text-center">
-                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-xs font-semibold bg-[#FFF1ED] text-[#AD2E01] border border-[#AD2E01]/20">
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-xs font-semibold bg-brand-tint text-brand-terracota border border-brand-terracota/20">
                         <Shield className="h-3 w-3" />
                         {u.rol}
                       </span>
@@ -276,7 +276,7 @@ export default function UsuariosPage() {
                           type="button"
                           onClick={() => abrirModalAsignarRol(u)}
                           title="Cambiar Rol"
-                          className="p-1.5 rounded-lg border border-surface-200 bg-white text-surface-600 hover:text-[#AD2E01] hover:border-[#AD2E01]/30 hover:bg-[#FFF1ED] transition-colors cursor-pointer shadow-2xs"
+                          className="p-1.5 rounded-lg border border-surface-200 bg-white text-surface-600 hover:text-brand-terracota hover:border-brand-terracota/30 hover:bg-brand-tint transition-colors cursor-pointer shadow-2xs"
                         >
                           <Shield className="h-4 w-4" />
                         </button>
@@ -296,7 +296,7 @@ export default function UsuariosPage() {
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-surface-200 my-8">
             <div className="flex items-center justify-between pb-3 border-b border-surface-200">
               <div className="flex items-center gap-2">
-                <Users className="h-5 w-5 text-[#AD2E01]" />
+                <Users className="h-5 w-5 text-brand-terracota" />
                 <h3 className="text-base font-bold text-surface-900">Crear Nuevo Usuario</h3>
               </div>
               <button
@@ -364,7 +364,7 @@ export default function UsuariosPage() {
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-[#AD2E01] hover:bg-[#8D2501] text-white text-sm font-semibold shadow-md cursor-pointer"
+                  className="px-5 py-2 rounded-xl bg-brand-terracota hover:bg-brand-terracota-dark text-white text-sm font-semibold shadow-md cursor-pointer"
                 >
                   Guardar Usuario
                 </button>
@@ -380,7 +380,7 @@ export default function UsuariosPage() {
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-surface-200">
             <div className="flex items-center justify-between pb-3 border-b border-surface-200">
               <div className="flex items-center gap-2">
-                <Shield className="h-5 w-5 text-[#AD2E01]" />
+                <Shield className="h-5 w-5 text-brand-terracota" />
                 <h3 className="text-base font-bold text-surface-900">Asignar Rol a {usuarioActual.nombre}</h3>
               </div>
               <button
@@ -402,12 +402,12 @@ export default function UsuariosPage() {
                   onClick={() => asignarRol(r)}
                   className={`w-full text-left p-2.5 rounded-xl border flex items-center justify-between transition-colors cursor-pointer ${
                     usuarioActual.rol === r
-                      ? 'border-[#AD2E01] bg-[#FFF1ED] text-[#AD2E01] font-bold'
+                      ? 'border-brand-terracota bg-brand-tint text-brand-terracota font-bold'
                       : 'border-surface-200 hover:bg-surface-50 text-surface-800'
                   }`}
                 >
                   <span className="text-xs font-semibold">{r}</span>
-                  {usuarioActual.rol === r && <Check className="h-4 w-4 text-[#AD2E01]" />}
+                  {usuarioActual.rol === r && <Check className="h-4 w-4 text-brand-terracota" />}
                 </button>
               ))}
             </div>

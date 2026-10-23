@@ -7,11 +7,11 @@
 const variants = {
   default: 'bg-surface-100 text-surface-700',
   primary: 'bg-primary-100 text-primary-800',
-  secondary: 'bg-[#fee8e3] text-[#AD2E01]',
+  secondary: 'bg-primary-100 text-brand-terracota',
   accent: 'bg-accent-100 text-accent-800',
   danger: 'bg-danger-50 text-danger-700',
-  success: 'bg-[#fee8e3] text-[#AD2E01] border border-[#fed4ca]',
-  brand: 'bg-[#AD2E01] text-white',
+  success: 'bg-primary-100 text-brand-terracota border border-primary-200',
+  brand: 'bg-brand-terracota text-white',
   dark: 'bg-black text-white',
 };
 

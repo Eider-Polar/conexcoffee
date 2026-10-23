@@ -91,7 +91,7 @@ export default function BarcoRealistaZoom({ zoomProgress = 0 }) {
             <div className="text-white/60 text-[10px] uppercase tracking-wider flex items-center gap-1.5">
               <span>Cámara Dinámica de Inspección</span>
               <span>•</span>
-              <span className="text-[#F25433] font-bold">
+              <span className="text-brand-orange font-bold">
                 {zoomProgress < 0.5 ? 'Paneo a Estribor (Der)' : 'Enfoque a Cubierta (Izq)'}
               </span>
             </div>
@@ -117,7 +117,7 @@ export default function BarcoRealistaZoom({ zoomProgress = 0 }) {
           </div>
 
           <div className="hidden md:flex bg-surface-900/90 backdrop-blur-md px-3.5 py-2 rounded-xl border border-white/10 text-white items-center gap-2 shadow-2xl">
-            <Compass className="h-3.5 w-3.5 text-[#F25433] animate-spin" style={{ animationDuration: '16s' }} />
+            <Compass className="h-3.5 w-3.5 text-brand-orange animate-spin" style={{ animationDuration: '16s' }} />
             <span>Puerto Buenaventura — Tránsito Directo</span>
           </div>
         </div>

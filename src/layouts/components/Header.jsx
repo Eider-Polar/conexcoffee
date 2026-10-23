@@ -62,14 +62,14 @@ export default function Header() {
             onClick={() => navigate('/profile')}
             className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl hover:bg-surface-100 transition-colors cursor-pointer"
           >
-            <div className="w-8 h-8 rounded-full bg-amber-100 text-[#AD2E01] flex items-center justify-center font-bold text-xs">
+            <div className="w-8 h-8 rounded-full bg-amber-100 text-brand-terracota flex items-center justify-center font-bold text-xs">
               <User className="h-4 w-4" />
             </div>
             <div className="hidden sm:flex flex-col text-left">
               <span className="text-xs font-bold text-stone-900 leading-tight">
                 {user?.name || 'Finca La Esperanza'}
               </span>
-              <span className="text-[11px] font-semibold text-[#AD2E01] leading-tight">
+              <span className="text-[11px] font-semibold text-brand-terracota leading-tight">
                 {rolMostrar}
               </span>
             </div>

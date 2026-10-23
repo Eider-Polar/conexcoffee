@@ -34,14 +34,25 @@ flowchart TD
         Guards[Guards: GuestRoute / ProtectedRoute / RoleGuard]
     end
 
-    subgraph CapaEstado [Capa de Estado y Logica de Aplicacion]
-        AuthStore[Zustand useAuthStore - Memoria Volatil]
+    subgraph CapaDatosServidor [Capa de Estado de Servidor y Mutaciones]
+        QueryHooks[TanStack Query Feature Hooks]
+        QueryClient[TanStack Query Client]
+        ResourceHooks[createResourceHooks]
+    end
+
+    subgraph CapaServiciosAPI [Capa de Servicios y Adaptadores]
+        ResourceAPI[createResourceApi / Mock Seed en Demo]
+        FeatureAPI[APIs de Dominio: caficultorApi, empresaApi, etc.]
+    end
+
+    subgraph CapaEstadoCliente [Capa de Estado de Cliente - Memoria Volatil]
+        AuthStore[Zustand useAuthStore]
         UIStore[Zustand useUIStore]
-        CustomHooks[Hooks: useAuth / useModal / useDebounce]
     end
 
     subgraph CapaInfraestructura [Capa de Infraestructura y Red]
         AxiosClient[Cliente Axios Centralizado]
+        DepInversion[Inversion de Dependencias: setUnauthorizedHandler]
         Sanitizer[Sanitizador DOMPurify]
         CaptchaModule[Verificador Turnstile Captcha]
     end
@@ -55,11 +66,14 @@ flowchart TD
     Guards --> Layouts
     Layouts --> Pages
     Pages --> Components
-    Pages --> CustomHooks
-    CustomHooks --> AuthStore
-    CustomHooks --> UIStore
-    Pages --> AxiosClient
-    Pages --> CaptchaModule
+    Pages --> QueryHooks
+    Pages --> AuthStore
+    QueryHooks --> ResourceHooks
+    ResourceHooks --> FeatureAPI
+    FeatureAPI --> ResourceAPI
+    ResourceAPI --> AxiosClient
+    AppProviders -.-> DepInversion
+    DepInversion -.-> AxiosClient
     Components --> Sanitizer
     AxiosClient --> APIEndpoints
     APIEndpoints -.-> HttpOnlyCookie
@@ -140,8 +154,9 @@ A fin de cumplir con las directrices de seguridad de la plataforma, se implement
    - El código JavaScript ejecutado en el cliente no posee lectura directa de la credencial, anulando vectores de ataque de extracción por inyección de scripts.
 2. **Configuración de Axios**:
    - Se establece `withCredentials: true` en la instancia global (`src/lib/axios.js`), garantizando que cada petición a la API viaje acompañada de la cookie de sesión correspondiente.
-3. **Manejo Centralizado de Expiración (Interceptor 401)**:
-   - Toda respuesta de red con código HTTP 401 desencadena automáticamente la invalidación del estado de sesión en Zustand (`setUser(null)`) y redirige al flujo de autenticación.
+3. **Manejo Desacoplado de Expiración (Inversión de Dependencias en 401)**:
+   - Para no acoplar la infraestructura de red (`src/lib/axios.js`) al almacén de estado (`src/store/useAuthStore`), Axios expone `setUnauthorizedHandler(callback)`.
+   - La raíz de la aplicación (`src/app/AppProviders.jsx`) inyecta el manejador al inicializar el árbol de React. Al recibir un 401 no esperado, Axios ejecuta dicho callback notificando al store de sesión para limpiar el estado y limpiar la caché de TanStack Query mediante `clearAuth()`.
 4. **Verificación Antibot (Cloudflare Turnstile)**:
    - Se implementa el componente `Captcha.jsx` para generar un token criptográfico previo al envío de formularios sensibles (inicio de sesión y creación de cuentas).
 
@@ -243,3 +258,24 @@ graph LR
 2. **Tratamiento XSS**: Todo texto ingresado por terceros o devuelto por el servidor que requiera renderizado de formato debe procesarse a través de la utilidad `sanitizeHTML` o el componente `SafeHTML` provistos en `src/lib/sanitize.jsx`.
 3. **Manejo de Errores**: La raíz del árbol de renderizado se encuentra envuelta por `ErrorBoundary`, el cual captura excepciones no controladas de React y despliega una interfaz de contingencia sin filtrar trazas de pila (stack traces) al usuario final.
 4. **Verificación Continua**: Todo nuevo código debe aprobar la validación estática de `npm run lint` (Oxlint) y compilar exitosamente sin errores con `npm run build`.
+
+---
+
+## 10. Sistema de Diseño y Centralización Cromática
+
+Para garantizar alta cohesión visual, evitar duplicación de estilos y permitir re-branding instantáneo sin alterar vistas, la aplicación erradica por completo las clases arbitrarias (`bg-[#...]`, `text-[#...]`).
+
+### Estructura de Tokens
+
+1. **Tokens Globales CSS (`src/styles/index.css`)**:
+   - Variables semánticas registradas en `@theme`:
+     - `--color-brand-terracota`: Color insignia institucional (`#AD2E01`).
+     - `--color-brand-terracota-dark`: Variante de contraste y active (`#8A2501`).
+     - `--color-brand-orange`: Variante de interactividad y hover (`#F25433`).
+     - `--color-brand-tint`: Fondo de contraste suave (`#FFF5F2`).
+     - `--color-brand-amber`, `--color-brand-gold`, `--color-brand-teal`: Acentos de estado y evaluación.
+     - Escala cromática de tueste y pergamino: `--color-roast-1` a `--color-roast-12`.
+2. **Utilidades Centralizadas (`src/lib/colors.js`)**:
+   - `COLOR_STYLES`: Mapeo estándar de variantes visuales (`default`, `neutral`, `success`, `warning`, `danger`, `brand`) asociadas a tokens semánticos en lugar de valores hexadecimales dispersos.
+   - Cualquier alteración institucional a la identidad gráfica se propaga a todo el ecosistema modificando exclusivamente `src/styles/index.css` y `src/lib/colors.js`.
+

@@ -74,9 +74,9 @@ export default function HeroLiquidGlassBanner({ currentSlide }) {
               return (
                 <div
                   key={idx}
-                  className="group flex items-center gap-2 px-2 py-1.5 sm:py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.10] border border-white/[0.08] hover:border-[#F25433]/45 transition-all duration-300 cursor-default"
+                  className="group flex items-center gap-2 px-2 py-1.5 sm:py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.10] border border-white/[0.08] hover:border-brand-orange/45 transition-all duration-300 cursor-default"
                 >
-                  <div className="shrink-0 w-7 h-7 rounded-lg bg-white/[0.07] border border-white/[0.11] flex items-center justify-center text-[#F25433] group-hover:bg-[#F25433] group-hover:text-white transition-colors duration-300 shadow-inner">
+                  <div className="shrink-0 w-7 h-7 rounded-lg bg-white/[0.07] border border-white/[0.11] flex items-center justify-center text-brand-orange group-hover:bg-brand-orange group-hover:text-white transition-colors duration-300 shadow-inner">
                     <Icon className="w-3.5 h-3.5" />
                   </div>
                   <span className="text-[10px] sm:text-[11px] font-semibold text-white/88 leading-tight group-hover:text-white transition-colors">

@@ -61,16 +61,24 @@ pages/ y components/   →   hooks/   →   api/   →   src/lib/axios.js
    - NUNCA guardar tokens JWT ni datos sensibles en el almacenamiento del navegador.
    - La sesión se gestiona con cookies seguras `HttpOnly` emitidas por el backend.
    - El estado de autenticación del frontend se guarda ÚNICAMENTE en el store de Zustand (`src/store/useAuthStore.js`) en memoria volátil de JavaScript.
-2. **AXIOS CENTRALIZADO**:
+2. **AXIOS CENTRALIZADO E INVERSIÓN DE DEPENDENCIAS**:
    - TODAS las peticiones HTTP deben realizarse a través de la instancia central en `src/lib/axios.js`.
    - La instancia tiene forzado `withCredentials: true` para enviar y recibir cookies automáticamente.
-   - El interceptor de Axios captura errores 401 y expulsa la sesión (`logout()`), redirigiendo a `/login`.
+   - **Desacoplamiento de infraestructura**: `src/lib/axios.js` NUNCA debe importar stores de Zustand (`useAuthStore`) ni capas de UI. La captura de 401 y expulsión de sesión se gestiona por inversión de dependencias mediante `setUnauthorizedHandler(fn)` registrado en `src/app/AppProviders.jsx`.
 3. **PROTECCIÓN CONTRA XSS**:
    - Todo HTML proveniente del servidor o de inputs debe sanitizarse usando `sanitizeHTML()` o el componente `<SafeHTML />` de `src/lib/sanitize.jsx`.
 4. **VERIFICACIÓN ANTIBOT**:
    - Todo formulario crítico (Login, Registro) debe incluir el componente `<Captcha />` de `src/components/ui/Captcha.jsx`.
 5. **CONSENTIMIENTO LEGAL OBLIGATORIO**:
    - El registro exige aceptación obligatoria de los Términos (`/terms`), Política de Privacidad (`/privacy`) y Aviso Legal (`/legal`).
+6. **SISTEMA ÚNICO DE COLORES (CERO HEX ARBITRARIOS)**:
+   - PROHIBIDO el uso de clases arbitrarias de color en Tailwind (`bg-[#AD2E01]`, `text-[#F25433]`, etc.).
+   - Todos los colores deben provenir de los tokens semánticos definidos en `src/styles/index.css` (`@theme`) y centralizados en `src/lib/colors.js`:
+     - Terracota de Marca: `bg-brand-terracota`, `text-brand-terracota`, `border-brand-terracota` (con variantes hover `bg-brand-terracota-dark` o `bg-brand-orange`).
+     - Tinte Claro: `bg-brand-tint` (`#FFF5F2`).
+     - Acentos: `brand-amber`, `brand-gold`, `brand-teal`.
+     - Tueste de Café: escala `--color-roast-1` a `--color-roast-12`.
+   - Cualquier cambio institucional o re-diseño cromático debe gestionarse ÚNICAMENTE en `src/styles/index.css` y `src/lib/colors.js`.
 
 ---
 

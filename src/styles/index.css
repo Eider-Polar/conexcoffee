@@ -12,6 +12,29 @@
   --color-brand-white: #FFFFFF;
   --color-brand-black: #000000;
 
+  /* Derivados semánticos de marca (única fuente: cambiar aquí = cambia toda la app) */
+  --color-brand-terracota-dark: #8D2501; /* hover de acciones primarias */
+  --color-brand-tint: #FFF1ED;           /* fondos suaves de marca */
+  --color-brand-tint-soft: #FFF5F2;
+  --color-brand-gold: #F39200;           /* acento ámbar */
+  --color-brand-teal: #00B497;           /* éxito / disponibilidad */
+  --color-brand-teal-dark: #009b82;
+
+  /* Escala de tueste del café (barras de nivel de tostión) */
+  --color-roast-1: #C89D7C;
+  --color-roast-2: #B08564;
+  --color-roast-3: #B07D54;
+  --color-roast-4: #99653D;
+  --color-roast-5: #986036;
+  --color-roast-6: #7E4922;
+  --color-roast-7: #7E461E;
+  --color-roast-8: #663513;
+  --color-roast-9: #5C2F10;
+  --color-roast-10: #452009;
+  --color-roast-11: #361706;
+  --color-roast-12: #220B02;
+  --color-neutral-gray: #757580;
+
   /* Colores primarios — Escala cromática oficial (#AD2E01 y #F25433) */
   --color-primary-50: #fef5f2;
   --color-primary-100: #fee8e3;

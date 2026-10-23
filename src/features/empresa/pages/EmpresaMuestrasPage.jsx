@@ -7,12 +7,21 @@ import {
   Archive,
   FlaskConical,
 } from 'lucide-react';
-import toast from 'react-hot-toast';
-import { INITIAL_EMPRESA_MUESTRAS, INITIAL_EMPRESA_LABORATORIOS } from '../data/empresaData';
+import { QueryState } from '@/components/feedback';
+import {
+  useEmpresaMuestras,
+  useCrearEmpresaMuestra,
+  useActualizarEmpresaMuestra,
+  useEmpresaLaboratorios,
+} from '../hooks/useEmpresaData';
 
 export default function EmpresaMuestrasPage() {
-  const [muestras, setMuestras] = useState(INITIAL_EMPRESA_MUESTRAS);
-  const [laboratorios] = useState(INITIAL_EMPRESA_LABORATORIOS);
+  const muestrasQuery = useEmpresaMuestras();
+  const muestras = muestrasQuery.data || [];
+  const laboratoriosQuery = useEmpresaLaboratorios();
+  const laboratorios = laboratoriosQuery.data || [];
+  const crearMutation = useCrearEmpresaMuestra();
+  const actualizarMutation = useActualizarEmpresaMuestra();
   const [searchTerm, setSearchTerm] = useState('');
 
   // Modales
@@ -65,19 +74,21 @@ export default function EmpresaMuestrasPage() {
       estado: 'En Evaluación',
     };
 
-    setMuestras([nuevo, ...muestras]);
-    toast.success('Muestra registrada y lista para evaluación en laboratorio');
-    setModalRegistrar(false);
-    setNuevaMuestra({
-      codigo: '',
-      lote_origen: '',
-      caficultor: '',
-      variedad: 'Pink Bourbon',
-      fecha: new Date().toISOString().split('T')[0],
-      peso_g: 350.0,
-      humedad: 10.8,
-      factor_rendimiento: 88.5,
-      laboratorio: 'Laboratorio Central TecniCafé',
+    crearMutation.mutate(nuevo, {
+      onSuccess: () => {
+        setModalRegistrar(false);
+        setNuevaMuestra({
+          codigo: '',
+          lote_origen: '',
+          caficultor: '',
+          variedad: 'Pink Bourbon',
+          fecha: new Date().toISOString().split('T')[0],
+          peso_g: 350.0,
+          humedad: 10.8,
+          factor_rendimiento: 88.5,
+          laboratorio: 'Laboratorio Central TecniCafé',
+        });
+      },
     });
   };
 
@@ -85,15 +96,14 @@ export default function EmpresaMuestrasPage() {
     e.preventDefault();
     if (!muestraSeleccionada) return;
 
-    setMuestras((prev) =>
-      prev.map((m) =>
-        m.id === muestraSeleccionada.id
-          ? { ...m, laboratorio: laboratorioDestino, estado: 'En Análisis' }
-          : m
-      )
+    actualizarMutation.mutate(
+      { ...muestraSeleccionada, laboratorio: laboratorioDestino, estado: 'En Análisis' },
+      {
+        onSuccess: () => {
+          setModalAsignarLab(false);
+        },
+      }
     );
-    toast.success(`Muestra ${muestraSeleccionada.codigo} asignada a ${laboratorioDestino}`);
-    setModalAsignarLab(false);
   };
 
   return (
@@ -124,6 +134,7 @@ export default function EmpresaMuestrasPage() {
       </div>
 
       {/* Tabla Oficial de Muestras */}
+      <QueryState query={muestrasQuery} />
       {/* Columnas: N°, Código Pre-oferta, Fecha, Peso (g), Humedad (%), Laboratorio, Acciones */}
       <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">

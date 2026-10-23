@@ -52,7 +52,7 @@ export default function ConfiguracionPage() {
         {/* Sección: Parámetros Generales */}
         <div className="bg-white rounded-2xl border border-surface-200 shadow-2xs p-6">
           <div className="flex items-center gap-2.5 pb-4 border-b border-surface-200 mb-5">
-            <Server className="h-5 w-5 text-[#AD2E01]" />
+            <Server className="h-5 w-5 text-brand-terracota" />
             <div>
               <h3 className="text-base font-bold text-surface-900">Parámetros de la Plataforma</h3>
               <p className="text-xs text-surface-500">Datos públicos y de contacto mostrados en el sistema</p>
@@ -66,7 +66,7 @@ export default function ConfiguracionPage() {
                 type="text"
                 value={config.nombrePlataforma}
                 onChange={(e) => setConfig({ ...config, nombrePlataforma: e.target.value })}
-                className="w-full px-3.5 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-[#AD2E01]/20 focus:border-[#AD2E01]"
+                className="w-full px-3.5 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
               />
             </div>
             <div>
@@ -75,7 +75,7 @@ export default function ConfiguracionPage() {
                 type="email"
                 value={config.emailSoporte}
                 onChange={(e) => setConfig({ ...config, emailSoporte: e.target.value })}
-                className="w-full px-3.5 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-[#AD2E01]/20 focus:border-[#AD2E01]"
+                className="w-full px-3.5 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
               />
             </div>
             <div>
@@ -84,7 +84,7 @@ export default function ConfiguracionPage() {
                 type="text"
                 value={config.telefonoContacto}
                 onChange={(e) => setConfig({ ...config, telefonoContacto: e.target.value })}
-                className="w-full px-3.5 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-[#AD2E01]/20 focus:border-[#AD2E01]"
+                className="w-full px-3.5 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
               />
             </div>
             <div>
@@ -93,7 +93,7 @@ export default function ConfiguracionPage() {
                 type="text"
                 value={config.unidadPesoDefecto}
                 onChange={(e) => setConfig({ ...config, unidadPesoDefecto: e.target.value })}
-                className="w-full px-3.5 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-[#AD2E01]/20 focus:border-[#AD2E01]"
+                className="w-full px-3.5 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
               />
             </div>
           </div>
@@ -102,7 +102,7 @@ export default function ConfiguracionPage() {
         {/* Sección: Parámetros de Calidad Cafetera (Norma SCA) */}
         <div className="bg-white rounded-2xl border border-surface-200 shadow-2xs p-6">
           <div className="flex items-center gap-2.5 pb-4 border-b border-surface-200 mb-5">
-            <Shield className="h-5 w-5 text-[#AD2E01]" />
+            <Shield className="h-5 w-5 text-brand-terracota" />
             <div>
               <h3 className="text-base font-bold text-surface-900">Estándares y Filtros de Calidad SCA</h3>
               <p className="text-xs text-surface-500">Límites para aprobación automática de muestras y ofertas</p>
@@ -119,7 +119,7 @@ export default function ConfiguracionPage() {
                 step="0.5"
                 value={config.puntajeMinimoSca}
                 onChange={(e) => setConfig({ ...config, puntajeMinimoSca: Number(e.target.value) })}
-                className="w-full px-3.5 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-[#AD2E01]/20 focus:border-[#AD2E01]"
+                className="w-full px-3.5 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
               />
             </div>
             <div>
@@ -131,7 +131,7 @@ export default function ConfiguracionPage() {
                 step="0.1"
                 value={config.umbralHumedadMax}
                 onChange={(e) => setConfig({ ...config, umbralHumedadMax: Number(e.target.value) })}
-                className="w-full px-3.5 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-[#AD2E01]/20 focus:border-[#AD2E01]"
+                className="w-full px-3.5 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
               />
             </div>
           </div>
@@ -140,7 +140,7 @@ export default function ConfiguracionPage() {
         {/* Sección: Seguridad y Notificaciones */}
         <div className="bg-white rounded-2xl border border-surface-200 shadow-2xs p-6">
           <div className="flex items-center gap-2.5 pb-4 border-b border-surface-200 mb-5">
-            <Lock className="h-5 w-5 text-[#AD2E01]" />
+            <Lock className="h-5 w-5 text-brand-terracota" />
             <div>
               <h3 className="text-base font-bold text-surface-900">Seguridad y Políticas de Acceso</h3>
               <p className="text-xs text-surface-500">Reglas de autenticación y Cloudflare Turnstile</p>
@@ -157,7 +157,7 @@ export default function ConfiguracionPage() {
                 type="checkbox"
                 checked={config.captchaHabilitado}
                 onChange={(e) => setConfig({ ...config, captchaHabilitado: e.target.checked })}
-                className="h-5 w-5 rounded text-[#AD2E01] focus:ring-[#AD2E01] cursor-pointer"
+                className="h-5 w-5 rounded text-brand-terracota focus:ring-brand-terracota cursor-pointer"
               />
             </label>
 
@@ -170,7 +170,7 @@ export default function ConfiguracionPage() {
                 type="checkbox"
                 checked={config.notificacionesEmail}
                 onChange={(e) => setConfig({ ...config, notificacionesEmail: e.target.checked })}
-                className="h-5 w-5 rounded text-[#AD2E01] focus:ring-[#AD2E01] cursor-pointer"
+                className="h-5 w-5 rounded text-brand-terracota focus:ring-brand-terracota cursor-pointer"
               />
             </label>
           </div>
@@ -179,7 +179,7 @@ export default function ConfiguracionPage() {
         <div className="flex justify-end">
           <button
             type="submit"
-            className="flex items-center gap-2 px-6 py-2.5 bg-[#AD2E01] hover:bg-[#8D2501] text-white text-sm font-bold rounded-xl shadow-md cursor-pointer transition-all active:scale-[0.98]"
+            className="flex items-center gap-2 px-6 py-2.5 bg-brand-terracota hover:bg-brand-terracota-dark text-white text-sm font-bold rounded-xl shadow-md cursor-pointer transition-all active:scale-[0.98]"
           >
             <Save className="h-4 w-4" />
             Guardar Configuración

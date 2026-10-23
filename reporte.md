@@ -202,3 +202,65 @@ Verificado: `npm run build` OK (code splitting activo, bundle principal ~380 kB 
 > [!IMPORTANT]
 > Al desplegar en Vercel sin backend, define `VITE_ENABLE_DEMO=true` o el login no funcionará. Cuando exista la API, ponlo en `false` y borra `demoAuth.js`.
 
+
+---
+
+## 9. Auditoría de acoplamiento y cohesión
+
+Método: búsqueda de imports entre features, de capas compartidas hacia features, de rutas y roles duplicados, y métricas de tamaño y estado por página. El informe se basa en esas búsquedas y no en un análisis estático completo.
+
+### 9.1 Veredicto
+
+| Criterio | Resultado | Nota |
+|---|---|---|
+| Acoplamiento entre features | **Bajo (bien)** | 0 imports entre features. 0 imports de `components/`, `lib/`, `hooks/`, `store/`, `guards/` o `layouts/` hacia `features/`. |
+| Dirección de dependencias | **Bien, con 1 excepción** | `lib/axios.js` importa `store/useAuthStore` (una capa de infraestructura que depende de una capa superior). |
+| Cohesión de módulos pequeños (`lib`, `store`, `guards`, `ui`) | **Alta (bien)** | Cada archivo tiene una sola responsabilidad. |
+| Cohesión de las páginas grandes | **Baja (mal)** | Páginas "todo en uno": datos, filtros, tabla, modales y formularios en un solo archivo. |
+| Acoplamiento a datos mock | **Alto (mal)** en 7 de 8 roles | 19 páginas importan `data/` directamente. Solo `caficultor` ya usa API + hooks. |
+| Acoplamiento por strings (rutas y roles) | **Medio-alto (mal)** | Las rutas están escritas a mano en muchos sitios. |
+
+Conclusión: **la arquitectura evita el alto acoplamiento a nivel estructural (carpetas y dependencias entre módulos), pero no evita la baja cohesión dentro de las páginas grandes, ni el acoplamiento de las páginas a los datos mock.** Lo segundo se corrige migrando cada feature al patrón del caficultor.
+
+### 9.2 Lo que está bien (evidencia)
+- **Aislamiento entre features:** ninguna feature importa a otra. Cada rol puede evolucionar o eliminarse sin romper a los demás.
+- **Capas compartidas puras:** `components/ui`, `modals`, `feedback`, `lib` no conocen ningún dominio. Solo `AddProductModal` y `VerificacionCodigoModal` mencionan términos de dominio (ver C5).
+- **Sin imports relativos profundos:** no hay `../../..`; todo usa el alias `@/` o rutas locales.
+- **Fábricas genéricas:** `createResourceApi` / `createResourceHooks` evitan repetir la capa de datos y concentran el cambio mock → API real en un único lugar.
+- **Sin dependencias circulares detectadas:** `axios → store → queryClient` es lineal.
+
+### 9.3 Hallazgos
+
+| # | Tipo | Severidad | Hallazgo |
+|---|---|---|---|
+| C1 | Acoplamiento | **Alto** | 19 páginas (`Empresa*`, `Laboratorio*`, `SuperAdminDashboard`, `Comprador*`, `Evaluacion`) importan `../data/...` y mantienen el estado con `useState`. La UI está atada al origen de los datos: al conectar la API hay que reescribir cada página. |
+| C2 | Cohesión | **Alto** | Páginas con muchas responsabilidades: `EmpresaOfertasPage` (22 `useState`, 12 funciones, 1531 líneas), `ComprasPage` (15 `useState`, 1089), `EmpresaContenedoresPage` (13), `CatadoresPage` (11). Mezclan listado, filtros, apertura de modales, validación y mutación. |
+| C3 | Acoplamiento | Medio | **Rutas como strings repetidos**: `router.jsx` (61), `Sidebar.jsx` (56), más dashboards, navbar y footer. Cambiar una ruta obliga a editar varios archivos y un typo no se detecta hasta ejecutar. |
+| C4 | Acoplamiento | Medio | Roles como strings sueltos en `Header.jsx:31`, `RegisterForm.jsx:313`, `AddProductPage.jsx:23,25`. Debería usarse `ROLES`. |
+| C5 | Cohesión | Medio | `components/modals/AddProductModal` y `VerificacionCodigoModal` son de dominio (landing y auth), pero viven en la carpeta genérica. |
+| C6 | Acoplamiento | Medio | `lib/axios.js` importa `store/useAuthStore` (infraestructura → estado de UI). Rompe la dirección de dependencias y hace difícil testear axios solo. Solución: inyección de dependencias, con `setUnauthorizedHandler(fn)` registrado desde `AppProviders`. |
+| C7 | Cohesión | Medio | Duplicación: `ModuloCabecera.jsx` existe en `superadmin` y en `empresa`. Los CRUD de brokers, caficultores, laboratorios, técnicos, muestras y contenedores están repetidos entre `superadmin/pages` y `empresa/pages`. Una regla de negocio habría que cambiarla en dos sitios. |
+| C8 | Acoplamiento | Bajo | `store/useAuthStore` importa `queryClient`: aceptable como decisión explícita (logout limpia caché), pero crea una dependencia store → lib. Documentada en AGENTS.md (`clearAuth()`). |
+| C9 | Cohesión | Bajo | 26 modales en features, la mayoría con estructura casi idéntica (cabecera, formulario, botones). Falta un `FormModal` realmente reutilizado. |
+| C10 | Acoplamiento | Bajo | 380 usos de colores arbitrarios de Tailwind (`bg-[#...]`) repartidos por las páginas. El tema no está centralizado: un cambio de marca implica tocar cientos de archivos. Pasar a tokens `@theme` en `index.css`. |
+| C11 | Acoplamiento | Bajo | Dashboards (`dashboardData.js`, `*DashboardPage.jsx`) contienen rutas hardcodeadas en datos de presentación. |
+
+### 9.4 Recomendaciones (de mayor a menor impacto)
+
+1. **Migrar cada feature al patrón `api/ + hooks/`** (soluciona C1). Orden sugerido: `laboratorio` → `empresa` → `superadmin` → `comprador` → `catador` → `broker/tecnico`.
+2. **Dividir las páginas grandes** (C2): una página de más de 300 líneas se separa en `<X>Table`, `<X>Filters`, `use<X>Page` (estado de modales y filtros) y los modales. Empezar por `EmpresaOfertasPage`.
+3. **Centralizar rutas** (C3, C11): crear `src/lib/routes.js` con un objeto `ROUTES` (`ROUTES.caficultor.lotes`) y usarlo en router, Sidebar y dashboards. Un test puede validar que cada ruta del Sidebar existe en el router.
+4. **Unificar CRUD duplicados** (C7, C9): un `CrudPage` / `DataTable` + `FormModal` genéricos, parametrizados por columnas y esquema; mover `ModuloCabecera` a `components/`.
+5. **Invertir la dependencia de axios** (C6): `setUnauthorizedHandler`.
+6. **Usar `ROLES` en todos los sitios** (C4) y mover los modales de dominio a su feature (C5).
+7. **Tokens de diseño** (C10) en `@theme`.
+8. **Automatizar los límites**: regla de lint `no-restricted-imports` para prohibir `@/features/<otra>` desde una feature, y `@/features/*` desde `components/`, `lib/`, `hooks/`; opcional `eslint-plugin-boundaries`/`dependency-cruiser` (requiere aprobar dependencia según AGENTS.md). Hoy el aislamiento se cumple por disciplina, no por herramienta.
+
+### 9.5 Resoluciones Implementadas
+
+| Hallazgo | Estado | Solución Técnica Aplicada |
+|---|---|---|
+| **C1** (Páginas atadas a `data/`) | **RESUELTO** | Se migraron las 19 páginas de los 8 roles (`caficultor`, `laboratorio`, `catador`, `comprador`, `tecnico`, `broker`, `empresa`, `superadmin`). Ninguna página importa directamente de `data/`. Todas usan `api/` (`createResourceApi` con fallback de seed en memoria durante `IS_DEMO_MODE`) y `hooks/` (`createResourceHooks` con TanStack Query v5 + `<QueryState />`). El cambio al backend real se producirá sin tocar páginas ni hooks. |
+| **C6** (Inversión de dependencias Axios) | **RESUELTO** | Se desacopló `src/lib/axios.js` del store de cliente `src/store/useAuthStore.js`. Axios ahora expone `setUnauthorizedHandler(fn)`. La raíz en `src/app/AppProviders.jsx` inyecta el manejador al inicializarse. Axios queda como capa de infraestructura pura y testeable. |
+| **C10** (Colores arbitrarios y falta de tema único) | **RESUELTO** | Se centralizó la paleta cromática en `src/styles/index.css` bajo tokens semánticos `@theme` (`--color-brand-terracota`, `--color-brand-orange`, `--color-brand-amber`, `--color-brand-gold`, `--color-brand-tint`, escala de tueste `--color-roast-1..12`) y en `src/lib/colors.js`. Se reemplazaron más de 380 clases hex arbitrarias (`bg-[#AD2E01]`, etc.) en 54 archivos por las clases de tokens semánticos. Un re-branding de la plataforma ahora se ejecuta en un único archivo. |
+

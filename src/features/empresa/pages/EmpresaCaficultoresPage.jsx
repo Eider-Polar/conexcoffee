@@ -7,11 +7,18 @@ import {
   X,
   Leaf,
 } from 'lucide-react';
-import toast from 'react-hot-toast';
-import { INITIAL_EMPRESA_CAFICULTORES } from '../data/empresaData';
+import { QueryState } from '@/components/feedback';
+import {
+  useEmpresaCaficultores,
+  useCrearEmpresaCaficultor,
+  useActualizarEmpresaCaficultor,
+} from '../hooks/useEmpresaData';
 
 export default function EmpresaCaficultoresPage() {
-  const [caficultores, setCaficultores] = useState(INITIAL_EMPRESA_CAFICULTORES);
+  const caficultoresQuery = useEmpresaCaficultores();
+  const caficultores = caficultoresQuery.data || [];
+  const crearMutation = useCrearEmpresaCaficultor();
+  const actualizarMutation = useActualizarEmpresaCaficultor();
   const [searchTerm, setSearchTerm] = useState('');
 
   // Modales
@@ -87,24 +94,26 @@ export default function EmpresaCaficultoresPage() {
       fincas_asociadas: 1,
     };
 
-    setCaficultores([nuevo, ...caficultores]);
-    toast.success('Caficultor vinculado a la empresa con éxito');
-    setModalRegistrar(false);
-    setNuevoCaficultor({
-      numero_identificacion: '',
-      nombres: '',
-      apellidos: '',
-      fecha_nacimiento: '1980-04-18',
-      genero: 'Masculino',
-      direccion: '',
-      telefono: '',
-      numero_hijos: 2,
-      estado_civil: 'Casado(a)',
-      pais_residencia: 'Colombia',
-      departamento_residencia: 'Cauca',
-      municipio_residencia: 'Popayán',
-      finca_principal: 'La Bonita',
-      variedad_predominante: 'Caturra Chiroso',
+    crearMutation.mutate(nuevo, {
+      onSuccess: () => {
+        setModalRegistrar(false);
+        setNuevoCaficultor({
+          numero_identificacion: '',
+          nombres: '',
+          apellidos: '',
+          fecha_nacimiento: '1980-04-18',
+          genero: 'Masculino',
+          direccion: '',
+          telefono: '',
+          numero_hijos: 2,
+          estado_civil: 'Casado(a)',
+          pais_residencia: 'Colombia',
+          departamento_residencia: 'Cauca',
+          municipio_residencia: 'Popayán',
+          finca_principal: 'La Bonita',
+          variedad_predominante: 'Caturra Chiroso',
+        });
+      },
     });
   };
 
@@ -112,11 +121,11 @@ export default function EmpresaCaficultoresPage() {
     e.preventDefault();
     if (!caficultorEdicion) return;
 
-    setCaficultores((prev) =>
-      prev.map((c) => (c.id === caficultorEdicion.id ? caficultorEdicion : c))
-    );
-    toast.success('Caficultor actualizado con éxito');
-    setModalEditar(false);
+    actualizarMutation.mutate(caficultorEdicion, {
+      onSuccess: () => {
+        setModalEditar(false);
+      },
+    });
   };
 
   const abrirEdicion = (c) => {
@@ -156,6 +165,7 @@ export default function EmpresaCaficultoresPage() {
       </div>
 
       {/* Tabla Oficial de Caficultores */}
+      <QueryState query={caficultoresQuery} />
       {/* Columnas: N°, Identificación, Nombres, Apellidos, Teléfono, Acciones (Editar, Ver) */}
       <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">

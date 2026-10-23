@@ -45,8 +45,8 @@ export default function CaficultorDashboardPage() {
         { etiqueta: 'Avance', valor: '100%' },
       ],
       porcentaje: 100,
-      colorFondoIcono: 'bg-amber-100 text-[#AD2E01]',
-      colorBarra: 'bg-[#AD2E01]',
+      colorFondoIcono: 'bg-amber-100 text-brand-terracota',
+      colorBarra: 'bg-brand-terracota',
       ruta: '/caficultor/fincas',
     },
     {
@@ -96,8 +96,8 @@ export default function CaficultorDashboardPage() {
         { etiqueta: 'Avance', valor: '90%' },
       ],
       porcentaje: 90,
-      colorFondoIcono: 'bg-amber-100 text-[#AD2E01]',
-      colorBarra: 'bg-[#AD2E01]',
+      colorFondoIcono: 'bg-amber-100 text-brand-terracota',
+      colorBarra: 'bg-brand-terracota',
       ruta: '/profile',
     },
   ];
@@ -123,7 +123,7 @@ export default function CaficultorDashboardPage() {
               <div>
                 {/* Cabecera del Paso */}
                 <div className="flex items-center justify-between pb-3 border-b border-stone-100">
-                  <span className="text-xs font-bold uppercase tracking-wider text-[#AD2E01] bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200/50">
+                  <span className="text-xs font-bold uppercase tracking-wider text-brand-terracota bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200/50">
                     {item.paso}
                   </span>
                 </div>
@@ -167,7 +167,7 @@ export default function CaficultorDashboardPage() {
               <button
                 type="button"
                 onClick={() => navigate(item.ruta)}
-                className="w-full py-2.5 px-4 bg-[#AD2E01] hover:bg-[#8D2501] text-white text-xs font-bold rounded-xl transition-colors flex items-center justify-center gap-2 shadow-xs cursor-pointer active:scale-[0.99]"
+                className="w-full py-2.5 px-4 bg-brand-terracota hover:bg-brand-terracota-dark text-white text-xs font-bold rounded-xl transition-colors flex items-center justify-center gap-2 shadow-xs cursor-pointer active:scale-[0.99]"
               >
                 <span>Continuar</span>
                 <ArrowRight className="w-4 h-4" />

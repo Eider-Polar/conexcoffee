@@ -49,7 +49,7 @@ export default function PublicNavbar({ onOpenAddProduct }) {
           {/* Logo Oficial Conexcoffee */}
           <Link
             to="/"
-            className="flex items-center focus:outline-none focus:ring-2 focus:ring-[#F25433] rounded-lg py-1 px-0.5 group"
+            className="flex items-center focus:outline-none focus:ring-2 focus:ring-brand-orange rounded-lg py-1 px-0.5 group"
             title="Conexcoffee — Inicio"
           >
             <img
@@ -67,9 +67,9 @@ export default function PublicNavbar({ onOpenAddProduct }) {
                 <Link
                   key={link.label}
                   to={link.path}
-                  className={`text-sm font-semibold transition-colors relative py-1 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:bg-[#F25433] after:transition-all ${
+                  className={`text-sm font-semibold transition-colors relative py-1 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:bg-brand-orange after:transition-all ${
                     isActive
-                      ? 'text-[#F25433] after:w-full'
+                      ? 'text-brand-orange after:w-full'
                       : 'text-white/85 hover:text-white after:w-0 hover:after:w-full'
                   }`}
                 >
@@ -85,10 +85,10 @@ export default function PublicNavbar({ onOpenAddProduct }) {
             <button
               onClick={onOpenAddProduct}
               type="button"
-              className="inline-flex items-center gap-2 px-3.5 py-2 text-sm font-semibold text-white bg-white/10 hover:bg-white/20 border border-white/25 rounded-xl transition-all shadow-xs cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#F25433]"
+              className="inline-flex items-center gap-2 px-3.5 py-2 text-sm font-semibold text-white bg-white/10 hover:bg-white/20 border border-white/25 rounded-xl transition-all shadow-xs cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-orange"
               title="Publicar un nuevo lote de café"
             >
-              <PlusCircle className="h-4 w-4 text-[#F25433]" />
+              <PlusCircle className="h-4 w-4 text-brand-orange" />
               <span>Agregar Producto</span>
             </button>
 
@@ -135,7 +135,7 @@ export default function PublicNavbar({ onOpenAddProduct }) {
                     to={link.path}
                     className={`px-3 py-2 text-base font-semibold rounded-lg transition-colors ${
                       isActive
-                        ? 'bg-[#F25433]/20 text-[#F25433]'
+                        ? 'bg-brand-orange/20 text-brand-orange'
                         : 'text-white/85 hover:bg-white/10 hover:text-white'
                     }`}
                     onClick={() => setMobileMenuOpen(false)}
@@ -155,7 +155,7 @@ export default function PublicNavbar({ onOpenAddProduct }) {
                 type="button"
                 className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl cursor-pointer"
               >
-                <PlusCircle className="h-4 w-4 text-[#F25433]" />
+                <PlusCircle className="h-4 w-4 text-brand-orange" />
                 <span>Agregar Producto</span>
               </button>
 

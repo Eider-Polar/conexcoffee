@@ -7,11 +7,18 @@ import {
   X,
   UserCheck,
 } from 'lucide-react';
-import toast from 'react-hot-toast';
-import { INITIAL_EMPRESA_TECNICOS } from '../data/empresaData';
+import { QueryState } from '@/components/feedback';
+import {
+  useEmpresaTecnicos,
+  useCrearEmpresaTecnico,
+  useActualizarEmpresaTecnico,
+} from '../hooks/useEmpresaData';
 
 export default function EmpresaTecnicosPage() {
-  const [tecnicos, setTecnicos] = useState(INITIAL_EMPRESA_TECNICOS);
+  const tecnicosQuery = useEmpresaTecnicos();
+  const tecnicos = tecnicosQuery.data || [];
+  const crearMutation = useCrearEmpresaTecnico();
+  const actualizarMutation = useActualizarEmpresaTecnico();
   const [searchTerm, setSearchTerm] = useState('');
 
   // Modales
@@ -69,21 +76,23 @@ export default function EmpresaTecnicosPage() {
       fincas_a_cargo: Number(nuevoTecnico.fincas_a_cargo) || 0,
     };
 
-    setTecnicos([nuevo, ...tecnicos]);
-    toast.success('Técnico de campo registrado exitosamente');
-    setModalRegistrar(false);
-    setNuevoTecnico({
-      numero_identificacion: '',
-      primer_nombre: '',
-      segundo_nombre: '',
-      primer_apellido: '',
-      segundo_apellido: '',
-      telefono: '',
-      correo: '',
-      zona_asignada: 'Huila Sur (Pitalito, San Agustín)',
-      fincas_a_cargo: 10,
-      especialidad: 'Agrónomo Especialista en Suelos y Q-Grader',
-      estado: 'Activo',
+    crearMutation.mutate(nuevo, {
+      onSuccess: () => {
+        setModalRegistrar(false);
+        setNuevoTecnico({
+          numero_identificacion: '',
+          primer_nombre: '',
+          segundo_nombre: '',
+          primer_apellido: '',
+          segundo_apellido: '',
+          telefono: '',
+          correo: '',
+          zona_asignada: 'Huila Sur (Pitalito, San Agustín)',
+          fincas_a_cargo: 10,
+          especialidad: 'Agrónomo Especialista en Suelos y Q-Grader',
+          estado: 'Activo',
+        });
+      },
     });
   };
 
@@ -91,11 +100,11 @@ export default function EmpresaTecnicosPage() {
     e.preventDefault();
     if (!tecnicoEdicion) return;
 
-    setTecnicos((prev) =>
-      prev.map((item) => (item.id === tecnicoEdicion.id ? { ...tecnicoEdicion } : item))
-    );
-    toast.success('Técnico actualizado correctamente');
-    setModalEditar(false);
+    actualizarMutation.mutate(tecnicoEdicion, {
+      onSuccess: () => {
+        setModalEditar(false);
+      },
+    });
   };
 
   const handleEjecutarConsulta = (e) => {
@@ -159,6 +168,7 @@ export default function EmpresaTecnicosPage() {
       </div>
 
       {/* Tabla de Técnicos */}
+      <QueryState query={tecnicosQuery} />
       {/* Columnas: N°, Identificación, Nombre Completo, Contacto, Zona Asignada, Fincas, Estado, Acciones */}
       <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">

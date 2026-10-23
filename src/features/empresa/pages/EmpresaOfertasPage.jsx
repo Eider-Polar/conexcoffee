@@ -21,22 +21,36 @@ import {
   Ship,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { QueryState } from '@/components/feedback';
 import {
-  INITIAL_EMPRESA_PREOFERTAS,
-  INITIAL_EMPRESA_OFERTAS,
-  INITIAL_EMPRESA_TECNICOS,
-  INITIAL_EMPRESA_CONTENEDORES,
-} from '../data/empresaData';
+  useEmpresaPreofertas,
+  useActualizarEmpresaPreoferta,
+  useEmpresaOfertas,
+  useCrearEmpresaOferta,
+  useActualizarEmpresaOferta,
+  useEmpresaTecnicos,
+  useEmpresaContenedores,
+} from '../hooks/useEmpresaData';
 
 export default function EmpresaOfertasPage({ vistaInicial = 'ofertas' }) {
   // Pestaña principal activa: 'ofertas' | 'preofertas'
   const [tabPrincipal, setTabPrincipal] = useState(vistaInicial);
 
-  // Estados de datos
-  const [preofertas, setPreofertas] = useState(INITIAL_EMPRESA_PREOFERTAS);
-  const [ofertas, setOfertas] = useState(INITIAL_EMPRESA_OFERTAS);
-  const [tecnicos] = useState(INITIAL_EMPRESA_TECNICOS);
-  const [contenedores] = useState(INITIAL_EMPRESA_CONTENEDORES);
+  // Estados de datos vía TanStack Query
+  const preofertasQuery = useEmpresaPreofertas();
+  const preofertas = preofertasQuery.data || [];
+  const actualizarPreoferta = useActualizarEmpresaPreoferta();
+
+  const ofertasQuery = useEmpresaOfertas();
+  const ofertas = ofertasQuery.data || [];
+  const crearOferta = useCrearEmpresaOferta();
+  const actualizarOferta = useActualizarEmpresaOferta();
+
+  const tecnicosQuery = useEmpresaTecnicos();
+  const tecnicos = tecnicosQuery.data || [];
+
+  const contenedoresQuery = useEmpresaContenedores();
+  const contenedores = contenedoresQuery.data || [];
 
   // Filtros de búsqueda
   const [searchTerm, setSearchTerm] = useState('');
@@ -125,16 +139,14 @@ export default function EmpresaOfertasPage({ vistaInicial = 'ofertas' }) {
       ? `${tec.primer_nombre} ${tec.primer_apellido}`
       : 'Técnico Agrónomo Asignado';
 
-    setPreofertas((prev) =>
-      prev.map((p) =>
-        p.id === preofertaSeleccionada.id
-          ? { ...p, estado: 'Asignada', tecnico_asignado: nombreTecnico }
-          : p
-      )
+    actualizarPreoferta.mutate(
+      { ...preofertaSeleccionada, estado: 'Asignada', tecnico_asignado: nombreTecnico },
+      {
+        onSuccess: () => {
+          setModalAsignarTecnico(false);
+        },
+      }
     );
-
-    toast.success(`Técnico ${nombreTecnico} asignado a ${preofertaSeleccionada.codigo}`);
-    setModalAsignarTecnico(false);
   };
 
   const handleAbrirRechazar = (item) => {
@@ -147,16 +159,18 @@ export default function EmpresaOfertasPage({ vistaInicial = 'ofertas' }) {
     e.preventDefault();
     if (!preofertaSeleccionada) return;
 
-    setPreofertas((prev) =>
-      prev.map((p) =>
-        p.id === preofertaSeleccionada.id
-          ? { ...p, estado: 'Rechazada', motivo_rechazo: motivoRechazo || 'No cumple requisitos mínimos de calidad' }
-          : p
-      )
+    actualizarPreoferta.mutate(
+      {
+        ...preofertaSeleccionada,
+        estado: 'Rechazada',
+        motivo_rechazo: motivoRechazo || 'No cumple requisitos mínimos de calidad',
+      },
+      {
+        onSuccess: () => {
+          setModalRechazar(false);
+        },
+      }
     );
-
-    toast.error(`Pre-oferta ${preofertaSeleccionada.codigo} ha sido rechazada`);
-    setModalRechazar(false);
   };
 
   const handleAbrirConversion = (item) => {
@@ -215,19 +229,13 @@ export default function EmpresaOfertasPage({ vistaInicial = 'ofertas' }) {
       },
     };
 
-    setOfertas([nuevaOferta, ...ofertas]);
-
-    setPreofertas((prev) =>
-      prev.map((p) =>
-        p.id === preofertaSeleccionada.id
-          ? { ...p, estado: 'Aprobada' }
-          : p
-      )
-    );
-
-    toast.success(`¡Éxito! Pre-oferta aprobada y convertida en Oferta en Firme (${nuevaOferta.codigo})`);
-    setModalConvertirOferta(false);
-    setTabPrincipal('ofertas');
+    crearOferta.mutate(nuevaOferta, {
+      onSuccess: () => {
+        actualizarPreoferta.mutate({ ...preofertaSeleccionada, estado: 'Aprobada' });
+        setModalConvertirOferta(false);
+        setTabPrincipal('ofertas');
+      },
+    });
   };
 
   // ----------------------------------------------------
@@ -253,14 +261,14 @@ export default function EmpresaOfertasPage({ vistaInicial = 'ofertas' }) {
     e.preventDefault();
     if (!ofertaSeleccionada || !contenedorDestino) return;
 
-    setOfertas((prev) =>
-      prev.map((o) =>
-        o.id === ofertaSeleccionada.id ? { ...o, contenedor_asignado: contenedorDestino } : o
-      )
+    actualizarOferta.mutate(
+      { ...ofertaSeleccionada, contenedor_asignado: contenedorDestino },
+      {
+        onSuccess: () => {
+          setModalAsignarContenedor(false);
+        },
+      }
     );
-
-    toast.success(`Oferta ${ofertaSeleccionada.codigo} asignada al contenedor ${contenedorDestino}`);
-    setModalAsignarContenedor(false);
   };
 
   return (
@@ -353,6 +361,7 @@ export default function EmpresaOfertasPage({ vistaInicial = 'ofertas' }) {
       {/* VISTA 1: OFERTAS EN FIRME (Idéntica a conexcoffee.co/ofertas)             */}
       {/* Columnas: N°, CODIGO, CANTIDAD, VARIEDAD DE CAFE, ESTADO, ACCIONES        */}
       {/* ========================================================================= */}
+      <QueryState query={tabPrincipal === 'ofertas' ? ofertasQuery : preofertasQuery} />
       {tabPrincipal === 'ofertas' && (
         <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">

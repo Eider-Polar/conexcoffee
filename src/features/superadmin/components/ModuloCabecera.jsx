@@ -37,11 +37,11 @@ export default function ModuloCabecera({
           <div className="text-white">
             <div className="flex items-center gap-2 mb-1.5">
               {Icono && (
-                <div className="h-7 w-7 rounded-lg bg-[#AD2E01] flex items-center justify-center text-white shadow-md">
+                <div className="h-7 w-7 rounded-lg bg-brand-terracota flex items-center justify-center text-white shadow-md">
                   <Icono className="h-4 w-4" />
                 </div>
               )}
-              <span className="text-xs font-bold tracking-wider uppercase text-[#F39200]">
+              <span className="text-xs font-bold tracking-wider uppercase text-brand-gold">
                 Módulo SuperAdmin
               </span>
             </div>
@@ -72,7 +72,7 @@ export default function ModuloCabecera({
               <button
                 type="button"
                 onClick={onRegistrar}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#AD2E01] hover:bg-[#8D2501] active:scale-[0.98] text-white text-xs sm:text-sm font-semibold transition-all shadow-md hover:shadow-lg cursor-pointer"
+                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-terracota hover:bg-brand-terracota-dark active:scale-[0.98] text-white text-xs sm:text-sm font-semibold transition-all shadow-md hover:shadow-lg cursor-pointer"
               >
                 <Plus className="h-4 w-4 stroke-[2.5]" />
                 <span>{textoBotonRegistrar}</span>
@@ -85,7 +85,7 @@ export default function ModuloCabecera({
       {/* Franja descriptiva inferior inspirada en la original */}
       <div className="px-4 sm:px-6 py-3 bg-surface-50 border-t border-surface-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs sm:text-sm">
         <div className="flex items-center gap-2.5 text-surface-700">
-          <div className="h-6 w-6 rounded-full bg-[#FFF1ED] text-[#AD2E01] flex items-center justify-center shrink-0 border border-[#AD2E01]/20">
+          <div className="h-6 w-6 rounded-full bg-brand-tint text-brand-terracota flex items-center justify-center shrink-0 border border-brand-terracota/20">
             <Info className="h-3.5 w-3.5" />
           </div>
           <span className="font-medium text-surface-600">
@@ -95,7 +95,7 @@ export default function ModuloCabecera({
 
         {totalRegistros !== undefined && (
           <div className="shrink-0 font-semibold text-surface-700 bg-white px-3 py-1 rounded-lg border border-surface-200 shadow-2xs">
-            Total registros: <span className="font-bold text-[#AD2E01]">{totalRegistros}</span>
+            Total registros: <span className="font-bold text-brand-terracota">{totalRegistros}</span>
           </div>
         )}
       </div>

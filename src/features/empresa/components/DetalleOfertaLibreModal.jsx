@@ -27,10 +27,10 @@ export default function DetalleOfertaLibreModal({
       size="2xl"
       title={
         <div className="flex flex-wrap items-center gap-2">
-          <span className="p-1 rounded-md bg-amber-50 text-[#AD2E01]">
+          <span className="p-1 rounded-md bg-amber-50 text-brand-terracota">
             <Sparkles className="w-4 h-4" />
           </span>
-          <span className="text-xs font-mono font-bold text-[#AD2E01] bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200/60">
+          <span className="text-xs font-mono font-bold text-brand-terracota bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200/60">
             {oferta.codigo}
           </span>
           <span className="text-sm sm:text-base font-extrabold text-stone-900">
@@ -43,7 +43,7 @@ export default function DetalleOfertaLibreModal({
         {/* Banner de Estado: Si está reservado */}
         {estaReservada && (
           <div className="bg-amber-50 border border-amber-200/80 rounded-xl p-3 flex items-start gap-3">
-            <span className="p-1.5 rounded-lg bg-amber-100 text-[#AD2E01] shrink-0 mt-0.5">
+            <span className="p-1.5 rounded-lg bg-amber-100 text-brand-terracota shrink-0 mt-0.5">
               <Clock className="w-4 h-4" />
             </span>
             <div className="text-xs">
@@ -117,7 +117,7 @@ export default function DetalleOfertaLibreModal({
               <span className="text-stone-500 block mb-0.5 font-medium">
                 Precio Estimado por Carga
               </span>
-              <span className="text-[#AD2E01] font-mono font-bold text-sm block">
+              <span className="text-brand-terracota font-mono font-bold text-sm block">
                 ${oferta.precio_estimado_carga?.toLocaleString('es-CO')} COP
               </span>
             </div>
@@ -136,12 +136,12 @@ export default function DetalleOfertaLibreModal({
             </div>
             <div>
               <span className="text-stone-500 block mb-0.5 font-medium flex items-center gap-1">
-                <Phone className="w-3.5 h-3.5 text-[#AD2E01]" />
+                <Phone className="w-3.5 h-3.5 text-brand-terracota" />
                 Contacto Telefónico Directo
               </span>
               <a
                 href={`tel:${oferta.caficultor_telefono}`}
-                className="inline-flex items-center gap-1.5 font-mono font-bold text-xs sm:text-sm text-[#AD2E01] hover:text-[#8D2501] bg-amber-50 hover:bg-amber-100/70 px-2.5 py-1 rounded-lg border border-amber-200/70 transition-colors"
+                className="inline-flex items-center gap-1.5 font-mono font-bold text-xs sm:text-sm text-brand-terracota hover:text-brand-terracota-dark bg-amber-50 hover:bg-amber-100/70 px-2.5 py-1 rounded-lg border border-amber-200/70 transition-colors"
                 title="Llamar o contactar al caficultor"
               >
                 <Phone className="w-3.5 h-3.5" />
@@ -182,10 +182,10 @@ export default function DetalleOfertaLibreModal({
                 className={`w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
                   estaReservada
                     ? 'bg-amber-100 text-amber-900 border border-amber-300/80 cursor-default opacity-90'
-                    : 'bg-white border-2 border-[#F25433] text-[#AD2E01] hover:bg-amber-50/70 active:scale-[0.99]'
+                    : 'bg-white border-2 border-brand-orange text-brand-terracota hover:bg-amber-50/70 active:scale-[0.99]'
                 }`}
               >
-                <Clock className="w-4 h-4 text-[#F25433]" />
+                <Clock className="w-4 h-4 text-brand-orange" />
                 <span>
                   {estaReservada ? 'Reservada (3 días restantes)' : 'Reservar (3 días)'}
                 </span>
@@ -200,7 +200,7 @@ export default function DetalleOfertaLibreModal({
               className={`w-full sm:w-auto px-5 py-2.5 rounded-xl text-xs font-bold text-white shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer ${
                 estaAceptada
                   ? 'bg-emerald-600 cursor-default opacity-90'
-                  : 'bg-[#AD2E01] hover:bg-[#8D2501] active:scale-[0.99]'
+                  : 'bg-brand-terracota hover:bg-brand-terracota-dark active:scale-[0.99]'
               }`}
             >
               <CheckCircle2 className="w-4 h-4" />

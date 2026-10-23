@@ -1,6 +1,14 @@
-import { NEGOCIACIONES_RECIENTES } from '../data/brokerData';
+import { useNegociaciones } from '../hooks/useBrokerData';
+import { QueryState } from '@/components/feedback';
 
 export default function NegociacionesTable() {
+  const query = useNegociaciones();
+  const negociaciones = query.data ?? [];
+
+  if (query.isLoading || query.isError) {
+    return <QueryState query={query} />;
+  }
+
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm text-left">
@@ -15,7 +23,7 @@ export default function NegociacionesTable() {
           </tr>
         </thead>
         <tbody className="divide-y divide-surface-200">
-          {NEGOCIACIONES_RECIENTES.map((neg) => (
+          {negociaciones.map((neg) => (
             <tr key={neg.id} className="hover:bg-surface-50 transition-colors">
               <td className="py-3 px-4 font-mono font-medium text-surface-900">{neg.id}</td>
               <td className="py-3 px-4 font-medium text-surface-900">{neg.comprador}</td>

@@ -1,10 +1,18 @@
 import { Award } from 'lucide-react';
-import { CATACIONES_RECIENTES } from '../data/catadorData';
+import { useCataciones } from '../hooks/useCatadorData';
+import { QueryState } from '@/components/feedback';
 
 export default function CatacionesList() {
+  const query = useCataciones();
+  const cataciones = query.data ?? [];
+
+  if (query.isLoading || query.isError) {
+    return <QueryState query={query} />;
+  }
+
   return (
     <div className="space-y-3">
-      {CATACIONES_RECIENTES.map((c) => (
+      {cataciones.map((c) => (
         <div key={c.id} className="p-4 rounded-lg border border-surface-200 bg-surface-50 hover:bg-surface-100/70 transition-colors">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>

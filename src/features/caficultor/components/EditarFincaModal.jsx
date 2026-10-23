@@ -24,7 +24,7 @@ export default function EditarFincaModal({ isOpen, onClose, finca, onGuardar }) 
       <div className="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-stone-200 space-y-4 my-8 animate-in fade-in zoom-in-95">
         <div className="flex items-center justify-between border-b border-stone-100 pb-3">
           <div className="flex items-center gap-2">
-            <span className="p-2 rounded-xl bg-amber-50 text-[#AD2E01]">
+            <span className="p-2 rounded-xl bg-amber-50 text-brand-terracota">
               <Pencil className="w-5 h-5" />
             </span>
             <div>
@@ -138,7 +138,7 @@ export default function EditarFincaModal({ isOpen, onClose, finca, onGuardar }) 
             </button>
             <button
               type="submit"
-              className="px-5 py-2 bg-[#AD2E01] hover:bg-[#8D2501] text-white font-bold rounded-xl shadow-xs cursor-pointer"
+              className="px-5 py-2 bg-brand-terracota hover:bg-brand-terracota-dark text-white font-bold rounded-xl shadow-xs cursor-pointer"
             >
               Guardar Cambios
             </button>

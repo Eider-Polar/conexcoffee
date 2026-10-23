@@ -1,6 +1,13 @@
-import { MUESTRAS_LABORATORIO } from '../data/laboratorioData';
+import { useMuestrasResumen } from '../hooks/useLaboratorioData';
+import { QueryState } from '@/components/feedback';
 
 export default function MuestrasLaboratorioTable() {
+  const query = useMuestrasResumen();
+  const muestras = query.data ?? [];
+
+  if (query.isLoading || query.isError) {
+    return <QueryState query={query} />;
+  }
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm text-left">
@@ -14,7 +21,7 @@ export default function MuestrasLaboratorioTable() {
           </tr>
         </thead>
         <tbody className="divide-y divide-surface-200">
-          {MUESTRAS_LABORATORIO.map((m) => (
+          {muestras.map((m) => (
             <tr key={m.id} className="hover:bg-surface-50 transition-colors">
               <td className="py-3 px-4 font-mono font-medium text-surface-900">{m.id}</td>
               <td className="py-3 px-4">

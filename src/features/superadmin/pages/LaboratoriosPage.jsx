@@ -182,7 +182,7 @@ export default function LaboratoriosPage() {
             placeholder="Buscar por NIT, nombre o correo…"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-surface-200 focus:outline-none focus:ring-2 focus:ring-[#AD2E01]/20 focus:border-[#AD2E01]"
+            className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-surface-200 focus:outline-none focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
           />
         </div>
       </div>
@@ -219,7 +219,7 @@ export default function LaboratoriosPage() {
                     </td>
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-2.5">
-                        <div className="h-8 w-8 rounded-lg bg-[#FFF1ED] text-[#AD2E01] flex items-center justify-center shrink-0">
+                        <div className="h-8 w-8 rounded-lg bg-brand-tint text-brand-terracota flex items-center justify-center shrink-0">
                           <FlaskConical className="h-4 w-4" />
                         </div>
                         <div>
@@ -240,7 +240,7 @@ export default function LaboratoriosPage() {
                           type="button"
                           onClick={() => abrirModalEditar(lab)}
                           title="Editar"
-                          className="p-1.5 rounded-lg border border-surface-200 bg-white text-surface-600 hover:text-[#AD2E01] hover:border-[#AD2E01]/30 hover:bg-[#FFF1ED] transition-colors cursor-pointer shadow-2xs"
+                          className="p-1.5 rounded-lg border border-surface-200 bg-white text-surface-600 hover:text-brand-terracota hover:border-brand-terracota/30 hover:bg-brand-tint transition-colors cursor-pointer shadow-2xs"
                         >
                           <Pencil className="h-4 w-4" />
                         </button>
@@ -268,7 +268,7 @@ export default function LaboratoriosPage() {
           <div className="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-surface-200 my-8">
             <div className="flex items-center justify-between pb-4 border-b border-surface-200">
               <div className="flex items-center gap-2.5">
-                <div className="h-9 w-9 rounded-xl bg-[#FFF1ED] text-[#AD2E01] flex items-center justify-center">
+                <div className="h-9 w-9 rounded-xl bg-brand-tint text-brand-terracota flex items-center justify-center">
                   <FlaskConical className="h-5 w-5" />
                 </div>
                 <div>
@@ -368,7 +368,7 @@ export default function LaboratoriosPage() {
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-[#AD2E01] hover:bg-[#8D2501] text-white text-sm font-semibold shadow-md cursor-pointer"
+                  className="px-5 py-2 rounded-xl bg-brand-terracota hover:bg-brand-terracota-dark text-white text-sm font-semibold shadow-md cursor-pointer"
                 >
                   Guardar Laboratorio
                 </button>
@@ -384,7 +384,7 @@ export default function LaboratoriosPage() {
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-surface-200">
             <div className="flex items-center justify-between pb-3 border-b border-surface-200">
               <div className="flex items-center gap-2">
-                <Search className="h-5 w-5 text-[#AD2E01]" />
+                <Search className="h-5 w-5 text-brand-terracota" />
                 <h3 className="text-base font-bold text-surface-900">Consultar Laboratorio</h3>
               </div>
               <button
@@ -407,11 +407,11 @@ export default function LaboratoriosPage() {
                     value={nitConsulta}
                     onChange={(e) => setNitConsulta(e.target.value)}
                     placeholder="Ej. 901456789-3"
-                    className="flex-1 px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-[#AD2E01]/20 focus:border-[#AD2E01]"
+                    className="flex-1 px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
                   />
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-[#AD2E01] hover:bg-[#8D2501] text-white text-xs font-bold rounded-xl shadow-sm cursor-pointer"
+                    className="px-4 py-2 bg-brand-terracota hover:bg-brand-terracota-dark text-white text-xs font-bold rounded-xl shadow-sm cursor-pointer"
                   >
                     Buscar
                   </button>
@@ -426,7 +426,7 @@ export default function LaboratoriosPage() {
             )}
 
             {resultadoConsulta && resultadoConsulta !== 'NO_ENCONTRADO' && (
-              <div className="mt-4 p-4 bg-[#FFF1ED] border border-[#AD2E01]/20 rounded-xl space-y-2">
+              <div className="mt-4 p-4 bg-brand-tint border border-brand-terracota/20 rounded-xl space-y-2">
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-emerald-600 shrink-0" />
                   <span className="font-bold text-surface-900 text-sm">
@@ -457,7 +457,7 @@ export default function LaboratoriosPage() {
           <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-surface-200">
             <div className="flex items-center justify-between pb-3 border-b border-surface-200">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-xl bg-[#FFF1ED] text-[#AD2E01] flex items-center justify-center">
+                <div className="h-10 w-10 rounded-xl bg-brand-tint text-brand-terracota flex items-center justify-center">
                   <FlaskConical className="h-5 w-5" />
                 </div>
                 <div>
@@ -489,7 +489,7 @@ export default function LaboratoriosPage() {
                 </div>
                 <div>
                   <span className="text-surface-500 block">Muestras Analizadas</span>
-                  <span className="font-semibold text-[#AD2E01]">{laboratorioActual.muestrasAnalizadas} cataciones</span>
+                  <span className="font-semibold text-brand-terracota">{laboratorioActual.muestrasAnalizadas} cataciones</span>
                 </div>
               </div>
 

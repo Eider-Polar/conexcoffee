@@ -8,10 +8,18 @@ import {
   Handshake,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { INITIAL_EMPRESA_BROKERS } from '../data/empresaData';
+import { QueryState } from '@/components/feedback';
+import {
+  useEmpresaBrokers,
+  useCrearEmpresaBroker,
+  useActualizarEmpresaBroker,
+} from '../hooks/useEmpresaData';
 
 export default function EmpresaBrokersPage() {
-  const [brokers, setBrokers] = useState(INITIAL_EMPRESA_BROKERS);
+  const query = useEmpresaBrokers();
+  const brokers = query.data ?? [];
+  const crearBroker = useCrearEmpresaBroker();
+  const actualizarBroker = useActualizarEmpresaBroker();
   const [searchTerm, setSearchTerm] = useState('');
 
   // Modales
@@ -90,8 +98,7 @@ export default function EmpresaBrokersPage() {
       estado: 'Activo',
     };
 
-    setBrokers([nuevo, ...brokers]);
-    toast.success('Broker registrado para la empresa con éxito');
+    crearBroker.mutate(nuevo);
     setModalRegistrar(false);
     setNuevoBroker({
       numero_identificacion: '',
@@ -114,12 +121,13 @@ export default function EmpresaBrokersPage() {
     e.preventDefault();
     if (!brokerEdicion) return;
 
-    setBrokers((prev) =>
-      prev.map((b) => (b.id === brokerEdicion.id ? brokerEdicion : b))
-    );
-    toast.success('Broker actualizado con éxito');
+    actualizarBroker.mutate(brokerEdicion);
     setModalEditar(false);
   };
+
+  if (query.isLoading || query.isError) {
+    return <QueryState query={query} />;
+  }
 
   const handleEjecutarConsulta = (e) => {
     e.preventDefault();

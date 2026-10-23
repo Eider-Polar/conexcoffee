@@ -8,11 +8,13 @@ import {
   FlaskConical,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { RESULTADOS_LABORATORIO_DATA } from '../data/laboratorioData';
+import { QueryState } from '@/components/feedback';
+import { useResultados } from '../hooks/useLaboratorioData';
 import { VerResultadoModal, GenerarReporteModal } from '../components';
 
 export default function LaboratorioResultadosPage() {
-  const [resultados, setResultados] = useState(RESULTADOS_LABORATORIO_DATA);
+  const query = useResultados();
+  const resultados = query.data ?? [];
   const [searchTerm, setSearchTerm] = useState('');
   const [filtroEstado, setFiltroEstado] = useState('Todos');
 
@@ -23,8 +25,11 @@ export default function LaboratorioResultadosPage() {
   const [modalReporte, setModalReporte] = useState(false);
   const [hojaReporte, setHojaReporte] = useState(null);
 
+  const [resultadosLocal, setResultadosLocal] = useState(null);
+  const listaResultados = resultadosLocal ?? resultados;
+
   // Filtrado
-  const resultadosFiltrados = resultados.filter((item) => {
+  const resultadosFiltrados = listaResultados.filter((item) => {
     const term = searchTerm.toLowerCase();
     const coincideTexto =
       item.codigo.toLowerCase().includes(term) ||
@@ -38,6 +43,10 @@ export default function LaboratorioResultadosPage() {
     return coincideTexto && coincideEstado;
   });
 
+  if (query.isLoading || query.isError) {
+    return <QueryState query={query} />;
+  }
+
   // Acciones
   const handleAbrirVer = (item) => {
     setResultadoSeleccionado(item);
@@ -45,8 +54,8 @@ export default function LaboratorioResultadosPage() {
   };
 
   const handleAprobarMuestra = (item) => {
-    setResultados((prev) =>
-      prev.map((r) =>
+    setResultadosLocal((prev) =>
+      (prev ?? resultados).map((r) =>
         r.id === item.id ? { ...r, estado: 'Aprobada' } : r
       )
     );
@@ -81,10 +90,10 @@ export default function LaboratorioResultadosPage() {
       <div className="bg-white rounded-2xl p-6 border border-stone-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="p-1.5 rounded-lg bg-amber-50 text-[#AD2E01]">
+            <span className="p-1.5 rounded-lg bg-amber-50 text-brand-terracota">
               <FlaskConical className="w-5 h-5" />
             </span>
-            <span className="text-xs font-bold uppercase tracking-wider text-[#AD2E01]">
+            <span className="text-xs font-bold uppercase tracking-wider text-brand-terracota">
               Laboratorio de Calidad
             </span>
           </div>
@@ -171,7 +180,7 @@ export default function LaboratorioResultadosPage() {
                     >
                       {/* Código */}
                       <td className="py-3.5 px-4">
-                        <span className="font-mono font-bold text-stone-900 bg-amber-50 text-[#AD2E01] px-2.5 py-1 rounded-md border border-amber-200/60">
+                        <span className="font-mono font-bold text-stone-900 bg-amber-50 text-brand-terracota px-2.5 py-1 rounded-md border border-amber-200/60">
                           {item.codigo}
                         </span>
                       </td>
@@ -225,7 +234,7 @@ export default function LaboratorioResultadosPage() {
                             onClick={() => handleAbrirVer(item)}
                             title="Ver detalle completo y evidencias"
                             aria-label="Ver detalle completo"
-                            className="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-stone-200 bg-white text-stone-700 hover:text-[#AD2E01] hover:border-[#AD2E01] hover:bg-amber-50/50 transition-colors shadow-2xs cursor-pointer"
+                            className="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-stone-200 bg-white text-stone-700 hover:text-brand-terracota hover:border-brand-terracota hover:bg-amber-50/50 transition-colors shadow-2xs cursor-pointer"
                           >
                             <Eye className="w-4 h-4" />
                           </button>

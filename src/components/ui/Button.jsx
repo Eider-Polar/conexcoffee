@@ -7,15 +7,15 @@
 
 const variants = {
   primary:
-    'bg-[#F25433] text-white hover:bg-[#AD2E01] focus:ring-[#F25433]/40 shadow-sm transition-colors',
+    'bg-brand-orange text-white hover:bg-brand-terracota focus:ring-brand-orange/40 shadow-sm transition-colors',
   secondary:
-    'bg-[#AD2E01] text-white hover:bg-[#8c2503] focus:ring-[#AD2E01]/40 shadow-sm transition-colors',
+    'bg-brand-terracota text-white hover:bg-primary-800 focus:ring-brand-terracota/40 shadow-sm transition-colors',
   danger:
     'bg-danger-600 text-white hover:bg-danger-700 focus:ring-danger-500 shadow-sm',
   ghost:
     'bg-transparent text-surface-700 hover:bg-surface-100 focus:ring-surface-400',
   outline:
-    'border border-surface-300 bg-white text-surface-800 hover:border-[#F25433] hover:text-[#F25433] focus:ring-[#F25433]/30 transition-colors',
+    'border border-surface-300 bg-white text-surface-800 hover:border-brand-orange hover:text-brand-orange focus:ring-brand-orange/30 transition-colors',
 };
 
 const sizes = {

@@ -1,9 +1,17 @@
-import { PROXIMAS_VISITAS_TECNICAS } from '../data/tecnicoData';
+import { useVisitasTecnicas } from '../hooks/useTecnicoData';
+import { QueryState } from '@/components/feedback';
 
 export default function VisitasTecnicasList() {
+  const query = useVisitasTecnicas();
+  const visitas = query.data ?? [];
+
+  if (query.isLoading || query.isError) {
+    return <QueryState query={query} />;
+  }
+
   return (
     <div className="space-y-3">
-      {PROXIMAS_VISITAS_TECNICAS.map((v) => (
+      {visitas.map((v) => (
         <div key={v.id} className="p-4 rounded-lg border border-surface-200 bg-surface-50 hover:bg-surface-100/70 transition-colors">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>

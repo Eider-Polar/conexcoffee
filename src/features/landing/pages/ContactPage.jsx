@@ -147,7 +147,7 @@ export default function ContactPage() {
         <div className="absolute inset-0 bg-black/80" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#AD2E01]/30 border border-[#F25433]/50 text-[#F25433] text-xs font-bold uppercase tracking-wider mb-4">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-terracota/30 border border-brand-orange/50 text-brand-orange text-xs font-bold uppercase tracking-wider mb-4">
             <MessageCircle className="h-3.5 w-3.5" />
             <span>Canales Oficiales de Atención</span>
           </div>
@@ -168,19 +168,19 @@ export default function ContactPage() {
           ==================================================== */}
       <section className="relative z-20 -mt-10 sm:-mt-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
         <div
-          className="relative p-6 sm:p-8 rounded-xl shadow-xl border-2 border-[#AD2E01] overflow-hidden bg-cover bg-center"
+          className="relative p-6 sm:p-8 rounded-xl shadow-xl border-2 border-brand-terracota overflow-hidden bg-cover bg-center"
           style={{
             backgroundImage: "url('/images/pagina-web/background-cafe-conexcoffee-two.png')",
             backgroundColor: '#F25433',
           }}
         >
           {/* Capa sólida de tinte terracota (sin gradientes) */}
-          <div className="absolute inset-0 bg-[#AD2E01]/90" />
+          <div className="absolute inset-0 bg-brand-terracota/90" />
 
           <div className="relative flex flex-col lg:flex-row items-center justify-between gap-6">
             <div className="space-y-2 text-center lg:text-left max-w-3xl">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 text-white text-[11px] font-extrabold uppercase tracking-wider">
-                <Sparkles className="h-3.5 w-3.5 text-[#F25433]" />
+                <Sparkles className="h-3.5 w-3.5 text-brand-orange" />
                 <span>Programa de Conexión Directa al Productor</span>
               </div>
               <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-white uppercase tracking-tight">
@@ -196,9 +196,9 @@ export default function ContactPage() {
               <button
                 type="button"
                 onClick={() => setIsEmpresasModalOpen(true)}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-3.5 bg-white text-[#AD2E01] hover:bg-surface-50 font-black text-xs sm:text-sm uppercase tracking-wider rounded-xl shadow-lg hover:shadow-xl transition-all cursor-pointer group"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-3.5 bg-white text-brand-terracota hover:bg-surface-50 font-black text-xs sm:text-sm uppercase tracking-wider rounded-xl shadow-lg hover:shadow-xl transition-all cursor-pointer group"
               >
-                <MapPin className="h-4 w-4 text-[#F25433] group-hover:scale-110 transition-transform" />
+                <MapPin className="h-4 w-4 text-brand-orange group-hover:scale-110 transition-transform" />
                 <span>Explorar Empresas Regionales en el Mapa &gt;</span>
               </button>
             </div>
@@ -210,12 +210,12 @@ export default function ContactPage() {
       <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Ubicación */}
-          <div className="bg-white p-6 sm:p-8 rounded-xl border border-surface-200 shadow-md flex flex-col justify-between hover:border-[#F25433]/40 transition-all">
+          <div className="bg-white p-6 sm:p-8 rounded-xl border border-surface-200 shadow-md flex flex-col justify-between hover:border-brand-orange/40 transition-all">
             <div>
-              <div className="w-12 h-12 rounded-xl bg-[#fee8e3] text-[#AD2E01] flex items-center justify-center mb-4">
+              <div className="w-12 h-12 rounded-xl bg-primary-100 text-brand-terracota flex items-center justify-center mb-4">
                 <MapPin className="h-6 w-6" />
               </div>
-              <span className="text-[11px] font-bold uppercase tracking-wider text-[#AD2E01] block mb-1">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-brand-terracota block mb-1">
                 Sede Principal
               </span>
               <h2 className="text-xl font-extrabold text-surface-900 mb-2">UBICACIÓN</h2>
@@ -224,25 +224,25 @@ export default function ContactPage() {
                 Parque Tecnológico de Innovación en Café, Cajibío — Cauca, Colombia.
               </p>
             </div>
-            <div className="mt-6 pt-4 border-t border-surface-100 flex items-center gap-1.5 text-xs font-semibold text-[#AD2E01]">
+            <div className="mt-6 pt-4 border-t border-surface-100 flex items-center gap-1.5 text-xs font-semibold text-brand-terracota">
               <Building2 className="h-3.5 w-3.5" />
               <span>Centro de Innovación & Calidad</span>
             </div>
           </div>
 
           {/* Correo Electrónico */}
-          <div className="bg-white p-6 sm:p-8 rounded-xl border border-surface-200 shadow-md flex flex-col justify-between hover:border-[#F25433]/40 transition-all">
+          <div className="bg-white p-6 sm:p-8 rounded-xl border border-surface-200 shadow-md flex flex-col justify-between hover:border-brand-orange/40 transition-all">
             <div>
-              <div className="w-12 h-12 rounded-xl bg-[#fee8e3] text-[#AD2E01] flex items-center justify-center mb-4">
+              <div className="w-12 h-12 rounded-xl bg-primary-100 text-brand-terracota flex items-center justify-center mb-4">
                 <Mail className="h-6 w-6" />
               </div>
-              <span className="text-[11px] font-bold uppercase tracking-wider text-[#AD2E01] block mb-1">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-brand-terracota block mb-1">
                 Escríbenos Directamente
               </span>
               <h2 className="text-xl font-extrabold text-surface-900 mb-2">CORREO</h2>
               <a
                 href="mailto:conexcoffe@gmail.com"
-                className="text-sm font-bold text-[#F25433] hover:text-[#AD2E01] transition-colors break-all"
+                className="text-sm font-bold text-brand-orange hover:text-brand-terracota transition-colors break-all"
               >
                 conexcoffe@gmail.com
               </a>
@@ -251,18 +251,18 @@ export default function ContactPage() {
               </p>
             </div>
             <div className="mt-6 pt-4 border-t border-surface-100 flex items-center gap-1.5 text-xs font-semibold text-surface-600">
-              <Clock className="h-3.5 w-3.5 text-[#AD2E01]" />
+              <Clock className="h-3.5 w-3.5 text-brand-terracota" />
               <span>Respuesta en menos de 24 horas</span>
             </div>
           </div>
 
           {/* WhatsApp Directo */}
-          <div className="bg-white p-6 sm:p-8 rounded-xl border border-surface-200 shadow-md flex flex-col justify-between hover:border-[#F25433]/40 transition-all">
+          <div className="bg-white p-6 sm:p-8 rounded-xl border border-surface-200 shadow-md flex flex-col justify-between hover:border-brand-orange/40 transition-all">
             <div>
-              <div className="w-12 h-12 rounded-xl bg-[#fee8e3] text-[#AD2E01] flex items-center justify-center mb-4">
+              <div className="w-12 h-12 rounded-xl bg-primary-100 text-brand-terracota flex items-center justify-center mb-4">
                 <Phone className="h-6 w-6" />
               </div>
-              <span className="text-[11px] font-bold uppercase tracking-wider text-[#AD2E01] block mb-1">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-brand-terracota block mb-1">
                 Atención Rápida
               </span>
               <h2 className="text-xl font-extrabold text-surface-900 mb-2">WHATSAPP</h2>
@@ -276,7 +276,7 @@ export default function ContactPage() {
                 href="https://wa.me/573217114140?text=Hola%20ConexCoffee,%20deseo%20m%C3%A1s%20informaci%C3%B3n"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 w-full px-3 py-2 text-xs font-bold text-white bg-[#AD2E01] hover:bg-[#8c2503] rounded-lg transition-colors cursor-pointer"
+                className="inline-flex items-center justify-center gap-2 w-full px-3 py-2 text-xs font-bold text-white bg-brand-terracota hover:bg-primary-800 rounded-lg transition-colors cursor-pointer"
               >
                 <MessageCircle className="h-3.5 w-3.5" />
                 <span>Chatear por WhatsApp</span>
@@ -292,14 +292,14 @@ export default function ContactPage() {
           {/* Columna Izquierda: Preguntas Frecuentes (FAQ Interactivo) */}
           <div className="lg:col-span-6 space-y-6">
             <div>
-              <div className="inline-flex items-center gap-2 text-[#AD2E01] font-bold text-xs uppercase tracking-widest mb-2">
+              <div className="inline-flex items-center gap-2 text-brand-terracota font-bold text-xs uppercase tracking-widest mb-2">
                 <HelpCircle className="h-4 w-4" />
                 <span>Resolución Rápida</span>
               </div>
               <h2 className="text-2xl sm:text-3xl font-extrabold text-surface-900 tracking-tight">
                 Preguntas Frecuentes
               </h2>
-              <div className="w-16 h-1 bg-[#F25433] rounded-full mt-3 mb-4" />
+              <div className="w-16 h-1 bg-brand-orange rounded-full mt-3 mb-4" />
               <p className="text-sm text-surface-600 leading-relaxed">
                 Encuentra respuestas inmediatas a las consultas más comunes sobre compras, ventas, calidad
                 y logística en ConexCoffee.
@@ -318,11 +318,11 @@ export default function ContactPage() {
                     <button
                       type="button"
                       onClick={() => toggleFaq(item.id)}
-                      className="w-full flex items-center justify-between p-5 text-left font-bold text-sm text-surface-900 hover:text-[#AD2E01] transition-colors cursor-pointer"
+                      className="w-full flex items-center justify-between p-5 text-left font-bold text-sm text-surface-900 hover:text-brand-terracota transition-colors cursor-pointer"
                     >
                       <span className="pr-4 leading-snug">{item.pregunta}</span>
                       <ChevronDown
-                        className={`h-4 w-4 shrink-0 text-[#AD2E01] transition-transform duration-200 ${
+                        className={`h-4 w-4 shrink-0 text-brand-terracota transition-transform duration-200 ${
                           isOpen ? 'rotate-180' : ''
                         }`}
                       />
@@ -340,14 +340,14 @@ export default function ContactPage() {
             {/* Tarjeta de soporte adicional */}
             <div className="p-6 rounded-xl bg-stone-900 text-white border border-stone-800">
               <h3 className="text-base font-bold mb-2 flex items-center gap-2">
-                <Clock className="h-4 w-4 text-[#F25433]" />
+                <Clock className="h-4 w-4 text-brand-orange" />
                 <span>Horario de Atención Oficial</span>
               </h3>
               <p className="text-xs text-surface-300 leading-relaxed mb-3">
                 Nuestro equipo técnico y administrativo atiende de Lunes a Viernes de 8:00 AM a 6:00 PM
                 y Sábados de 8:00 AM a 1:00 PM (Hora Colombia, GMT-5).
               </p>
-              <div className="flex items-center gap-2 text-xs font-semibold text-[#F25433]">
+              <div className="flex items-center gap-2 text-xs font-semibold text-brand-orange">
                 <CheckCircle2 className="h-4 w-4" />
                 <span>Atención prioritaria a productores y tostadores</span>
               </div>
@@ -358,7 +358,7 @@ export default function ContactPage() {
           <div className="lg:col-span-6">
             <Card className="p-6 sm:p-10 border border-surface-200 shadow-lg bg-white">
               <div className="mb-6">
-                <span className="text-[#AD2E01] font-bold text-xs uppercase tracking-widest block mb-1">
+                <span className="text-brand-terracota font-bold text-xs uppercase tracking-widest block mb-1">
                   Atención Personalizada
                 </span>
                 <h2 className="text-2xl font-extrabold text-surface-900 tracking-tight">
@@ -370,16 +370,16 @@ export default function ContactPage() {
               </div>
 
               {/* Aviso para Caficultores dentro del Formulario */}
-              <div className="mb-5 p-3.5 rounded-lg bg-[#fee8e3] border-l-4 border-[#AD2E01] text-xs text-surface-800 flex items-start gap-2.5">
-                <Sparkles className="h-4 w-4 text-[#AD2E01] shrink-0 mt-0.5" />
+              <div className="mb-5 p-3.5 rounded-lg bg-primary-100 border-l-4 border-brand-terracota text-xs text-surface-800 flex items-start gap-2.5">
+                <Sparkles className="h-4 w-4 text-brand-terracota shrink-0 mt-0.5" />
                 <div>
-                  <strong className="text-[#AD2E01] block">¿Eres caficultor y buscas comercializar tu cosecha?</strong>
+                  <strong className="text-brand-terracota block">¿Eres caficultor y buscas comercializar tu cosecha?</strong>
                   <span className="leading-relaxed">
                     En caso de que tu cosecha sea aprobada por la empresa aliada, podrás formalizar tu venta directa con garantía de precio justo.{' '}
                     <button
                       type="button"
                       onClick={() => setIsEmpresasModalOpen(true)}
-                      className="text-[#AD2E01] font-extrabold underline hover:text-[#8c2503] cursor-pointer"
+                      className="text-brand-terracota font-extrabold underline hover:text-primary-800 cursor-pointer"
                     >
                       Haz click aquí para abrir el Directorio & Mapa de Empresas Regionales
                     </button>.
@@ -417,7 +417,7 @@ export default function ContactPage() {
                       id="pais"
                       value={form.pais}
                       onChange={(e) => setForm({ ...form, pais: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-lg border border-surface-300 bg-white text-surface-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#F25433]"
+                      className="w-full px-3.5 py-2.5 rounded-lg border border-surface-300 bg-white text-surface-900 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange"
                     >
                       {PAISES_OPCIONES.map((p) => (
                         <option key={p.code} value={p.name}>
@@ -476,7 +476,7 @@ export default function ContactPage() {
                     id="tipoPqrs"
                     value={form.tipoPqrs}
                     onChange={(e) => setForm({ ...form, tipoPqrs: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-surface-300 bg-white text-surface-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#F25433]"
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-surface-300 bg-white text-surface-900 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange"
                   >
                     <option value="Consulta General">Consulta General</option>
                     <option value="Información de Café / Lotes">Información sobre Café & Muestras</option>
@@ -503,7 +503,7 @@ export default function ContactPage() {
                     value={form.mensaje}
                     onChange={(e) => setForm({ ...form, mensaje: e.target.value })}
                     placeholder="Escribe aquí tu consulta, lote de interés o detalles de tu proyecto..."
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-surface-300 bg-white text-surface-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#F25433] placeholder-surface-400"
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-surface-300 bg-white text-surface-900 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange placeholder-surface-400"
                   />
                 </div>
 
@@ -525,14 +525,14 @@ export default function ContactPage() {
                     />
                     <label
                       htmlFor="archivo"
-                      className="flex items-center justify-between px-3.5 py-2.5 rounded-lg border border-dashed border-surface-300 hover:border-[#F25433] bg-surface-50 text-surface-600 text-xs cursor-pointer transition-colors"
+                      className="flex items-center justify-between px-3.5 py-2.5 rounded-lg border border-dashed border-surface-300 hover:border-brand-orange bg-surface-50 text-surface-600 text-xs cursor-pointer transition-colors"
                     >
                       <span className="flex items-center gap-2">
-                        <Paperclip className="h-4 w-4 text-[#AD2E01]" />
+                        <Paperclip className="h-4 w-4 text-brand-terracota" />
                         <span>{fileName || 'Seleccionar archivo desde tu dispositivo...'}</span>
                       </span>
                       {fileName && (
-                        <span className="text-[#AD2E01] font-semibold flex items-center gap-1">
+                        <span className="text-brand-terracota font-semibold flex items-center gap-1">
                           <FileCheck className="h-3.5 w-3.5" />
                           Listo
                         </span>
@@ -548,11 +548,11 @@ export default function ContactPage() {
                     type="checkbox"
                     checked={form.aceptaTerminos}
                     onChange={(e) => setForm({ ...form, aceptaTerminos: e.target.checked })}
-                    className="h-4 w-4 mt-0.5 rounded border-surface-300 text-[#F25433] focus:ring-[#F25433]"
+                    className="h-4 w-4 mt-0.5 rounded border-surface-300 text-brand-orange focus:ring-brand-orange"
                   />
                   <label htmlFor="aceptaTerminos" className="text-xs text-surface-600 leading-normal">
                     Acepto el tratamiento de mis datos de acuerdo con la{' '}
-                    <a href="/privacy" className="text-[#AD2E01] font-bold hover:underline">
+                    <a href="/privacy" className="text-brand-terracota font-bold hover:underline">
                       Política de Privacidad
                     </a>{' '}
                     de ConexCoffee.
@@ -566,7 +566,7 @@ export default function ContactPage() {
                     variant="primary"
                     size="lg"
                     loading={submitting}
-                    className="w-full gap-2 bg-[#F25433] hover:bg-[#AD2E01] text-white font-bold tracking-wide"
+                    className="w-full gap-2 bg-brand-orange hover:bg-brand-terracota text-white font-bold tracking-wide"
                   >
                     <Send className="h-4 w-4" />
                     <span>ENVIAR MENSAJE</span>
@@ -582,7 +582,7 @@ export default function ContactPage() {
       <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pb-20">
         <div className="bg-stone-900 text-white p-8 sm:p-10 rounded-xl border border-stone-800 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="space-y-2 text-center md:text-left">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#F25433]">
+            <span className="text-xs font-bold uppercase tracking-widest text-brand-orange">
               Innovación Cafetera
             </span>
             <h3 className="text-xl sm:text-2xl font-extrabold text-white">

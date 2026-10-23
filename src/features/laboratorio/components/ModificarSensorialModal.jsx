@@ -35,7 +35,7 @@ export default function ModificarSensorialModal({ isOpen, onClose, sensorial, on
       <form onSubmit={handleSubmit} className="space-y-5 py-1">
         {/* Título en color Terracota/Rojo como en la imagen */}
         <div>
-          <h3 className="text-xl font-bold text-[#AD2E01]">
+          <h3 className="text-xl font-bold text-brand-terracota">
             Registrar perfil sensorial
           </h3>
           <p className="text-xs text-stone-400 font-mono mt-0.5">
@@ -62,7 +62,7 @@ export default function ModificarSensorialModal({ isOpen, onClose, sensorial, on
             </p>
             <p>
               <span className="font-bold text-stone-800">Puntaje SCA:</span>{' '}
-              <span className="text-[#AD2E01] font-bold underline decoration-stone-300">
+              <span className="text-brand-terracota font-bold underline decoration-stone-300">
                 {sensorial.puntajeSca || sensorial.puntajeTotal || '82.25'}
               </span>
             </p>
@@ -89,7 +89,7 @@ export default function ModificarSensorialModal({ isOpen, onClose, sensorial, on
           <button
             type="button"
             onClick={onClose}
-            className="px-5 py-2 bg-[#757580] hover:bg-stone-600 text-white rounded-lg text-xs font-bold transition-colors flex items-center gap-2 cursor-pointer shadow-xs active:scale-[0.99]"
+            className="px-5 py-2 bg-neutral-gray hover:bg-stone-600 text-white rounded-lg text-xs font-bold transition-colors flex items-center gap-2 cursor-pointer shadow-xs active:scale-[0.99]"
           >
             <XCircle className="w-4 h-4" />
             <span>Cancelar</span>
@@ -97,7 +97,7 @@ export default function ModificarSensorialModal({ isOpen, onClose, sensorial, on
 
           <button
             type="submit"
-            className="px-6 py-2 bg-[#00B497] hover:bg-[#009b82] text-white rounded-lg text-xs font-bold transition-colors flex items-center gap-2 cursor-pointer shadow-xs active:scale-[0.99]"
+            className="px-6 py-2 bg-brand-teal hover:bg-brand-teal-dark text-white rounded-lg text-xs font-bold transition-colors flex items-center gap-2 cursor-pointer shadow-xs active:scale-[0.99]"
           >
             <Save className="w-4 h-4" />
             <span>Guardar</span>

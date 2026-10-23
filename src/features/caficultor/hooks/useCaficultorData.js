@@ -27,6 +27,7 @@ const lotes = createResourceHooks('caficultor-lotes', lotesApi, {
   },
 });
 export const useLotes = lotes.useList;
+export const useCaficultorLotes = lotes.useList;
 export const useCrearLote = lotes.useCreate;
 export const useActualizarLote = lotes.useUpdate;
 
