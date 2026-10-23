@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { useAuth } from '@/features/auth';
+import { startKeepAliveRobot } from '@/lib/keepAliveBot';
 
 // ============================================
 // AppProviders — Wrapper de todos los providers globales
@@ -8,15 +9,17 @@ import { useAuth } from '@/features/auth';
 // Centraliza la inicialización de la app:
 // - Verifica la sesión del usuario al cargar (via getMe)
 // - Monta el sistema de toasts (react-hot-toast)
-// - Aquí se añaden futuros providers (ThemeProvider, etc.)
+// - Activa el robot keep-alive para mantener despierto el backend/Vercel
 // ============================================
 
 export default function AppProviders({ children }) {
   const { checkSession } = useAuth();
 
-  // Verificar sesión al montar la app
+  // Verificar sesión y activar robot de ping periódico
   useEffect(() => {
     checkSession();
+    const cleanupRobot = startKeepAliveRobot();
+    return () => cleanupRobot?.();
   }, []);
 
   return (
