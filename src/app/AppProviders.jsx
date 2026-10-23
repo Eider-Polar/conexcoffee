@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
-import { useAuth } from '@/features/auth';
+import useAuth from '@/features/auth/hooks/useAuth';
 import { startKeepAliveRobot } from '@/lib/keepAliveBot';
 
 // ============================================
@@ -20,7 +20,7 @@ export default function AppProviders({ children }) {
     checkSession();
     const cleanupRobot = startKeepAliveRobot();
     return () => cleanupRobot?.();
-  }, []);
+  }, [checkSession]);
 
   return (
     <>

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import useAuthStore from '@/store/useAuthStore';
+import { API_BASE_URL } from '@/lib/env';
 
 // ============================================
 // Instancia global de Axios — ConexCoffee
@@ -11,7 +12,7 @@ import useAuthStore from '@/store/useAuthStore';
 // ============================================
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL: API_BASE_URL || undefined,
   withCredentials: true,
   timeout: 15000,
   headers: {
@@ -49,15 +50,14 @@ api.interceptors.response.use(
   (error) => {
     const status = error.response?.status;
 
-    if (status === 401) {
-      // Limpiar estado de autenticación
+    // Con config.skipAuthRedirect = true (ej. getMe, health) un 401 es
+    // esperado (visitante anónimo) y NO debe tocar el estado ni redirigir.
+    if (status === 401 && !error.config?.skipAuthRedirect) {
+      // Limpiar estado de autenticación. No se hace redirección dura:
+      // ProtectedRoute detecta isAuthenticated=false y navega a /login
+      // sin recargar la app. Las rutas públicas no se ven afectadas.
       const { clearAuth } = useAuthStore.getState();
       clearAuth();
-
-      // Redirigir al login sin mostrar errores crudos
-      if (window.location.pathname !== '/login') {
-        window.location.href = '/login';
-      }
     }
 
     if (status === 403) {
@@ -73,5 +73,15 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+/**
+ * Extrae un mensaje legible de un error de Axios.
+ * Evita repetir `error.response?.data?.message` en cada componente.
+ */
+export function getErrorMessage(error, fallback = 'Ocurrió un error inesperado') {
+  if (error?.code === 'ECONNABORTED') return 'La solicitud tardó demasiado. Intenta de nuevo.';
+  if (!error?.response) return 'No se pudo conectar con el servidor.';
+  return error.response.data?.message || fallback;
+}
 
 export default api;

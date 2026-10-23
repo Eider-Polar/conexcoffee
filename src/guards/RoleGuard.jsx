@@ -14,10 +14,10 @@ import useAuthStore from '@/store/useAuthStore';
 // ============================================
 
 export default function RoleGuard({ allowedRoles = [] }) {
-  const { role } = useAuthStore();
+  const role = useAuthStore((state) => state.role);
 
-  // Si el rol del usuario no está en la lista permitida
-  if (!allowedRoles.includes(role)) {
+  // Sin rol o rol fuera de la lista permitida → 403
+  if (!role || !allowedRoles.includes(role)) {
     return <Navigate to="/unauthorized" replace />;
   }
 

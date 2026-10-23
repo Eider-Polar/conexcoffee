@@ -1,4 +1,4 @@
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import useAuthStore from '@/store/useAuthStore';
 import { Spinner } from '@/components/ui';
 
@@ -11,7 +11,9 @@ import { Spinner } from '@/components/ui';
 // ============================================
 
 export default function ProtectedRoute() {
-  const { isAuthenticated, isLoading } = useAuthStore();
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const isLoading = useAuthStore((s) => s.isLoading);
+  const location = useLocation();
 
   // Mientras verificamos la sesión, mostrar loading
   if (isLoading) {
@@ -24,7 +26,7 @@ export default function ProtectedRoute() {
 
   // Si no está autenticado, redirigir a login
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   // Si está autenticado, renderizar las rutas hijas

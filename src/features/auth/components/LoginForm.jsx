@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useAuthStore from '@/store/useAuthStore';
-import { login } from '../api/authApi';
+import useAuth from '../hooks/useAuth';
+import { getErrorMessage } from '@/lib/axios';
 import { ROLE_DASHBOARD_ROUTES } from '@/lib/constants';
 import { Input, Button, Captcha } from '@/components/ui';
 import { LogIn, UserPlus } from 'lucide-react';
@@ -26,7 +26,7 @@ export default function LoginForm() {
   const [showVerificacion, setShowVerificacion] = useState(false);
   const [emailRegistrado, setEmailRegistrado] = useState('');
 
-  const { setUser } = useAuthStore();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -52,14 +52,12 @@ export default function LoginForm() {
     }
     setLoading(true);
     try {
-      const data = await login({ ...formData, captchaToken });
-      setUser(data.user);
-      const dashboardRoute = ROLE_DASHBOARD_ROUTES[data.user.role] || '/';
+      const user = await login({ ...formData, captchaToken });
+      const dashboardRoute = ROLE_DASHBOARD_ROUTES[user.role] || '/';
       toast.success('¡Bienvenido!');
       navigate(dashboardRoute);
     } catch (error) {
-      const message = error.response?.data?.message || 'Credenciales inválidas';
-      toast.error(message);
+      toast.error(getErrorMessage(error, 'Credenciales inválidas'));
     } finally {
       setLoading(false);
     }

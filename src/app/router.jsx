@@ -1,4 +1,5 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { Suspense, lazy } from 'react';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 
 // Guards
 import ProtectedRoute from '@/guards/ProtectedRoute';
@@ -8,95 +9,163 @@ import GuestRoute from '@/guards/GuestRoute';
 // Layouts
 import { AuthLayout, DashboardLayout, PublicLayout } from '@/layouts';
 
-// Features — Landing
-import {
-  LandingPage,
-  DestinosPage,
-  NosotrosPage,
-  BlogPage,
-  ContactPage,
-  AddProductPage,
-} from '@/features/landing';
+// Feedback
+import { RouteError } from '@/components/feedback';
+import { Spinner } from '@/components/ui';
 
-// Features — Auth
-import { LoginPage, RegisterPage } from '@/features/auth';
-
-// Features — Dashboards por rol
-import {
-  SuperAdminDashboardPage,
-  CaficultoresPage,
-  CatadoresPage,
-  EmpresasPage,
-  BrokersPage,
-  ComprasPage,
-  ContenedoresPage,
-  FincasPage,
-  LaboratoriosPage,
-  MuestrasPage,
-  OfertasPage,
-  TecnicosPage,
-  UsuariosPage,
-  ConfiguracionPage,
-} from '@/features/superadmin';
-import {
-  EmpresaDashboardPage,
-  EmpresaBrokersPage,
-  EmpresaCaficultoresPage,
-  EmpresaContenedoresPage,
-  EmpresaLaboratoriosPage,
-  EmpresaMuestrasPage,
-  EmpresaPreOfertasPage,
-  EmpresaOfertasPage,
-  EmpresaOfertasLibresPage,
-  EmpresaTecnicosPage,
-} from '@/features/empresa';
-import { BrokerDashboardPage } from '@/features/broker';
-import {
-  CaficultorDashboardPage,
-  CaficultorFincasPage,
-  CaficultorLotesPage,
-  CaficultorPreOfertasPage,
-  CaficultorOfertasPage,
-} from '@/features/caficultor';
-import { CompradorDashboardPage, CompradorContenedoresPage, DetalleVariedadPage } from '@/features/comprador';
-import {
-  LaboratorioDashboardPage,
-  LaboratorioCatadoresPage,
-  LaboratorioAnalisisFisicoPage,
-  LaboratorioAnalisisSensorialPage,
-  LaboratorioResultadosPage,
-  LaboratorioHojasCatacionPage,
-  LaboratorioMuestrasPage,
-} from '@/features/laboratorio';
-import { TecnicoDashboardPage } from '@/features/tecnico';
-import { CatadorDashboardPage, EvaluacionPage } from '@/features/catador';
-
-// Features — Compartidas
-import { ProfilePage } from '@/features/profile';
-import { PaymentContainer } from '@/features/payments';
-
-// Features — Legal & Términos
-import { TermsPage, PrivacyPage, LegalNoticePage } from '@/features/legal';
-
-// Pages de utilidad
-import NotFoundPage from '@/features/auth/pages/NotFoundPage';
-import UnauthorizedPage from '@/features/auth/pages/UnauthorizedPage';
+// Constantes
+import { ROLES } from '@/lib/constants';
 
 // ============================================
 // Router — Definición centralizada de TODAS las rutas
 // ============================================
 // Estructura:
-// 1. Rutas públicas (landing, login, register)
-// 2. Rutas protegidas por rol
-// 3. Rutas compartidas (perfil, pagos)
-// 4. Páginas de error (404, 403)
+// 1. Rutas públicas (landing, legal)
+// 2. Rutas de invitado (login, register)
+// 3. Rutas protegidas por rol
+// 4. Rutas compartidas (perfil, pagos)
+// 5. Páginas de error (404, 403)
+//
+// Code splitting: cada feature se descarga bajo demanda (lazy) para que
+// un visitante de la landing no descargue los paneles de los 8 roles.
 //
 // Para agregar un nuevo módulo a un rol:
 // 1. Crear la carpeta en features/<rol>/<modulo>/
-// 2. Importar la página aquí
-// 3. Agregar la ruta dentro del RoleGuard correspondiente
+// 2. Exportar la página en features/<rol>/index.js
+// 3. Declarar el lazy aquí y agregar la ruta dentro del RoleGuard del rol
 // 4. Agregar el link en NAV_BY_ROLE en Sidebar.jsx
 // ============================================
+
+/**
+ * Crea un componente lazy a partir de un export con nombre de un barrel de feature.
+ * @param {() => Promise<object>} loader - ej. () => import('@/features/empresa')
+ * @param {string} name - nombre del export
+ */
+const lazyPage = (loader, name) =>
+  lazy(() => loader().then((module) => ({ default: module[name] })));
+
+/** Renderiza un componente lazy dentro de su Suspense. */
+const page = (Component) => (
+  <Suspense
+    fallback={
+      <div className="flex items-center justify-center min-h-[50vh]">
+        <Spinner size="lg" />
+      </div>
+    }
+  >
+    <Component />
+  </Suspense>
+);
+
+// ---------- Landing / Legal ----------
+const landing = () => import('@/features/landing');
+const LandingPage = lazyPage(landing, 'LandingPage');
+const DestinosPage = lazyPage(landing, 'DestinosPage');
+const NosotrosPage = lazyPage(landing, 'NosotrosPage');
+const BlogPage = lazyPage(landing, 'BlogPage');
+const ContactPage = lazyPage(landing, 'ContactPage');
+const AddProductPage = lazyPage(landing, 'AddProductPage');
+
+const legal = () => import('@/features/legal');
+const TermsPage = lazyPage(legal, 'TermsPage');
+const PrivacyPage = lazyPage(legal, 'PrivacyPage');
+const LegalNoticePage = lazyPage(legal, 'LegalNoticePage');
+
+// ---------- Auth ----------
+const auth = () => import('@/features/auth');
+const LoginPage = lazyPage(auth, 'LoginPage');
+const RegisterPage = lazyPage(auth, 'RegisterPage');
+const NotFoundPage = lazyPage(auth, 'NotFoundPage');
+const UnauthorizedPage = lazyPage(auth, 'UnauthorizedPage');
+
+// ---------- SuperAdmin ----------
+const superadmin = () => import('@/features/superadmin');
+const SuperAdminDashboardPage = lazyPage(superadmin, 'SuperAdminDashboardPage');
+const CaficultoresPage = lazyPage(superadmin, 'CaficultoresPage');
+const CatadoresPage = lazyPage(superadmin, 'CatadoresPage');
+const EmpresasPage = lazyPage(superadmin, 'EmpresasPage');
+const BrokersPage = lazyPage(superadmin, 'BrokersPage');
+const CompradoresPage = lazyPage(superadmin, 'CompradoresPage');
+const ComprasPage = lazyPage(superadmin, 'ComprasPage');
+const ContenedoresPage = lazyPage(superadmin, 'ContenedoresPage');
+const FincasPage = lazyPage(superadmin, 'FincasPage');
+const LaboratoriosPage = lazyPage(superadmin, 'LaboratoriosPage');
+const MuestrasPage = lazyPage(superadmin, 'MuestrasPage');
+const OfertasPage = lazyPage(superadmin, 'OfertasPage');
+const TecnicosPage = lazyPage(superadmin, 'TecnicosPage');
+const UsuariosPage = lazyPage(superadmin, 'UsuariosPage');
+const ConfiguracionPage = lazyPage(superadmin, 'ConfiguracionPage');
+
+// ---------- Empresa ----------
+const empresa = () => import('@/features/empresa');
+const EmpresaDashboardPage = lazyPage(empresa, 'EmpresaDashboardPage');
+const EmpresaBrokersPage = lazyPage(empresa, 'EmpresaBrokersPage');
+const EmpresaCaficultoresPage = lazyPage(empresa, 'EmpresaCaficultoresPage');
+const EmpresaContenedoresPage = lazyPage(empresa, 'EmpresaContenedoresPage');
+const EmpresaLaboratoriosPage = lazyPage(empresa, 'EmpresaLaboratoriosPage');
+const EmpresaMuestrasPage = lazyPage(empresa, 'EmpresaMuestrasPage');
+const EmpresaPreOfertasPage = lazyPage(empresa, 'EmpresaPreOfertasPage');
+const EmpresaOfertasPage = lazyPage(empresa, 'EmpresaOfertasPage');
+const EmpresaOfertasLibresPage = lazyPage(empresa, 'EmpresaOfertasLibresPage');
+const EmpresaTecnicosPage = lazyPage(empresa, 'EmpresaTecnicosPage');
+
+// ---------- Broker ----------
+const broker = () => import('@/features/broker');
+const BrokerDashboardPage = lazyPage(broker, 'BrokerDashboardPage');
+
+// ---------- Caficultor ----------
+const caficultor = () => import('@/features/caficultor');
+const CaficultorDashboardPage = lazyPage(caficultor, 'CaficultorDashboardPage');
+const CaficultorFincasPage = lazyPage(caficultor, 'CaficultorFincasPage');
+const CaficultorLotesPage = lazyPage(caficultor, 'CaficultorLotesPage');
+const CaficultorPreOfertasPage = lazyPage(caficultor, 'CaficultorPreOfertasPage');
+const CaficultorOfertasPage = lazyPage(caficultor, 'CaficultorOfertasPage');
+
+// ---------- Comprador ----------
+const comprador = () => import('@/features/comprador');
+const CompradorDashboardPage = lazyPage(comprador, 'CompradorDashboardPage');
+const CompradorContenedoresPage = lazyPage(comprador, 'CompradorContenedoresPage');
+const DetalleVariedadPage = lazyPage(comprador, 'DetalleVariedadPage');
+
+// ---------- Laboratorio ----------
+const laboratorio = () => import('@/features/laboratorio');
+const LaboratorioDashboardPage = lazyPage(laboratorio, 'LaboratorioDashboardPage');
+const LaboratorioCatadoresPage = lazyPage(laboratorio, 'LaboratorioCatadoresPage');
+const LaboratorioAnalisisFisicoPage = lazyPage(laboratorio, 'LaboratorioAnalisisFisicoPage');
+const LaboratorioAnalisisSensorialPage = lazyPage(laboratorio, 'LaboratorioAnalisisSensorialPage');
+const LaboratorioResultadosPage = lazyPage(laboratorio, 'LaboratorioResultadosPage');
+const LaboratorioHojasCatacionPage = lazyPage(laboratorio, 'LaboratorioHojasCatacionPage');
+const LaboratorioMuestrasPage = lazyPage(laboratorio, 'LaboratorioMuestrasPage');
+
+// ---------- Técnico ----------
+const tecnico = () => import('@/features/tecnico');
+const TecnicoDashboardPage = lazyPage(tecnico, 'TecnicoDashboardPage');
+
+// ---------- Catador ----------
+const catador = () => import('@/features/catador');
+const CatadorDashboardPage = lazyPage(catador, 'CatadorDashboardPage');
+const EvaluacionPage = lazyPage(catador, 'EvaluacionPage');
+
+// ---------- Compartidas ----------
+const profile = () => import('@/features/profile');
+const ProfilePage = lazyPage(profile, 'ProfilePage');
+
+const payments = () => import('@/features/payments');
+const PaymentContainer = lazyPage(payments, 'PaymentContainer');
+
+/**
+ * Helper para declarar un bloque de rol:
+ * RoleGuard → DashboardLayout → rutas del rol.
+ */
+const roleRoutes = (role, children) => ({
+  element: <RoleGuard allowedRoles={[role]} />,
+  children: [
+    {
+      element: <DashboardLayout />,
+      children,
+    },
+  ],
+});
 
 const router = createBrowserRouter([
   // ============================================
@@ -104,17 +173,18 @@ const router = createBrowserRouter([
   // ============================================
   {
     element: <PublicLayout />,
+    errorElement: <RouteError />,
     children: [
-      { path: '/', element: <LandingPage /> },
-      { path: '/destinos', element: <DestinosPage /> },
-      { path: '/nosotros', element: <NosotrosPage /> },
-      { path: '/blog', element: <BlogPage /> },
-      { path: '/contacto', element: <ContactPage /> },
-      { path: '/contactanos', element: <ContactPage /> },
-      { path: '/agregar-producto', element: <AddProductPage /> },
-      { path: '/terms', element: <TermsPage /> },
-      { path: '/privacy', element: <PrivacyPage /> },
-      { path: '/legal', element: <LegalNoticePage /> },
+      { path: '/', element: page(LandingPage) },
+      { path: '/destinos', element: page(DestinosPage) },
+      { path: '/nosotros', element: page(NosotrosPage) },
+      { path: '/blog', element: page(BlogPage) },
+      { path: '/contacto', element: page(ContactPage) },
+      { path: '/contactanos', element: <Navigate to="/contacto" replace /> },
+      { path: '/agregar-producto', element: page(AddProductPage) },
+      { path: '/terms', element: page(TermsPage) },
+      { path: '/privacy', element: page(PrivacyPage) },
+      { path: '/legal', element: page(LegalNoticePage) },
     ],
   },
 
@@ -123,12 +193,13 @@ const router = createBrowserRouter([
   // ============================================
   {
     element: <GuestRoute />,
+    errorElement: <RouteError />,
     children: [
       {
         element: <AuthLayout />,
         children: [
-          { path: '/login', element: <LoginPage /> },
-          { path: '/register', element: <RegisterPage /> },
+          { path: '/login', element: page(LoginPage) },
+          { path: '/register', element: page(RegisterPage) },
         ],
       },
     ],
@@ -139,180 +210,91 @@ const router = createBrowserRouter([
   // ============================================
   {
     element: <ProtectedRoute />,
+    errorElement: <RouteError />,
     children: [
-      // ----------------------------------------
-      // SuperAdmin
-      // ----------------------------------------
-      {
-        element: <RoleGuard allowedRoles={['superadmin']} />,
-        children: [
-          {
-            element: <DashboardLayout />,
-            children: [
-              { path: '/superadmin/dashboard',    element: <SuperAdminDashboardPage /> },
-              { path: '/superadmin/caficultores', element: <CaficultoresPage />        },
-              { path: '/superadmin/catadores',    element: <CatadoresPage />           },
-              { path: '/superadmin/empresas',     element: <EmpresasPage />            },
-              { path: '/superadmin/brokers',      element: <BrokersPage />             },
-              { path: '/superadmin/compras',      element: <ComprasPage />             },
-              { path: '/superadmin/compradores',  element: <ComprasPage />             },
-              { path: '/superadmin/contenedores', element: <ContenedoresPage />        },
-              { path: '/superadmin/fincas',       element: <FincasPage />              },
-              { path: '/superadmin/laboratorios', element: <LaboratoriosPage />        },
-              { path: '/superadmin/muestras',     element: <MuestrasPage />            },
-              { path: '/superadmin/ofertas',      element: <OfertasPage />             },
-              { path: '/superadmin/tecnicos',     element: <TecnicosPage />            },
-              { path: '/superadmin/users',        element: <UsuariosPage />            },
-              { path: '/superadmin/settings',     element: <ConfiguracionPage />       },
-            ],
-          },
-        ],
-      },
+      roleRoutes(ROLES.SUPERADMIN, [
+        { path: '/superadmin/dashboard',    element: page(SuperAdminDashboardPage) },
+        { path: '/superadmin/caficultores', element: page(CaficultoresPage) },
+        { path: '/superadmin/catadores',    element: page(CatadoresPage) },
+        { path: '/superadmin/empresas',     element: page(EmpresasPage) },
+        { path: '/superadmin/brokers',      element: page(BrokersPage) },
+        { path: '/superadmin/compras',      element: page(ComprasPage) },
+        { path: '/superadmin/compradores',  element: page(CompradoresPage) },
+        { path: '/superadmin/contenedores', element: page(ContenedoresPage) },
+        { path: '/superadmin/fincas',       element: page(FincasPage) },
+        { path: '/superadmin/laboratorios', element: page(LaboratoriosPage) },
+        { path: '/superadmin/muestras',     element: page(MuestrasPage) },
+        { path: '/superadmin/ofertas',      element: page(OfertasPage) },
+        { path: '/superadmin/tecnicos',     element: page(TecnicosPage) },
+        { path: '/superadmin/users',        element: page(UsuariosPage) },
+        { path: '/superadmin/settings',     element: page(ConfiguracionPage) },
+      ]),
 
-      // ----------------------------------------
-      // Empresa
-      // ----------------------------------------
-      {
-        element: <RoleGuard allowedRoles={['empresa']} />,
-        children: [
-          {
-            element: <DashboardLayout />,
-            children: [
-              { path: '/empresa/dashboard',      element: <EmpresaDashboardPage />    },
-              { path: '/empresa/ofertas-libres', element: <EmpresaOfertasLibresPage /> },
-              { path: '/empresa/brokers',        element: <EmpresaBrokersPage />      },
-              { path: '/empresa/caficultores',   element: <EmpresaCaficultoresPage /> },
-              { path: '/empresa/contenedores',   element: <EmpresaContenedoresPage /> },
-              { path: '/empresa/laboratorios',   element: <EmpresaLaboratoriosPage /> },
-              { path: '/empresa/muestras',       element: <EmpresaMuestrasPage />     },
-              { path: '/empresa/pre-ofertas',    element: <EmpresaPreOfertasPage />  },
-              { path: '/empresa/ofertas',        element: <EmpresaOfertasPage />      },
-              { path: '/empresa/tecnicos',       element: <EmpresaTecnicosPage />     },
-            ],
-          },
-        ],
-      },
+      roleRoutes(ROLES.EMPRESA, [
+        { path: '/empresa/dashboard',      element: page(EmpresaDashboardPage) },
+        { path: '/empresa/ofertas-libres', element: page(EmpresaOfertasLibresPage) },
+        { path: '/empresa/brokers',        element: page(EmpresaBrokersPage) },
+        { path: '/empresa/caficultores',   element: page(EmpresaCaficultoresPage) },
+        { path: '/empresa/contenedores',   element: page(EmpresaContenedoresPage) },
+        { path: '/empresa/laboratorios',   element: page(EmpresaLaboratoriosPage) },
+        { path: '/empresa/muestras',       element: page(EmpresaMuestrasPage) },
+        { path: '/empresa/pre-ofertas',    element: page(EmpresaPreOfertasPage) },
+        { path: '/empresa/ofertas',        element: page(EmpresaOfertasPage) },
+        { path: '/empresa/tecnicos',       element: page(EmpresaTecnicosPage) },
+      ]),
 
-      // ----------------------------------------
-      // Broker
-      // ----------------------------------------
-      {
-        element: <RoleGuard allowedRoles={['broker']} />,
-        children: [
-          {
-            element: <DashboardLayout />,
-            children: [
-              { path: '/broker/dashboard', element: <BrokerDashboardPage /> },
-              // { path: '/broker/negotiations', element: <NegotiationsPage /> },
-            ],
-          },
-        ],
-      },
+      roleRoutes(ROLES.BROKER, [
+        { path: '/broker/dashboard', element: page(BrokerDashboardPage) },
+        // { path: '/broker/negotiations', element: page(NegotiationsPage) },
+      ]),
 
-      // ----------------------------------------
-      // Caficultor
-      // ----------------------------------------
-      {
-        element: <RoleGuard allowedRoles={['caficultor']} />,
-        children: [
-          {
-            element: <DashboardLayout />,
-            children: [
-              { path: '/caficultor/dashboard', element: <CaficultorDashboardPage /> },
-              { path: '/caficultor/fincas', element: <CaficultorFincasPage /> },
-              { path: '/caficultor/lots', element: <CaficultorLotesPage /> },
-              { path: '/caficultor/lotes', element: <CaficultorLotesPage /> },
-              { path: '/caficultor/pre-ofertas', element: <CaficultorPreOfertasPage /> },
-              { path: '/caficultor/ofertas', element: <CaficultorOfertasPage /> },
-            ],
-          },
-        ],
-      },
+      roleRoutes(ROLES.CAFICULTOR, [
+        { path: '/caficultor/dashboard',   element: page(CaficultorDashboardPage) },
+        { path: '/caficultor/fincas',      element: page(CaficultorFincasPage) },
+        { path: '/caficultor/lotes',       element: page(CaficultorLotesPage) },
+        { path: '/caficultor/lots',        element: <Navigate to="/caficultor/lotes" replace /> },
+        { path: '/caficultor/pre-ofertas', element: page(CaficultorPreOfertasPage) },
+        { path: '/caficultor/ofertas',     element: page(CaficultorOfertasPage) },
+      ]),
 
-      // ----------------------------------------
-      // Comprador
-      // ----------------------------------------
-      {
-        element: <RoleGuard allowedRoles={['comprador']} />,
-        children: [
-          {
-            element: <DashboardLayout />,
-            children: [
-              { path: '/comprador/dashboard',        element: <CompradorDashboardPage /> },
-              { path: '/comprador/contenedores',     element: <CompradorContenedoresPage /> },
-              { path: '/comprador/catalogo/:variedadId', element: <DetalleVariedadPage /> },
-            ],
-          },
-        ],
-      },
+      roleRoutes(ROLES.COMPRADOR, [
+        { path: '/comprador/dashboard',            element: page(CompradorDashboardPage) },
+        { path: '/comprador/contenedores',         element: page(CompradorContenedoresPage) },
+        { path: '/comprador/catalogo/:variedadId', element: page(DetalleVariedadPage) },
+      ]),
 
-      // ----------------------------------------
-      // Laboratorio
-      // ----------------------------------------
-      {
-        element: <RoleGuard allowedRoles={['laboratorio']} />,
-        children: [
-          {
-            element: <DashboardLayout />,
-            children: [
-              { path: '/laboratorio/dashboard',          element: <LaboratorioDashboardPage />        },
-              { path: '/laboratorio/catadores',          element: <LaboratorioCatadoresPage />        },
-              { path: '/laboratorio/analisis-fisico',    element: <LaboratorioAnalisisFisicoPage />    },
-              { path: '/laboratorio/analisis-sensorial', element: <LaboratorioAnalisisSensorialPage /> },
-              { path: '/laboratorio/resultados',         element: <LaboratorioResultadosPage />        },
-              { path: '/laboratorio/hojas-catacion',     element: <LaboratorioHojasCatacionPage />    },
-              { path: '/laboratorio/muestras',           element: <LaboratorioMuestrasPage />         },
-            ],
-          },
-        ],
-      },
+      roleRoutes(ROLES.LABORATORIO, [
+        { path: '/laboratorio/dashboard',          element: page(LaboratorioDashboardPage) },
+        { path: '/laboratorio/catadores',          element: page(LaboratorioCatadoresPage) },
+        { path: '/laboratorio/analisis-fisico',    element: page(LaboratorioAnalisisFisicoPage) },
+        { path: '/laboratorio/analisis-sensorial', element: page(LaboratorioAnalisisSensorialPage) },
+        { path: '/laboratorio/resultados',         element: page(LaboratorioResultadosPage) },
+        { path: '/laboratorio/hojas-catacion',     element: page(LaboratorioHojasCatacionPage) },
+        { path: '/laboratorio/muestras',           element: page(LaboratorioMuestrasPage) },
+      ]),
 
-      // ----------------------------------------
-      // Técnico / Asistente Técnico
-      // ----------------------------------------
-      {
-        element: <RoleGuard allowedRoles={['tecnico']} />,
-        children: [
-          {
-            element: <DashboardLayout />,
-            children: [
-              { path: '/tecnico/dashboard', element: <TecnicoDashboardPage /> },
-            ],
-          },
-        ],
-      },
+      roleRoutes(ROLES.TECNICO, [
+        { path: '/tecnico/dashboard', element: page(TecnicoDashboardPage) },
+      ]),
 
-      // ----------------------------------------
-      // Catador
-      // ----------------------------------------
-      {
-        element: <RoleGuard allowedRoles={['catador']} />,
-        children: [
-          {
-            element: <DashboardLayout />,
-            children: [
-              { path: '/catador/dashboard',  element: <CatadorDashboardPage /> },
-              { path: '/catador/evaluacion', element: <EvaluacionPage /> },
-            ],
-          },
-        ],
-      },
+      roleRoutes(ROLES.CATADOR, [
+        { path: '/catador/dashboard',  element: page(CatadorDashboardPage) },
+        { path: '/catador/evaluacion', element: page(EvaluacionPage) },
+      ]),
 
-      // ----------------------------------------
       // Rutas compartidas (cualquier rol autenticado)
-      // ----------------------------------------
       {
         element: <DashboardLayout />,
         children: [
-          { path: '/profile', element: <ProfilePage /> },
+          { path: '/profile', element: page(ProfilePage) },
+          // TODO(backend): pasar el monto real y enviar el token al backend.
+          // Mientras tanto no se registra ni se expone el token de pago.
           {
             path: '/payments',
             element: (
-              <PaymentContainer
-                amount={0}
-                onPaymentToken={(token) => console.log('Token:', token)}
-                onError={(err) => console.error('Payment error:', err)}
-              />
+              <Suspense fallback={<Spinner size="lg" />}>
+                <PaymentContainer amount={0} onPaymentToken={() => {}} onError={() => {}} />
+              </Suspense>
             ),
           },
         ],
@@ -323,8 +305,8 @@ const router = createBrowserRouter([
   // ============================================
   // PÁGINAS DE UTILIDAD
   // ============================================
-  { path: '/unauthorized', element: <UnauthorizedPage /> },
-  { path: '*', element: <NotFoundPage /> },
+  { path: '/unauthorized', element: page(UnauthorizedPage), errorElement: <RouteError /> },
+  { path: '*', element: page(NotFoundPage), errorElement: <RouteError /> },
 ]);
 
 export default router;

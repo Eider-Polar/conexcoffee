@@ -53,7 +53,7 @@ export default function CaficultorDashboardPage() {
       porcentaje: 75,
       colorFondoIcono: 'bg-emerald-100 text-emerald-800',
       colorBarra: 'bg-emerald-700',
-      ruta: '/caficultor/lots',
+      ruta: '/caficultor/lotes',
     },
     {
       paso: 'Paso 3',

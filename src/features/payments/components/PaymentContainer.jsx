@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Card, Button, Spinner } from '@/components/ui';
 import { CreditCard, Lock } from 'lucide-react';
 

@@ -12,7 +12,9 @@ import { Spinner } from '@/components/ui';
 // ============================================
 
 export default function GuestRoute() {
-  const { isAuthenticated, isLoading, role } = useAuthStore();
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const isLoading = useAuthStore((s) => s.isLoading);
+  const role = useAuthStore((s) => s.role);
 
   // Mientras verificamos la sesión, mostrar loading
   if (isLoading) {
