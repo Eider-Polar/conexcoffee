@@ -8,23 +8,30 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import {
-  INITIAL_CAFICULTOR_FINCAS,
-  INITIAL_CAFICULTOR_LOTES,
-  INITIAL_CAFICULTOR_PREOFERTAS,
-  INITIAL_CAFICULTOR_OFERTAS,
-} from '../data/caficultorData';
+  useFincas,
+  useLotes,
+  usePreofertas,
+  useOfertas,
+} from '../hooks/useCaficultorData';
 
 export default function CaficultorDashboardPage() {
   const navigate = useNavigate();
 
-  const totalFincas = INITIAL_CAFICULTOR_FINCAS.length;
-  const totalLotes = INITIAL_CAFICULTOR_LOTES.length;
-  const totalPreofertas = INITIAL_CAFICULTOR_PREOFERTAS.length;
-  const preofertasRealizadas = INITIAL_CAFICULTOR_PREOFERTAS.filter(
+  // Las métricas se derivan de los datos del servidor (caché compartida
+  // con las demás pantallas, así que se mantienen sincronizadas).
+  const fincas = useFincas().data ?? [];
+  const lotes = useLotes().data ?? [];
+  const preofertas = usePreofertas().data ?? [];
+  const ofertas = useOfertas().data ?? [];
+
+  const totalFincas = fincas.length;
+  const totalLotes = lotes.length;
+  const totalPreofertas = preofertas.length;
+  const preofertasRealizadas = preofertas.filter(
     (p) => p.estado === 'Aprobada'
   ).length;
-  const totalOfertas = INITIAL_CAFICULTOR_OFERTAS.length;
-  const ofertasRealizadas = INITIAL_CAFICULTOR_OFERTAS.filter(
+  const totalOfertas = ofertas.length;
+  const ofertasRealizadas = ofertas.filter(
     (o) => o.estado === 'Publicada'
   ).length;
 

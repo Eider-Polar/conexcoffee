@@ -5,10 +5,13 @@ import {
   Eye,
   Pencil,
 } from 'lucide-react';
+import { QueryState } from '@/components/feedback';
 import {
-  INITIAL_CAFICULTOR_PREOFERTAS,
-  INITIAL_CAFICULTOR_LOTES,
-} from '../data/caficultorData';
+  usePreofertas,
+  useCrearPreoferta,
+  useActualizarPreoferta,
+  useLotes,
+} from '../hooks/useCaficultorData';
 import {
   RegistrarPreOfertaModal,
   EditarPreOfertaModal,
@@ -16,8 +19,12 @@ import {
 } from '../components';
 
 export default function CaficultorPreOfertasPage() {
-  const [preofertas, setPreofertas] = useState(INITIAL_CAFICULTOR_PREOFERTAS);
-  const [lotes] = useState(INITIAL_CAFICULTOR_LOTES);
+  const preofertasQuery = usePreofertas();
+  const preofertas = preofertasQuery.data ?? [];
+  const lotesQuery = useLotes();
+  const lotes = lotesQuery.data ?? [];
+  const crearPreoferta = useCrearPreoferta();
+  const actualizarPreoferta = useActualizarPreoferta();
   const [searchTerm, setSearchTerm] = useState('');
 
   // Modales
@@ -38,15 +45,11 @@ export default function CaficultorPreOfertasPage() {
   });
 
   const handleGuardarNuevaPreOferta = (nueva) => {
-    setPreofertas([nueva, ...preofertas]);
+    crearPreoferta.mutate(nueva);
   };
 
   const handleGuardarEdicionPreOferta = (preofertaActualizada) => {
-    setPreofertas((prev) =>
-      prev.map((item) =>
-        item.id === preofertaActualizada.id ? preofertaActualizada : item
-      )
-    );
+    actualizarPreoferta.mutate(preofertaActualizada);
   };
 
   const abrirEdicionPreOferta = (p) => {
@@ -58,6 +61,10 @@ export default function CaficultorPreOfertasPage() {
     setPreofertaSeleccionada(p);
     setModalDetalle(true);
   };
+
+  if (preofertasQuery.isLoading || preofertasQuery.isError) {
+    return <QueryState query={preofertasQuery} />;
+  }
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto py-2">

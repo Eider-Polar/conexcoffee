@@ -12,7 +12,8 @@ Bajo ninguna circunstancia se deben instalar librerías redundantes o modificar 
 - **Herramienta de Compilación**: Vite 8 (`vite` ^8.2).
 - **Estilos**: Tailwind CSS v4 (`@tailwindcss/vite` ^4.3, `tailwindcss` ^4.3). Configuración en CSS (`src/styles/index.css`), NO crear `tailwind.config.js`.
 - **Enrutamiento**: React Router DOM v7 (`react-router-dom` ^7.18) con `createBrowserRouter`.
-- **Estado Global**: Zustand v5 (`zustand` ^5.0) en memoria volátil de ejecución.
+- **Estado de Cliente**: Zustand v5 (`zustand` ^5.0) en memoria volátil (sesión y UI únicamente).
+- **Estado de Servidor**: TanStack Query v5 (`@tanstack/react-query` ^5). Cliente en `src/lib/queryClient.js`.
 - **Cliente HTTP**: Axios v1.20 (`axios` ^1.20).
 - **Iconografía**: Lucide React (`lucide-react` ^1.41). PROHIBIDO EL USO DE EMOJIS O OTRAS LIBRERÍAS DE ICONOS.
 - **Seguridad / Antibot**: Cloudflare Turnstile (`@marsidev/react-turnstile` ^1.6).
@@ -20,6 +21,37 @@ Bajo ninguna circunstancia se deben instalar librerías redundantes o modificar 
 - **Modales Accesibles**: Headless UI (`@headlessui/react` ^2.2).
 - **Notificaciones**: React Hot Toast (`react-hot-toast` ^2.6).
 - **Linteo y Limpieza**: Oxlint (`oxlint` ^1.79) y Knip (`knip` ^6.34).
+
+
+### Fronteras de estado (NO NEGOCIABLES)
+
+- **Datos del servidor** (todo lo que viene o va a la API) → TanStack Query mediante hooks de la feature. NUNCA en `useState(INITIAL_...)`, Zustand ni Context.
+- **Estado de cliente** (usuario, rol, sidebar, modal global) → Zustand con selectores: `useAuthStore((s) => s.role)`. Nunca `const { role } = useAuthStore()`.
+- **Estado efímero de UI** (búsqueda, modal abierto, campos de formulario) → `useState` local.
+- `clearAuth()` limpia la caché de Query (logout / 401). No se debe saltar.
+- Prohibido Redux o Context API para datos globales.
+- Agregar cualquier otra dependencia requiere aprobación explícita del usuario y actualizar este archivo y `AGENTS.md`.
+
+### Arquitectura de datos por capas (Page → Hook → API → Axios)
+
+```
+pages/ y components/   →   hooks/   →   api/   →   src/lib/axios.js
+```
+
+- **`api/`**: servicios puros (endpoints y payloads), sin React. Usar `createResourceApi` (`src/lib/createResourceApi.js`) para CRUD.
+- **`hooks/`**: envuelven los servicios con TanStack Query. Usar `createResourceHooks` (`src/hooks/createResourceHooks.js`) o `useQuery`/`useMutation` a mano. Claves `'<rol>-<recurso>'`.
+- **`pages/`**: componen hooks y componentes. PROHIBIDO importar `axios`, servicios o mocks de `data/` directamente.
+- **`components/`**: presentacionales, reciben datos y callbacks por props.
+- Manejar `isLoading`/`isError` con `<QueryState query={query} />` (`src/components/feedback`), después de llamar todos los hooks.
+- Errores: `getErrorMessage(error)` de `src/lib/axios.js`.
+- **Implementación de referencia:** `src/features/caficultor/`. Copiar este patrón en cualquier feature nueva o migrada.
+
+### Modo demo (sin backend)
+
+- `src/lib/env.js` es el único lugar que lee variables `VITE_*`. `IS_DEMO_MODE` es true en `npm run dev` o con `VITE_ENABLE_DEMO=true`.
+- Los mocks viven SOLO en `features/<rol>/data/` y se pasan como `seed` a `createResourceApi`. Las pages no los importan.
+- La autenticación demo está en `features/auth/api/demoAuth.js`. No incrustar credenciales en otro lugar.
+- Con backend: quitar los `seed`, borrar los mocks y poner `VITE_ENABLE_DEMO=false`. Pages y hooks no deben cambiar.
 
 ---
 

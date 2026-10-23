@@ -5,10 +5,13 @@ import {
   Eye,
   Pencil,
 } from 'lucide-react';
+import { QueryState } from '@/components/feedback';
 import {
-  INITIAL_CAFICULTOR_LOTES,
-  INITIAL_CAFICULTOR_FINCAS,
-} from '../data/caficultorData';
+  useLotes,
+  useCrearLote,
+  useActualizarLote,
+  useFincas,
+} from '../hooks/useCaficultorData';
 import {
   RegistrarLoteModal,
   EditarLoteModal,
@@ -16,8 +19,12 @@ import {
 } from '../components';
 
 export default function CaficultorLotesPage() {
-  const [lotes, setLotes] = useState(INITIAL_CAFICULTOR_LOTES);
-  const [fincas] = useState(INITIAL_CAFICULTOR_FINCAS);
+  const lotesQuery = useLotes();
+  const lotes = lotesQuery.data ?? [];
+  const fincasQuery = useFincas();
+  const fincas = fincasQuery.data ?? [];
+  const crearLote = useCrearLote();
+  const actualizarLote = useActualizarLote();
   const [searchTerm, setSearchTerm] = useState('');
 
   // Modales
@@ -37,13 +44,11 @@ export default function CaficultorLotesPage() {
   });
 
   const handleGuardarNuevoLote = (nuevoLote) => {
-    setLotes([nuevoLote, ...lotes]);
+    crearLote.mutate(nuevoLote);
   };
 
   const handleGuardarEdicionLote = (loteActualizado) => {
-    setLotes((prev) =>
-      prev.map((item) => (item.id === loteActualizado.id ? loteActualizado : item))
-    );
+    actualizarLote.mutate(loteActualizado);
   };
 
   const abrirEdicionLote = (l) => {
@@ -55,6 +60,10 @@ export default function CaficultorLotesPage() {
     setLoteSeleccionado(l);
     setModalDetalleLote(true);
   };
+
+  if (lotesQuery.isLoading || lotesQuery.isError) {
+    return <QueryState query={lotesQuery} />;
+  }
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto py-2">

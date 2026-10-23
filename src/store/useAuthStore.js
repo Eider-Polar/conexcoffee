@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import queryClient from '@/lib/queryClient';
 
 // ============================================
 // Store de Autenticación — ConexCoffee
@@ -42,13 +43,17 @@ const useAuthStore = create((set) => ({
    * Limpia completamente el estado de autenticación.
    * Llamado al hacer logout o cuando el backend responde 401.
    */
-  clearAuth: () =>
+  clearAuth: () => {
+    // La caché de datos de servidor pertenece al usuario saliente: descartarla
+    // para no mostrar su información a la siguiente sesión.
+    queryClient.clear();
     set({
       user: null,
       role: null,
       isAuthenticated: false,
       isLoading: false,
-    }),
+    });
+  },
 
   /**
    * Establece el estado de carga.

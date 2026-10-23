@@ -5,7 +5,8 @@ import {
   Eye,
   Pencil,
 } from 'lucide-react';
-import { INITIAL_CAFICULTOR_FINCAS } from '../data/caficultorData';
+import { QueryState } from '@/components/feedback';
+import { useFincas, useCrearFinca, useActualizarFinca } from '../hooks/useCaficultorData';
 import {
   RegistrarFincaModal,
   EditarFincaModal,
@@ -13,7 +14,10 @@ import {
 } from '../components';
 
 export default function CaficultorFincasPage() {
-  const [fincas, setFincas] = useState(INITIAL_CAFICULTOR_FINCAS);
+  const fincasQuery = useFincas();
+  const fincas = fincasQuery.data ?? [];
+  const crearFinca = useCrearFinca();
+  const actualizarFinca = useActualizarFinca();
   const [searchTerm, setSearchTerm] = useState('');
 
   // Modales
@@ -33,13 +37,11 @@ export default function CaficultorFincasPage() {
   });
 
   const handleGuardarNuevaFinca = (nuevaFinca) => {
-    setFincas([nuevaFinca, ...fincas]);
+    crearFinca.mutate(nuevaFinca);
   };
 
   const handleGuardarEdicionFinca = (fincaActualizada) => {
-    setFincas((prev) =>
-      prev.map((item) => (item.id === fincaActualizada.id ? fincaActualizada : item))
-    );
+    actualizarFinca.mutate(fincaActualizada);
   };
 
   const abrirEdicionFinca = (f) => {
@@ -51,6 +53,10 @@ export default function CaficultorFincasPage() {
     setFincaSeleccionada(f);
     setModalDetalleFinca(true);
   };
+
+  if (fincasQuery.isLoading || fincasQuery.isError) {
+    return <QueryState query={fincasQuery} />;
+  }
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto py-2">

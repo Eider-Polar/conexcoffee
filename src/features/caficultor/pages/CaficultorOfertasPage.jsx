@@ -5,12 +5,14 @@ import {
   Eye,
   Globe,
 } from 'lucide-react';
-import { INITIAL_CAFICULTOR_OFERTAS } from '../data/caficultorData';
+import { QueryState } from '@/components/feedback';
+import { useOfertas } from '../hooks/useCaficultorData';
 import { DetalleOfertaModal } from '../components';
 
 export default function CaficultorOfertasPage() {
   const navigate = useNavigate();
-  const [ofertas] = useState(INITIAL_CAFICULTOR_OFERTAS);
+  const ofertasQuery = useOfertas();
+  const ofertas = ofertasQuery.data ?? [];
   const [searchTerm, setSearchTerm] = useState('');
 
   const [modalDetalle, setModalDetalle] = useState(false);
@@ -29,6 +31,10 @@ export default function CaficultorOfertasPage() {
     setOfertaSeleccionada(o);
     setModalDetalle(true);
   };
+
+  if (ofertasQuery.isLoading || ofertasQuery.isError) {
+    return <QueryState query={ofertasQuery} />;
+  }
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto py-2">

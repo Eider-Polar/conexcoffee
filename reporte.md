@@ -186,7 +186,7 @@ Verificado: `npm run build` OK (code splitting activo, bundle principal ~380 kB 
 | H7 | RESUELTO | Nuevo `src/lib/env.js` centraliza variables y avisa si falta `VITE_API_BASE_URL` fuera de demo. |
 | H8 | PARCIAL | Helper `getErrorMessage()` en `axios.js` (usado en login). Falta aplicarlo en el resto de formularios, y soportar `AbortController`. |
 | H9 | PENDIENTE | Interceptor de request aún vacío (se llenará con CSRF). |
-| E1 | PENDIENTE | Decisión de stack (React Query/SWR o hook propio). |
+| E1 | RESUELTO | Decisión: **TanStack Query v5** para estado de servidor (Zustand queda solo para cliente). Provider en `AppProviders`, `src/lib/queryClient.js`, y fábricas `createResourceApi` / `createResourceHooks`. `clearAuth()` vacía la caché. |
 | E2 | RESUELTO | Selectores de Zustand en guards y `useAuth`. |
 | E3 | RESUELTO | `LoginForm` usa `useAuth().login`. |
 | E4 | RESUELTO | Acciones con `useCallback` y dependencias correctas en `AppProviders`. |
