@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import ModuloCabecera from '../components/ModuloCabecera';
+import { ModuloCabecera } from '@/components/data-display';
 import {
   Search,
   Eye,
@@ -18,196 +18,24 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-// Datos de Compras / Pedidos basados en livewire/compras/historial-compras-component.blade.php
-const INITIAL_PEDIDOS = [
-  {
-    id: 1,
-    codigo_pedido: 'ORD-2026-0814',
-    fecha: '2026-08-14',
-    comprador_nombre: 'John Smith',
-    comprador_empresa: 'Blue Coffee Roasters Inc.',
-    pais_destino: 'Estados Unidos (San Francisco)',
-    lotes: [
-      { codigo: 'OFR-HUILA-001', variedad: 'Pink Bourbon', cantidad_sacos: 25, peso_kg: 1500, precio_kg: 9.8 },
-      { codigo: 'OFR-CAUCA-014', variedad: 'Geisha Lavado', cantidad_sacos: 10, peso_kg: 600, precio_kg: 14.5 },
-    ],
-    subtotal: 23400.0,
-    flete: 1250.0,
-    total: 24650.0,
-    estado: 'Pago aceptado',
-    metodo_pago: 'Transferencia Bancaria Internacional (SWIFT)',
-    referencia_pago: 'SWIFT-US7849102',
-    naviera: 'Maersk Sealand - Línea Buenaventura',
-  },
-  {
-    id: 2,
-    codigo_pedido: 'ORD-2026-0820',
-    fecha: '2026-08-20',
-    comprador_nombre: 'Hans Weber',
-    comprador_empresa: 'Hamburg Kaffee Import GmbH',
-    pais_destino: 'Alemania (Hamburgo)',
-    lotes: [
-      { codigo: 'OFR-NAR-003', variedad: 'Castillo Fermentado', cantidad_sacos: 30, peso_kg: 1800, precio_kg: 8.2 },
-    ],
-    subtotal: 14760.0,
-    flete: 980.0,
-    total: 15740.0,
-    estado: 'Compra en camino',
-    metodo_pago: 'Carta de Crédito Irrevocable (L/C)',
-    referencia_pago: 'LC-DE998231',
-    naviera: 'Hapag-Lloyd - Puerto Cartagena',
-  },
-  {
-    id: 3,
-    codigo_pedido: 'ORD-2026-0829',
-    fecha: '2026-08-29',
-    comprador_nombre: 'Kenji Takahashi',
-    comprador_empresa: 'Tokyo Specialty Bean Co.',
-    pais_destino: 'Japón (Yokohama)',
-    lotes: [
-      { codigo: 'OFR-ANT-008', variedad: 'Bourbon Chiroso', cantidad_sacos: 20, peso_kg: 1200, precio_kg: 12.0 },
-    ],
-    subtotal: 14400.0,
-    flete: 1400.0,
-    total: 15800.0,
-    estado: 'Pago pendiente',
-    metodo_pago: 'Transferencia Bancaria Internacional',
-    referencia_pago: 'Pendiente de confirmación',
-    naviera: 'ONE Ocean Network Express',
-  },
-  {
-    id: 4,
-    codigo_pedido: 'ORD-2026-0902',
-    fecha: '2026-09-02',
-    comprador_nombre: 'Sophie Laurent',
-    comprador_empresa: 'Cafés de Terroir Paris',
-    pais_destino: 'Francia (Le Havre)',
-    lotes: [
-      { codigo: 'OFR-HUILA-005', variedad: 'Caturra Chiroso', cantidad_sacos: 15, peso_kg: 900, precio_kg: 10.5 },
-    ],
-    subtotal: 9450.0,
-    flete: 850.0,
-    total: 10300.0,
-    estado: 'Entregado',
-    metodo_pago: 'Stripe / Tarjeta Corporativa',
-    referencia_pago: 'ch_3NzK81LEe92X',
-    naviera: 'CMA CGM - Cartagena',
-  },
-  {
-    id: 5,
-    codigo_pedido: 'ORD-2026-0906',
-    fecha: '2026-09-06',
-    comprador_nombre: 'Liam O’Connor',
-    comprador_empresa: 'Dublin Artisan Roasters',
-    pais_destino: 'Irlanda (Dublín)',
-    lotes: [
-      { codigo: 'OFR-TOL-002', variedad: 'Geisha Natural', cantidad_sacos: 8, peso_kg: 480, precio_kg: 16.0 },
-    ],
-    subtotal: 7680.0,
-    flete: 620.0,
-    total: 8300.0,
-    estado: 'Pago rechazado',
-    metodo_pago: 'Transferencia Rechazada por Límite',
-    referencia_pago: 'REJ-IRL-9921',
-    naviera: 'Por asignar',
-  },
-];
-
-// Datos de Compradores basados en modulos/compradores/
-const INITIAL_COMPRADORES = [
-  {
-    id: 1,
-    numero_identificacion: 'US-9823412',
-    tipo_documento: 'PAS',
-    primer_nombre: 'JOHN',
-    segundo_nombre: 'DAVID',
-    primer_apellido: 'SMITH',
-    segundo_apellido: 'MILLER',
-    telefono: '+1 415 892 3411',
-    correo: 'john.smith@bluecoffeeroasters.com',
-    empresa: 'Blue Coffee Roasters Inc.',
-    pais: 'Estados Unidos',
-    ciudad: 'San Francisco, CA',
-    pedidos_totales: 14,
-    volumen_kg: 25200,
-    estado: 'Activo',
-  },
-  {
-    id: 2,
-    numero_identificacion: 'DE-4581290',
-    tipo_documento: 'PAS',
-    primer_nombre: 'HANS',
-    segundo_nombre: 'PETER',
-    primer_apellido: 'WEBER',
-    segundo_apellido: 'KLEIN',
-    telefono: '+49 40 7654 3210',
-    correo: 'h.weber@hamburgkaffee.de',
-    empresa: 'Hamburg Kaffee Import GmbH',
-    pais: 'Alemania',
-    ciudad: 'Hamburgo',
-    pedidos_totales: 8,
-    volumen_kg: 16800,
-    estado: 'Activo',
-  },
-  {
-    id: 3,
-    numero_identificacion: 'JP-1192834',
-    tipo_documento: 'PAS',
-    primer_nombre: 'KENJI',
-    segundo_nombre: '',
-    primer_apellido: 'TAKAHASHI',
-    segundo_apellido: 'SATO',
-    telefono: '+81 3 5555 0192',
-    correo: 'takahashi@tokyospecialty.jp',
-    empresa: 'Tokyo Specialty Bean Co.',
-    pais: 'Japón',
-    ciudad: 'Tokio',
-    pedidos_totales: 22,
-    volumen_kg: 39000,
-    estado: 'Activo',
-  },
-  {
-    id: 4,
-    numero_identificacion: 'FR-8829104',
-    tipo_documento: 'PAS',
-    primer_nombre: 'SOPHIE',
-    segundo_nombre: 'MARIE',
-    primer_apellido: 'LAURENT',
-    segundo_apellido: 'DUBOIS',
-    telefono: '+33 1 42 68 55 00',
-    correo: 'slaurent@cafesdeterroir.fr',
-    empresa: 'Cafés de Terroir Paris',
-    pais: 'Francia',
-    ciudad: 'París',
-    pedidos_totales: 6,
-    volumen_kg: 9200,
-    estado: 'Activo',
-  },
-  {
-    id: 5,
-    numero_identificacion: 'GB-3349182',
-    tipo_documento: 'PAS',
-    primer_nombre: 'LIAM',
-    segundo_nombre: '',
-    primer_apellido: 'O’CONNOR',
-    segundo_apellido: '',
-    telefono: '+353 1 496 2200',
-    correo: 'liam@dublinartisan.ie',
-    empresa: 'Dublin Artisan Roasters',
-    pais: 'Irlanda',
-    ciudad: 'Dublín',
-    pedidos_totales: 4,
-    volumen_kg: 5400,
-    estado: 'Activo',
-  },
-];
+import { QueryState } from '@/components/feedback';
+import {
+  useSuperadminPedidos,
+  useSuperadminCompradores,
+  useCrearSuperadminComprador,
+  useActualizarSuperadminComprador,
+} from '../hooks/useSuperadminData';
 
 export default function ComprasPage() {
   const [pestanaActiva, setPestanaActiva] = useState('compras'); // 'compras' | 'compradores'
 
-  // Datos
-  const [pedidos] = useState(INITIAL_PEDIDOS);
-  const [compradores, setCompradores] = useState(INITIAL_COMPRADORES);
+  const pedidosQuery = useSuperadminPedidos();
+  const pedidos = pedidosQuery.data ?? [];
+
+  const compradoresQuery = useSuperadminCompradores();
+  const compradores = compradoresQuery.data ?? [];
+  const crearCompradorMutation = useCrearSuperadminComprador();
+  const actualizarCompradorMutation = useActualizarSuperadminComprador();
 
   // Filtros
   const [searchTerm, setSearchTerm] = useState('');
@@ -260,13 +88,21 @@ export default function ComprasPage() {
   // Filtrado de compradores
   const compradoresFiltrados = compradores.filter((c) => {
     const term = searchTerm.toLowerCase();
-    const fullName = `${c.primer_nombre} ${c.segundo_nombre} ${c.primer_apellido} ${c.segundo_apellido}`.toLowerCase();
+    const id = c.numero_identificacion || c.numeroIdentificacion || '';
+    const pNombre = c.primer_nombre || c.primerNombre || '';
+    const sNombre = c.segundo_nombre || c.segundoNombre || '';
+    const pApellido = c.primer_apellido || c.primerApellido || '';
+    const sApellido = c.segundo_apellido || c.segundoApellido || '';
+    const fullName = `${pNombre} ${sNombre} ${pApellido} ${sApellido}`.toLowerCase();
+    const empresa = c.empresa || c.empresaCompradora || '';
+    const pais = c.pais || '';
+    const correo = c.correo || '';
     return (
-      c.numero_identificacion.toLowerCase().includes(term) ||
+      id.toLowerCase().includes(term) ||
       fullName.includes(term) ||
-      c.empresa.toLowerCase().includes(term) ||
-      c.pais.toLowerCase().includes(term) ||
-      c.correo.toLowerCase().includes(term)
+      empresa.toLowerCase().includes(term) ||
+      pais.toLowerCase().includes(term) ||
+      correo.toLowerCase().includes(term)
     );
   });
 
@@ -279,18 +115,25 @@ export default function ComprasPage() {
     }
 
     const nuevo = {
-      id: Date.now(),
       ...nuevoComprador,
+      numeroIdentificacion: nuevoComprador.numero_identificacion,
+      primerNombre: nuevoComprador.primer_nombre.toUpperCase(),
+      segundoNombre: nuevoComprador.segundo_nombre.toUpperCase(),
+      primerApellido: nuevoComprador.primer_apellido.toUpperCase(),
+      segundoApellido: nuevoComprador.segundo_apellido.toUpperCase(),
+      empresaCompradora: nuevoComprador.empresa,
       primer_nombre: nuevoComprador.primer_nombre.toUpperCase(),
       segundo_nombre: nuevoComprador.segundo_nombre.toUpperCase(),
       primer_apellido: nuevoComprador.primer_apellido.toUpperCase(),
       segundo_apellido: nuevoComprador.segundo_apellido.toUpperCase(),
       pedidos_totales: 0,
+      pedidosCount: 0,
       volumen_kg: 0,
+      volumenSacos: 0,
       estado: 'Activo',
     };
 
-    setCompradores([nuevo, ...compradores]);
+    crearCompradorMutation.mutate(nuevo);
     toast.success('Comprador internacional registrado correctamente');
     setModalRegistrarComprador(false);
     setNuevoComprador({
@@ -312,9 +155,10 @@ export default function ComprasPage() {
   const handleGuardarEdicionComprador = (e) => {
     e.preventDefault();
     if (!compradorSeleccionado) return;
-    setCompradores((prev) =>
-      prev.map((c) => (c.id === compradorSeleccionado.id ? compradorSeleccionado : c))
-    );
+    actualizarCompradorMutation.mutate({
+      ...compradorSeleccionado,
+      empresaCompradora: compradorSeleccionado.empresa || compradorSeleccionado.empresaCompradora,
+    });
     toast.success('Comprador actualizado correctamente');
     setModalEditarComprador(false);
   };
@@ -322,9 +166,11 @@ export default function ComprasPage() {
   // Consultar comprador por documento
   const handleConsultarComprador = (e) => {
     e.preventDefault();
-    const encontrado = compradores.find(
-      (c) => c.numero_identificacion.trim().toLowerCase() === cedulaConsulta.trim().toLowerCase()
-    );
+    const target = cedulaConsulta.trim().toLowerCase();
+    const encontrado = compradores.find((c) => {
+      const id = (c.numero_identificacion || c.numeroIdentificacion || '').trim().toLowerCase();
+      return id === target;
+    });
     if (encontrado) {
       setResultadoConsulta(encontrado);
       toast.success('Comprador encontrado');
@@ -394,6 +240,8 @@ export default function ComprasPage() {
           setModalConsultarComprador(true);
         }}
       />
+
+      <QueryState query={pedidosQuery} />
 
       {/* Pestañas de Navegación: Compras / Pedidos vs Compradores */}
       <div className="flex border-b border-stone-200 gap-8">
@@ -568,23 +416,23 @@ export default function ComprasPage() {
                   compradoresFiltrados.map((comp, index) => (
                     <tr key={comp.id} className="hover:bg-amber-50/40 transition-colors">
                       <td className="py-3 px-4 text-stone-500 font-medium">{index + 1}</td>
-                      <td className="py-3 px-4 font-semibold text-stone-900">{comp.numero_identificacion}</td>
+                      <td className="py-3 px-4 font-semibold text-stone-900">{comp.numero_identificacion || comp.numeroIdentificacion}</td>
                       <td className="py-3 px-4 text-stone-800 font-medium">
                         <div className="flex items-center gap-2">
                           <div className="w-7 h-7 rounded-full bg-amber-100 text-amber-800 font-bold flex items-center justify-center text-xs">
-                            {comp.primer_nombre[0]}
+                            {(comp.primer_nombre || comp.primerNombre || 'C')[0]}
                           </div>
                           <span>
-                            {comp.primer_nombre} {comp.segundo_nombre}
+                            {comp.primer_nombre || comp.primerNombre} {comp.segundo_nombre || comp.segundoNombre || ''}
                           </span>
                         </div>
                       </td>
                       <td className="py-3 px-4 text-stone-700">
-                        {comp.primer_apellido} {comp.segundo_apellido}
+                        {comp.primer_apellido || comp.primerApellido} {comp.segundo_apellido || comp.segundoApellido || ''}
                       </td>
                       <td className="py-3 px-4 text-stone-600 text-xs">{comp.telefono}</td>
                       <td className="py-3 px-4">
-                        <span className="font-semibold block text-xs text-stone-800">{comp.empresa}</span>
+                        <span className="font-semibold block text-xs text-stone-800">{comp.empresa || comp.empresaCompradora}</span>
                         <span className="text-[11px] text-stone-500">{comp.pais}</span>
                       </td>
                       <td className="py-3 px-4">
@@ -888,7 +736,7 @@ export default function ComprasPage() {
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-stone-900">Editar Comprador</h3>
-                  <p className="text-xs text-stone-500">{compradorSeleccionado.numero_identificacion}</p>
+                  <p className="text-xs text-stone-500">{compradorSeleccionado.numero_identificacion || compradorSeleccionado.numeroIdentificacion}</p>
                 </div>
               </div>
               <button onClick={() => setModalEditarComprador(false)} className="text-stone-400 hover:text-stone-600 p-1">
@@ -902,8 +750,8 @@ export default function ComprasPage() {
                   <label className="block text-xs font-semibold text-stone-700 mb-1">Empresa</label>
                   <input
                     type="text"
-                    value={compradorSeleccionado.empresa}
-                    onChange={(e) => setCompradorSeleccionado({ ...compradorSeleccionado, empresa: e.target.value })}
+                    value={compradorSeleccionado.empresa || compradorSeleccionado.empresaCompradora || ''}
+                    onChange={(e) => setCompradorSeleccionado({ ...compradorSeleccionado, empresa: e.target.value, empresaCompradora: e.target.value })}
                     className="w-full border border-stone-300 rounded-xl px-3 py-2 text-sm"
                   />
                 </div>
@@ -1002,15 +850,15 @@ export default function ComprasPage() {
                 <div className="p-4 bg-amber-50/50 border border-amber-200 rounded-xl space-y-2 text-xs">
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-amber-900 text-sm">
-                      {resultadoConsulta.primer_nombre} {resultadoConsulta.primer_apellido}
+                      {resultadoConsulta.primer_nombre || resultadoConsulta.primerNombre} {resultadoConsulta.primer_apellido || resultadoConsulta.primerApellido}
                     </span>
                     <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-full font-medium">
-                      {resultadoConsulta.estado}
+                      {resultadoConsulta.estado || (resultadoConsulta.activo ? 'Activo' : 'Inactivo')}
                     </span>
                   </div>
-                  <p className="text-stone-600"><b>Empresa:</b> {resultadoConsulta.empresa}</p>
+                  <p className="text-stone-600"><b>Empresa:</b> {resultadoConsulta.empresa || resultadoConsulta.empresaCompradora}</p>
                   <p className="text-stone-600"><b>País:</b> {resultadoConsulta.pais}</p>
-                  <p className="text-stone-600"><b>Pedidos realizados:</b> {resultadoConsulta.pedidos_totales} órdenes</p>
+                  <p className="text-stone-600"><b>Pedidos realizados:</b> {resultadoConsulta.pedidos_totales ?? resultadoConsulta.pedidosCount ?? 0} órdenes</p>
                   <p className="text-stone-600"><b>Teléfono:</b> {resultadoConsulta.telefono}</p>
                 </div>
               )}
@@ -1043,13 +891,13 @@ export default function ComprasPage() {
               </button>
               <div className="flex items-center gap-3">
                 <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-xs border border-white/20 flex items-center justify-center text-xl font-bold">
-                  {compradorSeleccionado.primer_nombre[0]}
+                  {(compradorSeleccionado.primer_nombre || compradorSeleccionado.primerNombre || 'C')[0]}
                 </div>
                 <div>
                   <h3 className="text-lg font-bold">
-                    {compradorSeleccionado.primer_nombre} {compradorSeleccionado.primer_apellido}
+                    {compradorSeleccionado.primer_nombre || compradorSeleccionado.primerNombre} {compradorSeleccionado.primer_apellido || compradorSeleccionado.primerApellido}
                   </h3>
-                  <p className="text-xs text-amber-200/80">{compradorSeleccionado.empresa}</p>
+                  <p className="text-xs text-amber-200/80">{compradorSeleccionado.empresa || compradorSeleccionado.empresaCompradora}</p>
                 </div>
               </div>
             </div>
@@ -1069,7 +917,7 @@ export default function ComprasPage() {
               </div>
               <div className="flex items-center gap-2">
                 <ShoppingBag className="w-4 h-4 text-amber-700 shrink-0" />
-                <span><b>Historial:</b> {compradorSeleccionado.pedidos_totales} pedidos ({compradorSeleccionado.volumen_kg.toLocaleString('es-CO')} kg café)</span>
+                <span><b>Historial:</b> {compradorSeleccionado.pedidos_totales ?? compradorSeleccionado.pedidosCount ?? 0} pedidos ({((compradorSeleccionado.volumen_kg ?? (compradorSeleccionado.volumenSacos ? compradorSeleccionado.volumenSacos * 60 : 0))).toLocaleString('es-CO')} kg café)</span>
               </div>
             </div>
 

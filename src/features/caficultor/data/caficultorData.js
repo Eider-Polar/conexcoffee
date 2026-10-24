@@ -165,7 +165,7 @@ export const INITIAL_CAFICULTOR_LOTES = [
   },
 ];
 
-export const INITIAL_CAFICULTOR_PREOFERTAS = [
+export const INITIAL_CAFICULTOR_MIS_PREOFERTAS = [
   {
     id: 1,
     codigo: 'PRE-2026-001',
@@ -203,7 +203,7 @@ export const INITIAL_CAFICULTOR_PREOFERTAS = [
   },
 ];
 
-export const INITIAL_CAFICULTOR_OFERTAS = [
+export const INITIAL_CAFICULTOR_MIS_OFERTAS = [
   {
     id: 1,
     codigo: 'OFE-2026-001',

@@ -12,115 +12,13 @@ import {
   Mail,
   MapPin,
 } from 'lucide-react';
-import ModuloCabecera from '../components/ModuloCabecera';
-
-const INITIAL_CAFICULTORES = [
-  {
-    id: 1,
-    numeroIdentificacion: '12345677',
-    primerNombre: 'MIGUEL',
-    segundoNombre: 'ANTONIO',
-    primerApellido: 'FLOREZ',
-    segundoApellido: 'SÁNCHEZ',
-    telefono: '3112344546',
-    correo: 'miguel.florez@conexcoffee.com',
-    fechaNacimiento: '1985-09-16',
-    genero: 'M',
-    direccion: 'Vereda La Esperanza, Finca El Paraíso',
-    municipio: 'Pitalito',
-    departamento: 'Huila',
-    numeroHijos: 2,
-    historia: 'Caficultor de 3ra generación enfocado en varietales Castillo y Geisha bajo sombra.',
-    empresa: 'Café Especial Huila SAS',
-    fincasCount: 2,
-    lotesCount: 5,
-    avatar: '/images/users/avatar-2.jpg',
-  },
-  {
-    id: 2,
-    numeroIdentificacion: '12345678',
-    primerNombre: 'PEDRO',
-    segundoNombre: 'JOSÉ',
-    primerApellido: 'PRUEBA',
-    segundoApellido: 'GARCÍA',
-    telefono: '3128765432',
-    correo: 'pedro.prueba@conexcoffee.com',
-    fechaNacimiento: '1990-04-12',
-    genero: 'M',
-    direccion: 'Vereda Claraval, Finca Los Rosales',
-    municipio: 'Popayán',
-    departamento: 'Cauca',
-    numeroHijos: 1,
-    historia: 'Especialista en fermentaciones anaeróbicas y cafés de proceso honey.',
-    empresa: null, // Sin empresa para probar asignación
-    fincasCount: 1,
-    lotesCount: 3,
-    avatar: '/images/users/avatar-3.jpg',
-  },
-  {
-    id: 3,
-    numeroIdentificacion: '10984726',
-    primerNombre: 'MARÍA',
-    segundoNombre: 'DEL ROSARIO',
-    primerApellido: 'RUIZ',
-    segundoApellido: 'MENDOZA',
-    telefono: '3159988776',
-    correo: 'maria.ruiz@conexcoffee.com',
-    fechaNacimiento: '1988-11-23',
-    genero: 'F',
-    direccion: 'Vereda San Isidro, Finca Buena Vista',
-    municipio: 'La Unión',
-    departamento: 'Nariño',
-    numeroHijos: 3,
-    historia: 'Líder comunitaria cafetera promotora de cafés sostenibles con certificación Rainforest.',
-    empresa: 'Exportadora Andina de Café',
-    fincasCount: 3,
-    lotesCount: 7,
-    avatar: '/images/users/avatar-4.jpg',
-  },
-  {
-    id: 4,
-    numeroIdentificacion: '11029384',
-    primerNombre: 'JORGE',
-    segundoNombre: 'ENRIQUE',
-    primerApellido: 'MARTÍNEZ',
-    segundoApellido: 'CASTRO',
-    telefono: '3201122334',
-    correo: 'jorge.martinez@conexcoffee.com',
-    fechaNacimiento: '1979-02-05',
-    genero: 'M',
-    direccion: 'Vereda El Carmen, Finca La Colina',
-    municipio: 'Planadas',
-    departamento: 'Tolima',
-    numeroHijos: 2,
-    historia: 'Pionero en agricultura orgánica y secado solar en camas elevadas africanas.',
-    empresa: null,
-    fincasCount: 1,
-    lotesCount: 2,
-    avatar: '/images/users/avatar-5.jpg',
-  },
-  {
-    id: 5,
-    numeroIdentificacion: '10852938',
-    primerNombre: 'ANA',
-    segundoNombre: 'LUCÍA',
-    primerApellido: 'PÉREZ',
-    segundoApellido: 'TORRES',
-    telefono: '3187766554',
-    correo: 'ana.perez@conexcoffee.com',
-    fechaNacimiento: '1992-07-19',
-    genero: 'F',
-    direccion: 'Vereda San Antonio, Finca El Mirador',
-    municipio: 'Acevedo',
-    departamento: 'Huila',
-    numeroHijos: 1,
-    historia: 'Productora de microlotes exóticos Bourbon Rosado con perfil de taza superior a 86 SCA.',
-    empresa: 'Origen Café Colombia',
-    fincasCount: 2,
-    lotesCount: 4,
-    avatar: '/images/users/avatar-6.jpg',
-  },
-];
+import { ModuloCabecera } from '@/components/data-display';
+import { QueryState } from '@/components/feedback';
+import {
+  useSuperadminCaficultores,
+  useCrearSuperadminCaficultor,
+  useActualizarSuperadminCaficultor,
+} from '../hooks/useSuperadminData';
 
 const EMPRESAS_DISPONIBLES = [
   'Café Especial Huila SAS',
@@ -131,7 +29,10 @@ const EMPRESAS_DISPONIBLES = [
 ];
 
 export default function CaficultoresPage() {
-  const [caficultores, setCaficultores] = useState(INITIAL_CAFICULTORES);
+  const query = useSuperadminCaficultores();
+  const caficultores = query.data ?? [];
+  const crearCaficultor = useCrearSuperadminCaficultor();
+  const actualizarCaficultor = useActualizarSuperadminCaficultor();
   const [searchTerm, setSearchTerm] = useState('');
   const [filtroEmpresa, setFiltroEmpresa] = useState('todos');
 
@@ -216,32 +117,23 @@ export default function CaficultoresPage() {
   const guardarCreacion = (e) => {
     e.preventDefault();
     const nuevo = {
-      id: Date.now(),
       ...formData,
       fincasCount: 0,
       lotesCount: 0,
       avatar: '/images/users/user-dummy-img.jpg',
     };
-    setCaficultores([nuevo, ...caficultores]);
+    crearCaficultor.mutate(nuevo);
     setModalRegistroAbierto(false);
   };
 
   const guardarEdicion = (e) => {
     e.preventDefault();
-    setCaficultores(
-      caficultores.map((c) =>
-        c.id === caficultorActual.id ? { ...c, ...formData } : c
-      )
-    );
+    actualizarCaficultor.mutate({ ...caficultorActual, ...formData });
     setModalEditarAbierto(false);
   };
 
   const asignarEmpresa = (nombreEmpresa) => {
-    setCaficultores(
-      caficultores.map((c) =>
-        c.id === caficultorActual.id ? { ...c, empresa: nombreEmpresa } : c
-      )
-    );
+    actualizarCaficultor.mutate({ ...caficultorActual, empresa: nombreEmpresa });
     setModalAsignarAbierto(false);
   };
 
@@ -273,6 +165,8 @@ export default function CaficultoresPage() {
         onRegistrar={abrirModalCrear}
         textoBotonRegistrar="Registrar Caficultor"
       />
+
+      <QueryState query={query} />
 
       {/* Barra de Búsqueda y Filtros */}
       <div className="bg-white p-4 rounded-2xl border border-surface-200 shadow-2xs flex flex-col sm:flex-row gap-3 items-center justify-between">

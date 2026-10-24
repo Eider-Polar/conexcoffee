@@ -1,7 +1,7 @@
 import { createResourceApi } from '@/lib/createResourceApi';
-import { MOCK_CONTENEDORES } from '../data/mockData';
+import { MOCK_COMPRADOR_DESPACHOS } from '../data/mockData';
 
 export const contenedoresCompradorApi = createResourceApi({
   path: '/comprador/contenedores',
-  seed: MOCK_CONTENEDORES,
+  seed: MOCK_COMPRADOR_DESPACHOS,
 });

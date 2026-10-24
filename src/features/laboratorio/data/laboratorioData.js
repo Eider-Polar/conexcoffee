@@ -272,7 +272,7 @@ export const HOJAS_CATACION_DATA = [
   },
 ];
 
-export const MUESTRAS_DATA = [
+export const ANALISIS_MUESTRAS_DATA = [
   {
     id: 1,
     codigoLote: 'LOT-MUE-101',

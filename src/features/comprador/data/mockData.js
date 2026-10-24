@@ -6,7 +6,7 @@
 // está diseñada para ser compatible con la respuesta del backend.
 // ============================================
 
-export const MOCK_CONTENEDORES = [
+export const MOCK_COMPRADOR_DESPACHOS = [
   {
     id: 'cnt-001',
     codigo: 'CNT-2026-001',
@@ -286,4 +286,4 @@ export const MOCK_CONTENEDORES = [
   },
 ];
 
-export const PAISES_DISPONIBLES = [...new Set(MOCK_CONTENEDORES.map((c) => c.paisDestino))];
+export const PAISES_DISPONIBLES = [...new Set(MOCK_COMPRADOR_DESPACHOS.map((c) => c.paisDestino))];

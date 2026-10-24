@@ -2,8 +2,8 @@ import { createResourceApi } from '@/lib/createResourceApi';
 import {
   INITIAL_CAFICULTOR_FINCAS,
   INITIAL_CAFICULTOR_LOTES,
-  INITIAL_CAFICULTOR_PREOFERTAS,
-  INITIAL_CAFICULTOR_OFERTAS,
+  INITIAL_CAFICULTOR_MIS_PREOFERTAS,
+  INITIAL_CAFICULTOR_MIS_OFERTAS,
 } from '../data/caficultorData';
 
 // ============================================
@@ -28,10 +28,10 @@ export const lotesApi = createResourceApi({
 
 export const preofertasApi = createResourceApi({
   path: '/caficultor/pre-ofertas',
-  seed: INITIAL_CAFICULTOR_PREOFERTAS,
+  seed: INITIAL_CAFICULTOR_MIS_PREOFERTAS,
 });
 
 export const ofertasApi = createResourceApi({
   path: '/caficultor/ofertas',
-  seed: INITIAL_CAFICULTOR_OFERTAS,
+  seed: INITIAL_CAFICULTOR_MIS_OFERTAS,
 });

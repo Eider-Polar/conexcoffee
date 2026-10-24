@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { animate } from 'animejs';
 import useAuthStore from '@/store/useAuthStore';
 import useUIStore from '@/store/useUIStore';
+import useAuth from '@/features/auth/hooks/useAuth';
+import { ROLES } from '@/lib/constants';
 import { Menu, LogOut, User, Bell } from 'lucide-react';
 
 // ============================================
@@ -12,8 +14,11 @@ import { Menu, LogOut, User, Bell } from 'lucide-react';
 // ============================================
 
 export default function Header() {
-  const { user, role, clearAuth } = useAuthStore();
-  const { sidebarOpen, toggleSidebar } = useUIStore();
+  const user = useAuthStore((s) => s.user);
+  const role = useAuthStore((s) => s.role);
+  const sidebarOpen = useUIStore((s) => s.sidebarOpen);
+  const toggleSidebar = useUIStore((s) => s.toggleSidebar);
+  const { logout } = useAuth();
   const navigate = useNavigate();
   const menuBtnRef = useRef(null);
 
@@ -51,19 +56,15 @@ export default function Header() {
 
   const handleLogout = async () => {
     try {
-      // TODO: Llamar al endpoint de logout del backend
-      // await api.post('/auth/logout');
-      clearAuth();
+      await logout();
       navigate('/login');
     } catch {
-      // Si falla el logout en backend, igual limpiamos el frontend
-      clearAuth();
       navigate('/login');
     }
   };
 
   const rolMostrar =
-    role === 'caficultor' || user?.role === 'caficultor'
+    role === ROLES.CAFICULTOR || user?.role === ROLES.CAFICULTOR
       ? 'Caficultor'
       : role
       ? role.charAt(0).toUpperCase() + role.slice(1)

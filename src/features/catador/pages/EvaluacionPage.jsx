@@ -61,19 +61,16 @@ export default function EvaluacionPage() {
 
   // Al finalizar y enviar la evaluación desde el modal
   const handleFinalizarEvaluacion = (resultado) => {
-    setEvaluaciones((prev) =>
-      prev.map((item) =>
-        item.id === resultado.evaluacionId
-          ? {
-              ...item,
-              estado: 'Completada',
-              puntuacionTotal: resultado.puntuacionTotal,
-              categoria: resultado.categoria,
-              unido: true,
-            }
-          : item
-      )
-    );
+    const item = evaluaciones.find((ev) => ev.id === resultado.evaluacionId);
+    if (item) {
+      actualizar.mutate({
+        ...item,
+        estado: 'Completada',
+        puntuacionTotal: resultado.puntuacionTotal,
+        categoria: resultado.categoria,
+        unido: true,
+      });
+    }
 
     setIsModalOpen(false);
     setEvaluacionActiva(null);

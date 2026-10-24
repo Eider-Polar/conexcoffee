@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { LayoutDashboard, BarChart3, Globe, Activity, ArrowRight } from 'lucide-react';
+import { useAuthStore } from '@/store/useAuthStore';
 import { QueryState } from '@/components/feedback';
 import StatKPI from '../components/StatKPI';
 import ActivityItem from '../components/ActivityItem';

@@ -7,73 +7,13 @@ import {
   X,
   Check,
 } from 'lucide-react';
-import ModuloCabecera from '../components/ModuloCabecera';
-
-const INITIAL_USUARIOS = [
-  {
-    id: 1,
-    nombre: 'SuperAdmin Conex',
-    email: 'admin@conexcoffee.com',
-    rol: 'SuperAdmin',
-    estado: 'Activo',
-    ultimoAcceso: '2026-09-11 22:40',
-    avatar: '/images/users/avatar-1.jpg',
-  },
-  {
-    id: 2,
-    nombre: 'Café Especial Huila SAS',
-    email: 'contacto@cafehuila.com',
-    rol: 'Empresa',
-    estado: 'Activo',
-    ultimoAcceso: '2026-09-11 18:25',
-    avatar: '/images/users/avatar-2.jpg',
-  },
-  {
-    id: 3,
-    nombre: 'Oscar Valverde',
-    email: 'oscar.valverde@brokerconex.com',
-    rol: 'Broker',
-    estado: 'Activo',
-    ultimoAcceso: '2026-09-11 15:10',
-    avatar: '/images/users/avatar-7.jpg',
-  },
-  {
-    id: 4,
-    nombre: 'Miguel Florez',
-    email: 'miguel.florez@conexcoffee.com',
-    rol: 'Productor',
-    estado: 'Activo',
-    ultimoAcceso: '2026-09-10 09:30',
-    avatar: '/images/users/avatar-3.jpg',
-  },
-  {
-    id: 5,
-    nombre: 'Blue Coffee Roasters Inc.',
-    email: 'john.smith@bluecoffeeroasters.com',
-    rol: 'Comprador',
-    estado: 'Activo',
-    ultimoAcceso: '2026-09-11 14:15',
-    avatar: '/images/users/avatar-10.jpg',
-  },
-  {
-    id: 6,
-    nombre: 'Laboratorio Central TecniCafé',
-    email: 'laboratorio@tecnicafe.co',
-    rol: 'Laboratorio',
-    estado: 'Activo',
-    ultimoAcceso: '2026-09-09 11:45',
-    avatar: '/images/users/avatar-5.jpg',
-  },
-  {
-    id: 7,
-    nombre: 'Carlos Eduardo Ramírez',
-    email: 'carlos.ramirez@conexcoffee.com',
-    rol: 'Tecnico',
-    estado: 'Activo',
-    ultimoAcceso: '2026-09-11 08:20',
-    avatar: '/images/users/avatar-8.jpg',
-  },
-];
+import { ModuloCabecera } from '@/components/data-display';
+import { QueryState } from '@/components/feedback';
+import {
+  useSuperadminUsuarios,
+  useCrearSuperadminUsuario,
+  useActualizarSuperadminUsuario,
+} from '../hooks/useSuperadminData';
 
 const ROLES_DISPONIBLES = [
   'SuperAdmin',
@@ -87,7 +27,10 @@ const ROLES_DISPONIBLES = [
 ];
 
 export default function UsuariosPage() {
-  const [usuarios, setUsuarios] = useState(INITIAL_USUARIOS);
+  const query = useSuperadminUsuarios();
+  const usuarios = query.data ?? [];
+  const crearUsuario = useCrearSuperadminUsuario();
+  const actualizarUsuario = useActualizarSuperadminUsuario();
   const [searchTerm, setSearchTerm] = useState('');
   const [filtroRol, setFiltroRol] = useState('todos');
 
@@ -120,7 +63,6 @@ export default function UsuariosPage() {
   const guardarCreacion = (e) => {
     e.preventDefault();
     const nuevo = {
-      id: Date.now(),
       nombre: formData.nombre,
       email: formData.email,
       rol: formData.rol,
@@ -128,27 +70,22 @@ export default function UsuariosPage() {
       ultimoAcceso: 'Recién registrado',
       avatar: '/images/users/user-dummy-img.jpg',
     };
-    setUsuarios([nuevo, ...usuarios]);
+    crearUsuario.mutate(nuevo);
     setModalRegistroAbierto(false);
   };
 
   const asignarRol = (nuevoRol) => {
-    setUsuarios(
-      usuarios.map((u) =>
-        u.id === usuarioActual.id ? { ...u, rol: nuevoRol } : u
-      )
-    );
+    actualizarUsuario.mutate({ ...usuarioActual, rol: nuevoRol });
     setModalRolAbierto(false);
   };
 
   const toggleEstado = (id) => {
-    setUsuarios(
-      usuarios.map((u) =>
-        u.id === id
-          ? { ...u, estado: u.estado === 'Activo' ? 'Inactivo' : 'Activo' }
-          : u
-      )
-    );
+    const target = usuarios.find((u) => u.id === id);
+    if (!target) return;
+    actualizarUsuario.mutate({
+      ...target,
+      estado: target.estado === 'Activo' ? 'Inactivo' : 'Activo',
+    });
   };
 
   const filtrados = usuarios.filter((u) => {
@@ -175,6 +112,8 @@ export default function UsuariosPage() {
         onRegistrar={abrirModalCrear}
         textoBotonRegistrar="Crear Usuario"
       />
+
+      <QueryState query={query} />
 
       {/* Buscador y Filtro por Rol */}
       <div className="bg-white p-4 rounded-2xl border border-surface-200 shadow-2xs flex flex-col sm:flex-row gap-3 items-center justify-between">

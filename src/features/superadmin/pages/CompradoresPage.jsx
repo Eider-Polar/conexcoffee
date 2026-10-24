@@ -7,64 +7,19 @@ import {
   X,
   CheckCircle,
 } from 'lucide-react';
-import ModuloCabecera from '../components/ModuloCabecera';
-
-const INITIAL_COMPRADORES = [
-  {
-    id: 1,
-    numeroIdentificacion: 'US-9823412',
-    primerNombre: 'JOHN',
-    segundoNombre: 'DAVID',
-    primerApellido: 'SMITH',
-    segundoApellido: 'MILLER',
-    telefono: '+1 415 892 3411',
-    correo: 'john.smith@bluecoffeeroasters.com',
-    empresaCompradora: 'Blue Coffee Roasters Inc.',
-    pais: 'Estados Unidos',
-    ciudad: 'San Francisco, CA',
-    pedidosCount: 14,
-    volumenSacos: 420,
-    activo: true,
-    avatar: '/images/users/avatar-1.jpg',
-  },
-  {
-    id: 2,
-    numeroIdentificacion: 'DE-4581290',
-    primerNombre: 'HANS',
-    segundoNombre: 'PETER',
-    primerApellido: 'WEBER',
-    segundoApellido: 'KLEIN',
-    telefono: '+49 40 7654 3210',
-    correo: 'h.weber@hamburgkaffee.de',
-    empresaCompradora: 'Hamburg Kaffee Import GmbH',
-    pais: 'Alemania',
-    ciudad: 'Hamburgo',
-    pedidosCount: 8,
-    volumenSacos: 280,
-    activo: true,
-    avatar: '/images/users/avatar-10.jpg',
-  },
-  {
-    id: 3,
-    numeroIdentificacion: 'JP-1192834',
-    primerNombre: 'KENJI',
-    segundoNombre: '',
-    primerApellido: 'TAKAHASHI',
-    segundoApellido: 'SATO',
-    telefono: '+81 3 5555 0192',
-    correo: 'takahashi@tokyospecialty.jp',
-    empresaCompradora: 'Tokyo Specialty Bean Co.',
-    pais: 'Japón',
-    ciudad: 'Tokio',
-    pedidosCount: 22,
-    volumenSacos: 650,
-    activo: true,
-    avatar: '/images/users/avatar-2.jpg',
-  },
-];
+import { ModuloCabecera } from '@/components/data-display';
+import { QueryState } from '@/components/feedback';
+import {
+  useSuperadminCompradores,
+  useCrearSuperadminComprador,
+  useActualizarSuperadminComprador,
+} from '../hooks/useSuperadminData';
 
 export default function CompradoresPage() {
-  const [compradores, setCompradores] = useState(INITIAL_COMPRADORES);
+  const query = useSuperadminCompradores();
+  const compradores = query.data ?? [];
+  const crearComprador = useCrearSuperadminComprador();
+  const actualizarComprador = useActualizarSuperadminComprador();
   const [searchTerm, setSearchTerm] = useState('');
 
   const [modalRegistroAbierto, setModalRegistroAbierto] = useState(false);
@@ -144,24 +99,19 @@ export default function CompradoresPage() {
   const guardarCreacion = (e) => {
     e.preventDefault();
     const nuevo = {
-      id: Date.now(),
       ...formData,
       pedidosCount: 0,
       volumenSacos: 0,
       activo: true,
       avatar: '/images/users/user-dummy-img.jpg',
     };
-    setCompradores([nuevo, ...compradores]);
+    crearComprador.mutate(nuevo);
     setModalRegistroAbierto(false);
   };
 
   const guardarEdicion = (e) => {
     e.preventDefault();
-    setCompradores(
-      compradores.map((c) =>
-        c.id === compradorActual.id ? { ...c, ...formData } : c
-      )
-    );
+    actualizarComprador.mutate({ ...compradorActual, ...formData });
     setModalEditarAbierto(false);
   };
 
@@ -192,6 +142,8 @@ export default function CompradoresPage() {
         onRegistrar={abrirModalCrear}
         textoBotonRegistrar="Registrar Comprador"
       />
+
+      <QueryState query={query} />
 
       {/* Buscador */}
       <div className="bg-white p-4 rounded-2xl border border-surface-200 shadow-2xs flex items-center justify-between">

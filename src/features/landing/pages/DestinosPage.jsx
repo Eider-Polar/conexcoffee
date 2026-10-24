@@ -1,5 +1,5 @@
 import { Globe } from 'lucide-react';
-import ContenedoresDestinoAnimation from './ContenedoresDestinoAnimation';
+import ContenedoresDestinoAnimation from '../components/ContenedoresDestinoAnimation';
 
 // ============================================
 // DestinosPage — Destinos Internacionales & Contenedores

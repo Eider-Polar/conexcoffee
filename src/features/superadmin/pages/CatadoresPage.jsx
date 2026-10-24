@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import ModuloCabecera from '../components/ModuloCabecera';
+import { ModuloCabecera } from '@/components/data-display';
 import {
   Search,
   Eye,
@@ -13,76 +13,18 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-// Datos iniciales de demostración basados en el seeder de ConexCoffee
-const INITIAL_CATADORES = [
-  {
-    id: 1,
-    numero_identificacion: '1088324567',
-    tipo_documento: 'CC',
-    primer_nombre: 'ANDRÉS',
-    segundo_nombre: 'FELIPE',
-    primer_apellido: 'MARTÍNEZ',
-    segundo_apellido: 'ZAPATA',
-    telefono: '3128904561',
-    correo: 'andres.martinez@tecnicafe.co',
-    certificacion: 'Q-Grader Arábica (CQI #4892)',
-    laboratorio: 'Laboratorio Central TecniCafé',
-    experiencia: '8 años',
-    muestras_evaluadas: 142,
-    estado: 'Activo',
-  },
-  {
-    id: 2,
-    numero_identificacion: '52893412',
-    tipo_documento: 'CC',
-    primer_nombre: 'CAROLINA',
-    segundo_nombre: 'PAOLA',
-    primer_apellido: 'HERRERA',
-    segundo_apellido: 'GIRALDO',
-    telefono: '3104567890',
-    correo: 'carolina.herrera@cafecauca.com',
-    certificacion: 'Q-Grader Arábica (CQI #6104)',
-    laboratorio: 'Centro Sensorial Café Nariño',
-    experiencia: '5 años',
-    muestras_evaluadas: 98,
-    estado: 'Activo',
-  },
-  {
-    id: 3,
-    numero_identificacion: '1094857234',
-    tipo_documento: 'CC',
-    primer_nombre: 'JORGE',
-    segundo_nombre: 'LUIS',
-    primer_apellido: 'QUINTERO',
-    segundo_apellido: 'VALENCIA',
-    telefono: '3157891234',
-    correo: 'jorge.quintero@cafespecial.org',
-    certificacion: 'Q-Processing Level 2 & Q-Grader',
-    laboratorio: 'Laboratorio Calidad Huila',
-    experiencia: '10 años',
-    muestras_evaluadas: 310,
-    estado: 'Activo',
-  },
-  {
-    id: 4,
-    numero_identificacion: '43872910',
-    tipo_documento: 'CC',
-    primer_nombre: 'MARÍA',
-    segundo_nombre: 'FERNANDA',
-    primer_apellido: 'SUÁREZ',
-    segundo_apellido: 'MONTOYA',
-    telefono: '3189923412',
-    correo: 'mafe.suarez@conexcata.com',
-    certificacion: 'Q-Grader Arábica (CQI #7721)',
-    laboratorio: 'Laboratorio Central TecniCafé',
-    experiencia: '4 años',
-    muestras_evaluadas: 64,
-    estado: 'Activo',
-  },
-];
+import { QueryState } from '@/components/feedback';
+import {
+  useSuperadminCatadores,
+  useCrearSuperadminCatador,
+  useActualizarSuperadminCatador,
+} from '../hooks/useSuperadminData';
 
 export default function CatadoresPage() {
-  const [catadores, setCatadores] = useState(INITIAL_CATADORES);
+  const query = useSuperadminCatadores();
+  const catadores = query.data ?? [];
+  const crearCatador = useCrearSuperadminCatador();
+  const actualizarCatador = useActualizarSuperadminCatador();
   const [searchTerm, setSearchTerm] = useState('');
   const [filtroLaboratorio, setFiltroLaboratorio] = useState('todos');
 
@@ -152,7 +94,7 @@ export default function CatadoresPage() {
       estado: 'Activo',
     };
 
-    setCatadores([nuevo, ...catadores]);
+    crearCatador.mutate(nuevo);
     toast.success('Catador registrado correctamente');
     setModalRegistrarAbierto(false);
     setNuevoCatador({
@@ -175,9 +117,7 @@ export default function CatadoresPage() {
     e.preventDefault();
     if (!catadorSeleccionado) return;
 
-    setCatadores((prev) =>
-      prev.map((c) => (c.id === catadorSeleccionado.id ? catadorSeleccionado : c))
-    );
+    actualizarCatador.mutate(catadorSeleccionado);
     toast.success('Catador actualizado correctamente');
     setModalEditarAbierto(false);
   };
@@ -217,6 +157,8 @@ export default function CatadoresPage() {
           setModalConsultarAbierto(true);
         }}
       />
+
+      <QueryState query={query} />
 
       {/* Barra de Búsqueda y Filtros */}
       <div className="bg-white rounded-2xl p-4 border border-stone-200 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">

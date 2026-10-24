@@ -10,7 +10,8 @@ import { User, Mail, Shield } from 'lucide-react';
 // ============================================
 
 export default function ProfilePage() {
-  const { user, role } = useAuthStore();
+  const user = useAuthStore((s) => s.user);
+  const role = useAuthStore((s) => s.role);
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">

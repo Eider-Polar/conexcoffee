@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import ModuloCabecera from '../components/ModuloCabecera';
+import toast from 'react-hot-toast';
+import { ModuloCabecera } from '@/components/data-display';
 import {
   Search,
   Eye,

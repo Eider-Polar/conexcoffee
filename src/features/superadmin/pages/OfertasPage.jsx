@@ -8,75 +8,19 @@ import {
   Layers,
   Award,
 } from 'lucide-react';
-import ModuloCabecera from '../components/ModuloCabecera';
-
-const INITIAL_OFERTAS = [
-  {
-    id: 1,
-    codigo: 'OFR-HUILA-001',
-    cantidad: 1500.0, // kg
-    variedadCafe: 'Pink Bourbon',
-    puntajeSca: 88.5,
-    proceso: 'Honey Anaeróbico',
-    precioKg: 18.5, // USD
-    caficultor: 'Miguel Florez',
-    empresa: 'Café Especial Huila SAS',
-    estado: 'Publicada',
-    notasCata: 'Jazmín, frutos rojos, acidez fosfórica brillante y postgusto dulce prolongado.',
-  },
-  {
-    id: 2,
-    codigo: 'OFR-CAUCA-024',
-    cantidad: 2400.0,
-    variedadCafe: 'Castillo / Colombia',
-    puntajeSca: 86.0,
-    proceso: 'Lavado Tradicional',
-    precioKg: 12.0,
-    caficultor: 'Pedro Prueba',
-    empresa: 'Exportadora Andina de Café',
-    estado: 'Negociación',
-    notasCata: 'Panela, cítricos dulces, chocolate con leche y cuerpo cremoso.',
-  },
-  {
-    id: 3,
-    codigo: 'OFR-NARINO-089',
-    cantidad: 800.0,
-    variedadCafe: 'Geisha de Altura',
-    puntajeSca: 90.2,
-    proceso: 'Natural 96h',
-    precioKg: 35.0,
-    caficultor: 'María del Rosario Ruiz',
-    empresa: 'Origen Café Colombia',
-    estado: 'Vendida',
-    notasCata: 'Floral intenso, bergamota, melocotón maduro y acidez málica compleja.',
-  },
-];
-
-const INITIAL_PREOFERTAS = [
-  {
-    id: 1,
-    codigo: 'PRE-TOLIMA-012',
-    caficultor: 'Jorge Enrique Martínez',
-    finca: 'Finca La Colina',
-    variedad: 'Caturra Orgánico',
-    cantidadEstimada: 1200,
-    estado: 'En Catación',
-  },
-  {
-    id: 2,
-    codigo: 'PRE-HUILA-055',
-    caficultor: 'Ana Lucía Pérez',
-    finca: 'Finca El Mirador',
-    variedad: 'Bourbon Rosado',
-    cantidadEstimada: 900,
-    estado: 'Muestra Enviada',
-  },
-];
+import { ModuloCabecera } from '@/components/data-display';
+import { QueryState } from '@/components/feedback';
+import { useSuperadminOfertas, useSuperadminPreofertas } from '../hooks/useSuperadminData';
 
 export default function OfertasPage() {
   const [pestanaActiva, setPestanaActiva] = useState('ofertas');
-  const [ofertas] = useState(INITIAL_OFERTAS);
-  const [preofertas] = useState(INITIAL_PREOFERTAS);
+
+  const ofertasQuery = useSuperadminOfertas();
+  const ofertas = ofertasQuery.data ?? [];
+
+  const preofertasQuery = useSuperadminPreofertas();
+  const preofertas = preofertasQuery.data ?? [];
+
   const [searchTerm, setSearchTerm] = useState('');
 
   const [modalDetalleAbierto, setModalDetalleAbierto] = useState(false);
@@ -121,6 +65,8 @@ export default function OfertasPage() {
         icono={Gift}
         totalRegistros={pestanaActiva === 'ofertas' ? ofertasFiltradas.length : preofertasFiltradas.length}
       />
+
+      <QueryState query={ofertasQuery} />
 
       {/* Pestañas Submódulos */}
       <div className="flex items-center justify-between border-b border-surface-200">

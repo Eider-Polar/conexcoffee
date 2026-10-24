@@ -1,15 +1,3 @@
-import {
-  Users,
-  Leaf,
-  Building2,
-  ShoppingBag,
-  Handshake,
-  Coffee,
-  FlaskConical,
-  Package,
-  UserCheck,
-} from 'lucide-react';
-
 // ============================================
 // dashboardData.js — Datos del SuperAdmin Dashboard
 // ============================================
@@ -19,10 +7,10 @@ import {
 // ============================================
 
 export const DASHBOARD_STATS = [
-  { id: 'usuarios',     label: 'Total Usuarios',   value: '1,234', change: '+8.2%', up: true,  icon: Users,    color: '#AD2E01', bg: '#FFF1ED' },
-  { id: 'caficultores', label: 'Caficultores',      value: '412',   change: '+5.4%', up: true,  icon: Leaf,     color: '#AD2E01', bg: '#FFF1ED' },
-  { id: 'empresas',     label: 'Empresas Activas',  value: '56',    change: '+3.1%', up: true,  icon: Building2, color: '#F25433', bg: '#FFF5F2' },
-  { id: 'ofertas',      label: 'Ofertas Activas',   value: '89',    change: '-2.4%', up: false, icon: ShoppingBag, color: '#AD2E01', bg: '#FFF1ED' },
+  { id: 'usuarios',     label: 'Total Usuarios',   value: '1,234', change: '+8.2%', up: true,  iconName: 'Users',       color: '#AD2E01', bg: '#FFF1ED' },
+  { id: 'caficultores', label: 'Caficultores',      value: '412',   change: '+5.4%', up: true,  iconName: 'Leaf',        color: '#AD2E01', bg: '#FFF1ED' },
+  { id: 'empresas',     label: 'Empresas Activas',  value: '56',    change: '+3.1%', up: true,  iconName: 'Building2',    color: '#F25433', bg: '#FFF5F2' },
+  { id: 'ofertas',      label: 'Ofertas Activas',   value: '89',    change: '-2.4%', up: false, iconName: 'ShoppingBag',  color: '#AD2E01', bg: '#FFF1ED' },
 ];
 
 export const PLATFORM_METRICS = [
@@ -42,12 +30,12 @@ export const RECENT_ACTIVITY = [
 ];
 
 export const QUICK_MODULES = [
-  { id: 'caficultores',  title: 'Caficultores',  description: 'Productores de café',            path: '/superadmin/caficultores',  icon: Leaf,        stats: [{ label: 'Total', value: '412' },  { label: 'Activos',    value: '395'   }] },
-  { id: 'empresas',      title: 'Empresas',       description: 'Empresas compradoras',           path: '/superadmin/empresas',       icon: Building2,   stats: [{ label: 'Total', value: '56'  },  { label: 'Activas',    value: '52'    }] },
-  { id: 'brokers',       title: 'Brokers',        description: 'Intermediarios de comercio',     path: '/superadmin/brokers',        icon: Handshake,   stats: [{ label: 'Total', value: '28'  },  { label: 'Activos',    value: '24'    }] },
-  { id: 'compradores',   title: 'Compradores',    description: 'Compradores internacionales',    path: '/superadmin/compradores',    icon: ShoppingBag, stats: [{ label: 'Total', value: '134' },  { label: 'Nuevos',     value: '12'    }] },
-  { id: 'fincas',        title: 'Fincas',         description: 'Fincas y lotes registrados',     path: '/superadmin/fincas',         icon: Coffee,      stats: [{ label: 'Fincas', value: '384' }, { label: 'Lotes',      value: '1,201' }] },
-  { id: 'laboratorios',  title: 'Laboratorios',   description: 'Centros de catación',            path: '/superadmin/laboratorios',   icon: FlaskConical,stats: [{ label: 'Total', value: '8'   },  { label: 'Activos',    value: '7'     }] },
-  { id: 'muestras',      title: 'Muestras',       description: 'Muestras de café enviadas',      path: '/superadmin/muestras',       icon: Package,     stats: [{ label: 'Total', value: '225' },  { label: 'Pendientes', value: '50'    }] },
-  { id: 'tecnicos',      title: 'Técnicos',       description: 'Técnicos de campo asignados',    path: '/superadmin/tecnicos',       icon: UserCheck,   stats: [{ label: 'Total', value: '18'  },  { label: 'Activos',    value: '16'    }] },
+  { id: 'caficultores',  title: 'Caficultores',  description: 'Productores de café',            path: '/superadmin/caficultores',  iconName: 'Leaf',        stats: [{ label: 'Total', value: '412' },  { label: 'Activos',    value: '395'   }] },
+  { id: 'empresas',      title: 'Empresas',       description: 'Empresas compradoras',           path: '/superadmin/empresas',       iconName: 'Building2',   stats: [{ label: 'Total', value: '56'  },  { label: 'Activas',    value: '52'    }] },
+  { id: 'brokers',       title: 'Brokers',        description: 'Intermediarios de comercio',     path: '/superadmin/brokers',        iconName: 'Handshake',   stats: [{ label: 'Total', value: '28'  },  { label: 'Activos',    value: '24'    }] },
+  { id: 'compradores',   title: 'Compradores',    description: 'Compradores internacionales',    path: '/superadmin/compradores',    iconName: 'ShoppingBag', stats: [{ label: 'Total', value: '134' },  { label: 'Nuevos',     value: '12'    }] },
+  { id: 'fincas',        title: 'Fincas',         description: 'Fincas y lotes registrados',     path: '/superadmin/fincas',         iconName: 'Coffee',      stats: [{ label: 'Fincas', value: '384' }, { label: 'Lotes',      value: '1,201' }] },
+  { id: 'laboratorios',  title: 'Laboratorios',   description: 'Centros de catación',            path: '/superadmin/laboratorios',   iconName: 'FlaskConical',stats: [{ label: 'Total', value: '8'   },  { label: 'Activos',    value: '7'     }] },
+  { id: 'muestras',      title: 'Muestras',       description: 'Muestras de café enviadas',      path: '/superadmin/muestras',       iconName: 'Package',     stats: [{ label: 'Total', value: '225' },  { label: 'Pendientes', value: '50'    }] },
+  { id: 'tecnicos',      title: 'Técnicos',       description: 'Técnicos de campo asignados',    path: '/superadmin/tecnicos',       iconName: 'UserCheck',   stats: [{ label: 'Total', value: '18'  },  { label: 'Activos',    value: '16'    }] },
 ];

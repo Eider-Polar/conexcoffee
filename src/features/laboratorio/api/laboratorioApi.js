@@ -5,7 +5,7 @@ import {
   ANALISIS_FISICOS_DATA,
   ANALISIS_SENSORIALES_DATA,
   HOJAS_CATACION_DATA,
-  MUESTRAS_DATA,
+  ANALISIS_MUESTRAS_DATA,
   RESULTADOS_LABORATORIO_DATA,
 } from '../data/laboratorioData';
 
@@ -36,7 +36,7 @@ export const hojasCatacionApi = createResourceApi({
 
 export const muestrasApi = createResourceApi({
   path: '/laboratorio/muestras',
-  seed: MUESTRAS_DATA,
+  seed: ANALISIS_MUESTRAS_DATA,
 });
 
 export const resultadosApi = createResourceApi({

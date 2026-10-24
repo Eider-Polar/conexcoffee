@@ -74,8 +74,6 @@ const NAV_BY_ROLE = {
   ],
   [ROLES.BROKER]: [
     { label: 'Dashboard', path: '/broker/dashboard', icon: LayoutDashboard },
-    { label: 'Negociaciones', path: '/broker/negotiations', icon: Handshake },
-    { label: 'Contratos', path: '/broker/contratos', icon: FileText },
     { label: 'Página Web', path: '/', icon: Globe },
   ],
   [ROLES.CAFICULTOR]: [
@@ -89,7 +87,6 @@ const NAV_BY_ROLE = {
   [ROLES.COMPRADOR]: [
     { label: 'Dashboard',     path: '/comprador/dashboard',    icon: LayoutDashboard },
     { label: 'Contenedores', path: '/comprador/contenedores', icon: Package },
-    { label: 'Mis pedidos',  path: '/comprador/orders',       icon: ShoppingCart },
     { label: 'Página Web',   path: '/',                       icon: Globe },
   ],
   [ROLES.LABORATORIO]: [
@@ -97,28 +94,27 @@ const NAV_BY_ROLE = {
     { label: 'Catadores',          path: '/laboratorio/catadores',          icon: Award },
     { label: 'Análisis Físico',    path: '/laboratorio/analisis-fisico',    icon: FlaskConical },
     { label: 'Análisis Sensorial', path: '/laboratorio/analisis-sensorial', icon: Coffee },
+    { label: 'Hojas de Catación',  path: '/laboratorio/hojas-catacion',     icon: FileText },
     { label: 'Muestras',           path: '/laboratorio/muestras',           icon: Archive },
     { label: 'Resultados',         path: '/laboratorio/resultados',         icon: ClipboardCheck },
     { label: 'Página Web',         path: '/',                               icon: Globe },
   ],
   [ROLES.TECNICO]: [
-    { label: 'Dashboard',        path: '/tecnico/dashboard',     icon: LayoutDashboard },
-    { label: 'Visitas a Fincas', path: '/tecnico/dashboard',     icon: MapPin },
-    { label: 'Auditorías BPA',   path: '/tecnico/dashboard',     icon: UserCheck },
-    { label: 'Página Web',       path: '/',                      icon: Globe },
+    { label: 'Dashboard',  path: '/tecnico/dashboard', icon: LayoutDashboard },
+    { label: 'Página Web', path: '/',                  icon: Globe },
   ],
   [ROLES.CATADOR]: [
-    { label: 'Dashboard',         path: '/catador/dashboard',    icon: LayoutDashboard },
-    { label: 'Evaluación',        path: '/catador/evaluacion',   icon: ClipboardCheck },
-    { label: 'Sesiones Catación', path: '/catador/evaluacion',   icon: Coffee },
-    { label: 'Puntuaciones SCA',  path: '/catador/evaluacion',   icon: Award },
-    { label: 'Página Web',        path: '/',                     icon: Globe },
+    { label: 'Dashboard',  path: '/catador/dashboard',  icon: LayoutDashboard },
+    { label: 'Evaluación', path: '/catador/evaluacion', icon: ClipboardCheck },
+    { label: 'Página Web', path: '/',                   icon: Globe },
   ],
 };
 
 export default function Sidebar() {
-  const { role } = useAuthStore();
-  const { sidebarOpen, toggleSidebar, setSidebarOpen } = useUIStore();
+  const role = useAuthStore((s) => s.role);
+  const sidebarOpen = useUIStore((s) => s.sidebarOpen);
+  const toggleSidebar = useUIStore((s) => s.toggleSidebar);
+  const setSidebarOpen = useUIStore((s) => s.setSidebarOpen);
   const location = useLocation();
   const navRef = useRef(null);
   const closeBtnRef = useRef(null);

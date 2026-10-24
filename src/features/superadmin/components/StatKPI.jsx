@@ -1,8 +1,15 @@
-import { TrendingUp, TrendingDown } from 'lucide-react';
+import { TrendingUp, TrendingDown, Users, Leaf, Building2, ShoppingBag } from 'lucide-react';
+
+const ICON_MAP = {
+  Users,
+  Leaf,
+  Building2,
+  ShoppingBag,
+};
 
 // Tarjeta KPI para el dashboard del SuperAdmin
 export default function StatKPI({ stat }) {
-  const Icon = stat.icon;
+  const Icon = stat.icon || ICON_MAP[stat.iconName] || Users;
   return (
     <div className="bg-white rounded-2xl border border-surface-200 p-5 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
       <div className="flex items-start justify-between">

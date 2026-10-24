@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Settings,
   Shield,
@@ -7,9 +7,12 @@ import {
   Server,
   Lock,
 } from 'lucide-react';
-import ModuloCabecera from '../components/ModuloCabecera';
+import { ModuloCabecera } from '@/components/data-display';
+import { QueryState } from '@/components/feedback';
+import { useSuperadminConfiguracion } from '../hooks/useSuperadminData';
 
 export default function ConfiguracionPage() {
+  const query = useSuperadminConfiguracion();
   const [guardadoExitoso, setGuardadoExitoso] = useState(false);
   const [config, setConfig] = useState({
     nombrePlataforma: 'ConexCoffee — Plataforma de Café Especial',
@@ -23,6 +26,12 @@ export default function ConfiguracionPage() {
     umbralHumedadMax: 12.5,
     puntajeMinimoSca: 84.0,
   });
+
+  useEffect(() => {
+    if (query.data?.[0]) {
+      setConfig(query.data[0]);
+    }
+  }, [query.data]);
 
   const guardarConfiguracion = (e) => {
     e.preventDefault();
@@ -40,6 +49,8 @@ export default function ConfiguracionPage() {
         mensaje="En este módulo podrás configurar las variables globales de la plataforma y parámetros operativos."
         icono={Settings}
       />
+
+      <QueryState query={query} />
 
       {guardadoExitoso && (
         <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center gap-3 text-emerald-800 text-sm font-semibold animate-in fade-in">

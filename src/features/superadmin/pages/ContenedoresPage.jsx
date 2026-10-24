@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import ModuloCabecera from '../components/ModuloCabecera';
+import { ModuloCabecera } from '@/components/data-display';
 import {
   Search,
   Eye,
@@ -11,56 +11,18 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-// Datos iniciales de demostración basados en el seeder de ConexCoffee
-const INITIAL_CONTENEDORES = [
-  {
-    id: 1,
-    codigo: 'CTN-BOG-ROT-2026-01',
-    pais_origen: 'Colombia (Puerto Buenaventura)',
-    pais_destino: 'Países Bajos (Puerto de Rotterdam)',
-    fecha_apertura: '2026-08-10',
-    fecha_cierre_estimada: '2026-09-25',
-    cantidad_cafe_kg: 19200,
-    capacidad_total_kg: 21600,
-    estado: 'Publicado',
-    temperatura_controlada: '18°C',
-    ofertas_asignadas: [
-      { codigo: 'OFR-HUILA-001', variedad: 'Pink Bourbon', sacos: 25, peso_kg: 1500 },
-      { codigo: 'OFR-CAUCA-014', variedad: 'Geisha Lavado', sacos: 15, peso_kg: 900 },
-    ],
-  },
-  {
-    id: 2,
-    codigo: 'CTN-CTG-HAM-2026-02',
-    pais_origen: 'Colombia (Puerto Cartagena)',
-    pais_destino: 'Alemania (Puerto de Hamburgo)',
-    fecha_apertura: '2026-08-22',
-    fecha_cierre_estimada: '2026-10-05',
-    cantidad_cafe_kg: 14500,
-    capacidad_total_kg: 21600,
-    estado: 'Publicado',
-    temperatura_controlada: '17.5°C',
-    ofertas_asignadas: [
-      { codigo: 'OFR-NAR-003', variedad: 'Castillo Fermentado', sacos: 30, peso_kg: 1800 },
-    ],
-  },
-  {
-    id: 3,
-    codigo: 'CTN-BUN-YOK-2026-03',
-    pais_origen: 'Colombia (Puerto Buenaventura)',
-    pais_destino: 'Japón (Puerto de Yokohama)',
-    fecha_apertura: '2026-09-01',
-    fecha_cierre_estimada: '2026-10-20',
-    cantidad_cafe_kg: 6800,
-    capacidad_total_kg: 21600,
-    estado: 'Creado',
-    temperatura_controlada: '18°C',
-    ofertas_asignadas: [],
-  },
-];
+import { QueryState } from '@/components/feedback';
+import {
+  useSuperadminContenedores,
+  useCrearSuperadminContenedor,
+  useActualizarSuperadminContenedor,
+} from '../hooks/useSuperadminData';
 
 export default function ContenedoresPage() {
-  const [contenedores, setContenedores] = useState(INITIAL_CONTENEDORES);
+  const query = useSuperadminContenedores();
+  const contenedores = query.data ?? [];
+  const crearContenedor = useCrearSuperadminContenedor();
+  const actualizarContenedor = useActualizarSuperadminContenedor();
   const [searchTerm, setSearchTerm] = useState('');
   const [filtroEstado, setFiltroEstado] = useState('todos');
 
@@ -122,7 +84,7 @@ export default function ContenedoresPage() {
       ofertas_asignadas: [],
     };
 
-    setContenedores([nuevo, ...contenedores]);
+    crearContenedor.mutate(nuevo);
     toast.success('Contenedor de exportación creado con éxito');
     setModalRegistrarAbierto(false);
     setNuevoContenedor({
@@ -140,9 +102,7 @@ export default function ContenedoresPage() {
   // Toggle publicar / ocultar
   const handleTogglePublicacion = (contenedor) => {
     const nuevoEstado = contenedor.estado === 'Publicado' ? 'Creado' : 'Publicado';
-    setContenedores((prev) =>
-      prev.map((c) => (c.id === contenedor.id ? { ...c, estado: nuevoEstado } : c))
-    );
+    actualizarContenedor.mutate({ ...contenedor, estado: nuevoEstado });
     toast.success(
       `Contenedor ${contenedor.codigo} ${
         nuevoEstado === 'Publicado' ? 'publicado para subasta' : 'ocultado'
@@ -168,9 +128,7 @@ export default function ContenedoresPage() {
       cantidad_cafe_kg: nuevoPeso,
     };
 
-    setContenedores((prev) =>
-      prev.map((c) => (c.id === contenedorSeleccionado.id ? actualizado : c))
-    );
+    actualizarContenedor.mutate(actualizado);
     setContenedorSeleccionado(actualizado);
     toast.success(`Oferta ${nuevaOfertaAsignar.codigo} asignada al contenedor`);
     setModalAsignarAbierto(false);
@@ -188,6 +146,8 @@ export default function ContenedoresPage() {
         textoBotonRegistrar="Registrar Contenedor"
         onRegistrar={() => setModalRegistrarAbierto(true)}
       />
+
+      <QueryState query={query} />
 
       {/* Barra de Búsqueda y Filtros */}
       <div className="bg-white rounded-2xl p-4 border border-stone-200 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">

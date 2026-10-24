@@ -8,49 +8,13 @@ import {
   Check,
   Droplets,
 } from 'lucide-react';
-import ModuloCabecera from '../components/ModuloCabecera';
-
-const INITIAL_MUESTRAS = [
-  {
-    id: 1,
-    codigoPreoferta: 'PRE-HUILA-2026-001',
-    fecha: '2026-08-15',
-    peso: 350.0,
-    humedad: 10.8,
-    factorRendimiento: 88.5,
-    caficultor: 'Miguel Florez',
-    finca: 'Finca El Paraíso',
-    variedad: 'Pink Bourbon',
-    laboratorio: 'Laboratorio Central TecniCafé',
-    estado: 'Evaluada',
-  },
-  {
-    id: 2,
-    codigoPreoferta: 'PRE-CAUCA-2026-042',
-    fecha: '2026-08-20',
-    peso: 320.0,
-    humedad: 11.2,
-    factorRendimiento: 89.2,
-    caficultor: 'Pedro Prueba',
-    finca: 'Finca Los Rosales',
-    variedad: 'Honey Caturra',
-    laboratorio: null, // Sin laboratorio asignado
-    estado: 'Pendiente Laboratorio',
-  },
-  {
-    id: 3,
-    codigoPreoferta: 'PRE-NARINO-2026-105',
-    fecha: '2026-08-28',
-    peso: 400.0,
-    humedad: 10.5,
-    factorRendimiento: 91.0,
-    caficultor: 'María del Rosario Ruiz',
-    finca: 'Finca Buena Vista',
-    variedad: 'Geisha Lavado',
-    laboratorio: 'Centro Sensorial Café Nariño',
-    estado: 'En Análisis',
-  },
-];
+import { ModuloCabecera } from '@/components/data-display';
+import { QueryState } from '@/components/feedback';
+import {
+  useSuperadminMuestras,
+  useCrearSuperadminMuestra,
+  useActualizarSuperadminMuestra,
+} from '../hooks/useSuperadminData';
 
 const LABORATORIOS_DISPONIBLES = [
   'Laboratorio Central TecniCafé',
@@ -59,7 +23,10 @@ const LABORATORIOS_DISPONIBLES = [
 ];
 
 export default function MuestrasPage() {
-  const [muestras, setMuestras] = useState(INITIAL_MUESTRAS);
+  const query = useSuperadminMuestras();
+  const muestras = query.data ?? [];
+  const crearMuestra = useCrearSuperadminMuestra();
+  const actualizarMuestra = useActualizarSuperadminMuestra();
   const [searchTerm, setSearchTerm] = useState('');
 
   const [modalRegistroAbierto, setModalRegistroAbierto] = useState(false);
@@ -108,25 +75,22 @@ export default function MuestrasPage() {
   const guardarCreacion = (e) => {
     e.preventDefault();
     const nueva = {
-      id: Date.now(),
       ...formData,
       peso: Number(formData.peso),
       humedad: Number(formData.humedad),
       factorRendimiento: Number(formData.factorRendimiento || 88),
       estado: formData.laboratorio ? 'En Análisis' : 'Pendiente Laboratorio',
     };
-    setMuestras([nueva, ...muestras]);
+    crearMuestra.mutate(nueva);
     setModalRegistroAbierto(false);
   };
 
   const asignarLaboratorio = (nombreLab) => {
-    setMuestras(
-      muestras.map((m) =>
-        m.id === muestraActual.id
-          ? { ...m, laboratorio: nombreLab, estado: 'En Análisis' }
-          : m
-      )
-    );
+    actualizarMuestra.mutate({
+      ...muestraActual,
+      laboratorio: nombreLab,
+      estado: 'En Análisis',
+    });
     setModalAsignarAbierto(false);
   };
 
@@ -153,6 +117,8 @@ export default function MuestrasPage() {
         onRegistrar={abrirModalCrear}
         textoBotonRegistrar="Registrar Muestra"
       />
+
+      <QueryState query={query} />
 
       {/* Buscador */}
       <div className="bg-white p-4 rounded-2xl border border-surface-200 shadow-2xs flex items-center justify-between">

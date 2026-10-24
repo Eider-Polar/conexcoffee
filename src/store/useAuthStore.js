@@ -63,4 +63,5 @@ const useAuthStore = create((set) => ({
     set({ isLoading: loading }),
 }));
 
+export { useAuthStore };
 export default useAuthStore;

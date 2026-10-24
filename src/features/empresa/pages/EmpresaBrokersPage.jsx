@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import ModuloCabecera from '../components/ModuloCabecera';
+import { ModuloCabecera } from '@/components/data-display';
 import {
   Search,
   Eye,
