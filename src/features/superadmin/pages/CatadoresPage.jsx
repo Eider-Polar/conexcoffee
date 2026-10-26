@@ -479,7 +479,7 @@ export default function CatadoresPage() {
             <div className="p-6 border-b border-stone-200 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center">
-                  <Edit className="w-5 h-5" />
+                  <Pencil className="w-5 h-5" />
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-stone-900">Actualizar Catador</h3>
