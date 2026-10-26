@@ -1,15 +1,17 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import {
   Archive,
   Search,
+  Filter,
   Eye,
   X,
   FlaskConical,
   Check,
-  Droplets,
 } from 'lucide-react';
 import { ModuloCabecera } from '@/components/data-display';
 import { QueryState } from '@/components/feedback';
+import ActionButton from '../components/ActionButton';
+import { useTableEntranceAnimation } from '../hooks/useSuperadminAnimations';
 import {
   useSuperadminMuestras,
   useCrearSuperadminMuestra,
@@ -28,6 +30,8 @@ export default function MuestrasPage() {
   const crearMuestra = useCrearSuperadminMuestra();
   const actualizarMuestra = useActualizarSuperadminMuestra();
   const [searchTerm, setSearchTerm] = useState('');
+  const [filtroLaboratorio, setFiltroLaboratorio] = useState('todos');
+  const tableRef = useRef(null);
 
   const [modalRegistroAbierto, setModalRegistroAbierto] = useState(false);
   const [modalAsignarAbierto, setModalAsignarAbierto] = useState(false);
@@ -96,13 +100,18 @@ export default function MuestrasPage() {
 
   const filtradas = muestras.filter((m) => {
     const term = searchTerm.toLowerCase();
-    return (
+    const matchesSearch =
       m.codigoPreoferta.toLowerCase().includes(term) ||
       m.caficultor.toLowerCase().includes(term) ||
       m.variedad.toLowerCase().includes(term) ||
-      (m.laboratorio && m.laboratorio.toLowerCase().includes(term))
-    );
+      (m.laboratorio && m.laboratorio.toLowerCase().includes(term));
+
+    if (filtroLaboratorio === 'con_lab') return matchesSearch && m.laboratorio;
+    if (filtroLaboratorio === 'sin_lab') return matchesSearch && !m.laboratorio;
+    return matchesSearch;
   });
+
+  useTableEntranceAnimation(tableRef, [filtradas.length]);
 
   return (
     <div className="space-y-6">
@@ -120,8 +129,8 @@ export default function MuestrasPage() {
 
       <QueryState query={query} />
 
-      {/* Buscador */}
-      <div className="bg-white p-4 rounded-2xl border border-surface-200 shadow-2xs flex items-center justify-between">
+      {/* Barra de Búsqueda y Filtros */}
+      <div className="bg-white p-4 rounded-2xl border border-surface-200 shadow-2xs flex flex-col sm:flex-row gap-3 items-center justify-between">
         <div className="relative w-full sm:w-80">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-surface-400" />
           <input
@@ -132,12 +141,25 @@ export default function MuestrasPage() {
             className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-surface-200 focus:outline-none focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
           />
         </div>
+
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <Filter className="h-4 w-4 text-surface-400 shrink-0" />
+          <select
+            value={filtroLaboratorio}
+            onChange={(e) => setFiltroLaboratorio(e.target.value)}
+            className="px-3 py-2 text-sm rounded-xl border border-surface-200 bg-white text-surface-700 focus:outline-none focus:ring-2 focus:ring-brand-terracota/20 cursor-pointer"
+          >
+            <option value="todos">Todas las muestras</option>
+            <option value="con_lab">Con laboratorio asignado</option>
+            <option value="sin_lab">Sin laboratorio asignado</option>
+          </select>
+        </div>
       </div>
 
       {/* Tabla Oficial (Nº, Código/lote, Fecha, Peso (g), Humedad, Acciones) */}
       <div className="bg-white rounded-2xl border border-surface-200 shadow-2xs overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left">
+          <table ref={tableRef} className="w-full text-sm text-left">
             <thead className="bg-surface-50 border-b border-surface-200 text-surface-600 uppercase text-xs tracking-wider">
               <tr>
                 <th scope="col" className="px-4 py-3.5 font-bold w-12 text-center">Nº</th>
@@ -164,21 +186,18 @@ export default function MuestrasPage() {
                     </td>
                     <td className="px-5 py-3.5">
                       <div className="flex flex-col">
-                        <span className="font-bold text-surface-900 font-mono text-xs">{m.codigoPreoferta}</span>
+                        <span className="font-bold text-surface-900 text-xs">{m.codigoPreoferta}</span>
                         <span className="text-[11px] text-surface-500">{m.caficultor} — {m.variedad}</span>
                       </div>
                     </td>
-                    <td className="px-5 py-3.5 text-surface-600 text-xs font-mono">
+                    <td className="px-5 py-3.5 text-surface-600 text-xs">
                       {m.fecha}
                     </td>
                     <td className="px-5 py-3.5 font-semibold text-surface-800">
                       {m.peso.toLocaleString('es-CO', { minimumFractionDigits: 1 })} g
                     </td>
                     <td className="px-5 py-3.5 font-medium text-surface-700">
-                      <span className="inline-flex items-center gap-1">
-                        <Droplets className="h-3.5 w-3.5 text-blue-500" />
-                        {m.humedad.toFixed(1)}%
-                      </span>
+                      {m.humedad.toFixed(1)}%
                     </td>
                     <td className="px-5 py-3.5 text-center">
                       {m.laboratorio ? (
@@ -196,23 +215,19 @@ export default function MuestrasPage() {
                       <div className="flex items-center justify-center gap-1.5">
                         {/* Asignar laboratorio si aún no tiene */}
                         {!m.laboratorio && (
-                          <button
-                            type="button"
-                            onClick={() => abrirModalAsignar(m)}
+                          <ActionButton
+                            icon={FlaskConical}
                             title="Asignar Laboratorio"
-                            className="p-1.5 rounded-lg border border-surface-200 bg-white text-emerald-600 hover:bg-emerald-50 hover:border-emerald-300 transition-colors cursor-pointer shadow-2xs"
-                          >
-                            <FlaskConical className="h-4 w-4" />
-                          </button>
+                            variant="success"
+                            onClick={() => abrirModalAsignar(m)}
+                          />
                         )}
-                        <button
-                          type="button"
+                        <ActionButton
+                          icon={Eye}
+                          title="Ver Muestra"
+                          variant="view"
                           onClick={() => abrirModalDetalles(m)}
-                          title="Ver"
-                          className="p-1.5 rounded-lg border border-surface-200 bg-white text-surface-600 hover:text-blue-600 hover:border-blue-300 hover:bg-blue-50 transition-colors cursor-pointer shadow-2xs"
-                        >
-                          <Eye className="h-4 w-4" />
-                        </button>
+                        />
                       </div>
                     </td>
                   </tr>
@@ -254,7 +269,7 @@ export default function MuestrasPage() {
                     type="text"
                     value={formData.codigoPreoferta}
                     onChange={(e) => setFormData({ ...formData, codigoPreoferta: e.target.value })}
-                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 font-mono"
+                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200"
                   />
                 </div>
                 <div>
@@ -367,7 +382,7 @@ export default function MuestrasPage() {
 
             <p className="text-xs text-surface-600 my-3">
               Seleccione el laboratorio para realizar la catación de la muestra{' '}
-              <strong className="text-surface-900 font-mono">{muestraActual.codigoPreoferta}</strong>.
+              <strong className="text-surface-900">{muestraActual.codigoPreoferta}</strong>.
             </p>
 
             <div className="space-y-2 mt-4">
@@ -398,7 +413,7 @@ export default function MuestrasPage() {
                   <Archive className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-surface-900 font-mono">{muestraActual.codigoPreoferta}</h3>
+                  <h3 className="text-lg font-bold text-surface-900">{muestraActual.codigoPreoferta}</h3>
                   <span className="text-xs text-surface-500">{muestraActual.caficultor} — {muestraActual.variedad}</span>
                 </div>
               </div>

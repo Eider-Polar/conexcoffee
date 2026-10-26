@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { ModuloCabecera } from '@/components/data-display';
 import {
   Search,
@@ -12,6 +12,8 @@ import {
 import toast from 'react-hot-toast';
 
 import { QueryState } from '@/components/feedback';
+import ActionButton from '../components/ActionButton';
+import { useTableEntranceAnimation } from '../hooks/useSuperadminAnimations';
 import {
   useSuperadminContenedores,
   useCrearSuperadminContenedor,
@@ -25,6 +27,7 @@ export default function ContenedoresPage() {
   const actualizarContenedor = useActualizarSuperadminContenedor();
   const [searchTerm, setSearchTerm] = useState('');
   const [filtroEstado, setFiltroEstado] = useState('todos');
+  const tableRef = useRef(null);
 
   // Modales
   const [modalRegistrarAbierto, setModalRegistrarAbierto] = useState(false);
@@ -66,6 +69,8 @@ export default function ContenedoresPage() {
 
     return matchesSearch && matchesEstado;
   });
+
+  useTableEntranceAnimation(tableRef, [contenedoresFiltrados.length]);
 
   // Guardar nuevo
   const handleGuardarNuevo = (e) => {
@@ -140,8 +145,9 @@ export default function ContenedoresPage() {
       <ModuloCabecera
         titulo="Contenedores"
         subtitulo="Gestión logística de consolidación marítima y despacho internacional de café"
-        imagen="/images/portadas/contenedor.jpg"
-        mensajeInfo="En este módulo podrás registrar y gestionar la información detallada de cada uno de tus contenedores."
+        imagenPortada="/images/portadas/contenedor.jpg"
+        mensaje="En este módulo podrás registrar y gestionar la información detallada de cada uno de tus contenedores."
+        icono={Package}
         totalRegistros={contenedores.length}
         textoBotonRegistrar="Registrar Contenedor"
         onRegistrar={() => setModalRegistrarAbierto(true)}
@@ -150,24 +156,24 @@ export default function ContenedoresPage() {
       <QueryState query={query} />
 
       {/* Barra de Búsqueda y Filtros */}
-      <div className="bg-white rounded-2xl p-4 border border-stone-200 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
+      <div className="bg-white rounded-2xl p-4 border border-surface-200 shadow-2xs flex flex-col md:flex-row gap-4 items-center justify-between">
         <div className="relative w-full md:w-96">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-surface-400" />
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Buscar por código, puerto, país..."
-            className="w-full pl-9 pr-4 py-2 text-sm border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-700/20 focus:border-amber-700"
+            className="w-full pl-9 pr-4 py-2 text-sm border border-surface-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
           />
         </div>
 
         <div className="flex items-center gap-3 w-full md:w-auto">
-          <span className="text-xs font-medium text-stone-500">Estado:</span>
+          <span className="text-xs font-medium text-surface-500">Estado:</span>
           <select
             value={filtroEstado}
             onChange={(e) => setFiltroEstado(e.target.value)}
-            className="text-sm border border-stone-200 rounded-xl px-3 py-2 bg-stone-50 focus:outline-none focus:ring-2 focus:ring-amber-700/20"
+            className="text-sm border border-surface-200 rounded-xl px-3 py-2 bg-surface-50 text-surface-700 focus:outline-none focus:ring-2 focus:ring-brand-terracota/20 cursor-pointer"
           >
             <option value="todos">Todos los estados</option>
             <option value="publicado">Publicado</option>
@@ -177,10 +183,10 @@ export default function ContenedoresPage() {
       </div>
 
       {/* Tabla de Contenedores */}
-      <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl border border-surface-200 shadow-2xs overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-stone-50 border-b border-stone-200 text-stone-600 font-semibold text-xs uppercase tracking-wider">
+          <table ref={tableRef} className="w-full text-left text-sm">
+            <thead className="bg-surface-50 border-b border-surface-200 text-surface-600 font-semibold text-xs uppercase tracking-wider">
               <tr>
                 <th className="py-3 px-4">Nº</th>
                 <th className="py-3 px-4">Código Contenedor</th>
@@ -192,10 +198,10 @@ export default function ContenedoresPage() {
                 <th className="py-3 px-4 text-center">Acciones</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-stone-100">
+            <tbody className="divide-y divide-surface-100">
               {contenedoresFiltrados.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="text-center py-10 text-stone-400">
+                  <td colSpan={8} className="text-center py-10 text-surface-400">
                     No se encontraron contenedores registrados.
                   </td>
                 </tr>
@@ -205,35 +211,32 @@ export default function ContenedoresPage() {
                     (c.cantidad_cafe_kg / c.capacidad_total_kg) * 100
                   );
                   return (
-                    <tr key={c.id} className="hover:bg-amber-50/40 transition-colors">
-                      <td className="py-3 px-4 text-stone-500 font-medium">{index + 1}</td>
-                      <td className="py-3 px-4 font-bold text-stone-900">
-                        <div className="flex items-center gap-2">
-                          <Package className="w-4 h-4 text-amber-700" />
-                          <span>{c.codigo}</span>
-                        </div>
+                    <tr key={c.id} className="hover:bg-surface-50/80 transition-colors">
+                      <td className="py-3 px-4 text-surface-500 font-medium">{index + 1}</td>
+                      <td className="py-3 px-4 font-bold text-surface-900">
+                        <span>{c.codigo}</span>
                       </td>
                       <td className="py-3 px-4 text-stone-700 text-xs">{c.pais_origen}</td>
-                      <td className="py-3 px-4 text-stone-800 font-medium text-xs">
+                      <td className="py-3 px-4 text-surface-800 font-medium text-xs">
                         {c.pais_destino}
                       </td>
-                      <td className="py-3 px-4 text-stone-600 text-xs">{c.fecha_apertura}</td>
+                      <td className="py-3 px-4 text-surface-600 text-xs">{c.fecha_apertura}</td>
                       <td className="py-3 px-4">
                         <div className="space-y-1">
-                          <span className="font-semibold text-stone-900 text-xs">
+                          <span className="font-semibold text-surface-900 text-xs">
                             {c.cantidad_cafe_kg.toLocaleString('es-CO')} kg
                           </span>
-                          <div className="w-28 bg-stone-100 rounded-full h-1.5 overflow-hidden">
+                          <div className="w-28 bg-surface-100 rounded-full h-1.5 overflow-hidden">
                             <div
                               className={`h-full rounded-full ${
                                 porcentajeLlenado > 80
                                   ? 'bg-emerald-600'
-                                  : 'bg-amber-600'
+                                  : 'bg-brand-terracota'
                               }`}
                               style={{ width: `${porcentajeLlenado}%` }}
                             />
                           </div>
-                          <span className="text-[10px] text-stone-400 block">
+                          <span className="text-[10px] text-surface-400 block">
                             {porcentajeLlenado}% capacidad
                           </span>
                         </div>
@@ -243,7 +246,7 @@ export default function ContenedoresPage() {
                           className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
                             c.estado === 'Publicado'
                               ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                              : 'bg-stone-100 text-stone-700 border border-stone-200'
+                              : 'bg-surface-100 text-surface-700 border border-surface-200'
                           }`}
                         >
                           {c.estado}
@@ -251,45 +254,34 @@ export default function ContenedoresPage() {
                       </td>
                       <td className="py-3 px-4">
                         <div className="flex items-center justify-center gap-1.5">
-                          <button
+                          <ActionButton
+                            icon={Eye}
+                            title="Ver trazabilidad"
+                            variant="view"
                             onClick={() => {
                               setContenedorSeleccionado(c);
                               setModalDetalleAbierto(true);
                             }}
-                            className="p-1.5 text-stone-500 hover:text-stone-900 hover:bg-stone-100 rounded-lg transition-colors"
-                            title="Ver trazabilidad"
-                          >
-                            <Eye className="w-4 h-4" />
-                          </button>
-                          <button
+                          />
+                          <ActionButton
+                            icon={ShoppingBag}
+                            title="Asignar oferta"
+                            variant="primary"
                             onClick={() => {
                               setContenedorSeleccionado(c);
                               setModalAsignarAbierto(true);
                             }}
-                            className="p-1.5 text-stone-500 hover:text-amber-800 hover:bg-amber-100 rounded-lg transition-colors"
-                            title="Asignar oferta"
-                          >
-                            <ShoppingBag className="w-4 h-4" />
-                          </button>
-                          <button
-                            onClick={() => handleTogglePublicacion(c)}
-                            className={`p-1.5 rounded-lg transition-colors ${
-                              c.estado === 'Publicado'
-                                ? 'text-amber-700 hover:bg-amber-50'
-                                : 'text-emerald-700 hover:bg-emerald-50'
-                            }`}
+                          />
+                          <ActionButton
+                            icon={c.estado === 'Publicado' ? EyeOff : Send}
                             title={
                               c.estado === 'Publicado'
                                 ? 'Ocultar contenedor'
                                 : 'Publicar contenedor'
                             }
-                          >
-                            {c.estado === 'Publicado' ? (
-                              <EyeOff className="w-4 h-4" />
-                            ) : (
-                              <Send className="w-4 h-4" />
-                            )}
-                          </button>
+                            variant={c.estado === 'Publicado' ? 'warning' : 'success'}
+                            onClick={() => handleTogglePublicacion(c)}
+                          />
                         </div>
                       </td>
                     </tr>
@@ -301,7 +293,7 @@ export default function ContenedoresPage() {
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-stone-200 bg-stone-50 flex items-center justify-between text-xs text-stone-500">
+        <div className="p-4 border-t border-surface-200 bg-surface-50 flex items-center justify-between text-xs text-surface-500">
           <span>
             Total registros: <b>{contenedoresFiltrados.length}</b> de {contenedores.length}
           </span>

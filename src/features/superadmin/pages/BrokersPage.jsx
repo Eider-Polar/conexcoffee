@@ -1,15 +1,17 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import {
   Handshake,
   Search,
+  Filter,
   Pencil,
   Eye,
   X,
   Building2,
-  CheckCircle,
 } from 'lucide-react';
 import { ModuloCabecera } from '@/components/data-display';
 import { QueryState } from '@/components/feedback';
+import ActionButton from '../components/ActionButton';
+import { useTableEntranceAnimation } from '../hooks/useSuperadminAnimations';
 import {
   useSuperadminBrokers,
   useCrearSuperadminBroker,
@@ -22,16 +24,15 @@ export default function BrokersPage() {
   const crearBroker = useCrearSuperadminBroker();
   const actualizarBroker = useActualizarSuperadminBroker();
   const [searchTerm, setSearchTerm] = useState('');
+  const [filtroDepartamento, setFiltroDepartamento] = useState('todos');
+  const tableRef = useRef(null);
 
   // Modales
   const [modalRegistroAbierto, setModalRegistroAbierto] = useState(false);
   const [modalEditarAbierto, setModalEditarAbierto] = useState(false);
   const [modalDetalleAbierto, setModalDetalleAbierto] = useState(false);
-  const [modalConsultarAbierto, setModalConsultarAbierto] = useState(false);
 
   const [brokerActual, setBrokerActual] = useState(null);
-  const [cedulaConsulta, setCedulaConsulta] = useState('');
-  const [resultadoConsulta, setResultadoConsulta] = useState(null);
 
   const [formData, setFormData] = useState({
     numeroIdentificacion: '',
@@ -90,20 +91,6 @@ export default function BrokersPage() {
     setModalDetalleAbierto(true);
   };
 
-  const abrirModalConsultar = () => {
-    setCedulaConsulta('');
-    setResultadoConsulta(null);
-    setModalConsultarAbierto(true);
-  };
-
-  const ejecutarConsulta = (e) => {
-    e.preventDefault();
-    const encontrado = brokers.find(
-      (b) => b.numeroIdentificacion.trim() === cedulaConsulta.trim()
-    );
-    setResultadoConsulta(encontrado || 'NO_ENCONTRADO');
-  };
-
   const guardarCreacion = (e) => {
     e.preventDefault();
     const nuevo = {
@@ -123,20 +110,28 @@ export default function BrokersPage() {
     setModalEditarAbierto(false);
   };
 
+  const departamentosUnicos = Array.from(
+    new Set(brokers.map((b) => b.departamento).filter(Boolean))
+  );
+
   const filtrados = brokers.filter((b) => {
     const term = searchTerm.toLowerCase();
-    return (
+    const matchesSearch =
       b.numeroIdentificacion.toLowerCase().includes(term) ||
       b.primerNombre.toLowerCase().includes(term) ||
       b.primerApellido.toLowerCase().includes(term) ||
       b.telefono.toLowerCase().includes(term) ||
-      (b.municipio && b.municipio.toLowerCase().includes(term))
-    );
+      (b.municipio && b.municipio.toLowerCase().includes(term));
+    const matchesDepto =
+      filtroDepartamento === 'todos' || b.departamento === filtroDepartamento;
+    return matchesSearch && matchesDepto;
   });
+
+  useTableEntranceAnimation(tableRef, [filtrados.length]);
 
   return (
     <div className="space-y-6">
-      {/* Cabecera idéntica a components.cabecera-modulo con botones oficiales Consultar y Registrar */}
+      {/* Cabecera idéntica a components.cabecera-modulo */}
       <ModuloCabecera
         titulo="Brokers"
         subtitulo="Intermediarios comerciales autorizados para negociación de lotes y contratos"
@@ -144,16 +139,14 @@ export default function BrokersPage() {
         mensaje="En este módulo podrás registrar la información detallada de cada uno de tus brokers."
         icono={Handshake}
         totalRegistros={filtrados.length}
-        onConsultar={abrirModalConsultar}
-        textoBotonConsultar="Consultar Broker"
         onRegistrar={abrirModalCrear}
         textoBotonRegistrar="Registrar Broker"
       />
 
       <QueryState query={query} />
 
-      {/* Buscador */}
-      <div className="bg-white p-4 rounded-2xl border border-surface-200 shadow-2xs flex items-center justify-between">
+      {/* Barra de Búsqueda y Filtros */}
+      <div className="bg-white p-4 rounded-2xl border border-surface-200 shadow-2xs flex flex-col sm:flex-row gap-3 items-center justify-between">
         <div className="relative w-full sm:w-80">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-surface-400" />
           <input
@@ -164,12 +157,28 @@ export default function BrokersPage() {
             className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-surface-200 focus:outline-none focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
           />
         </div>
+
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <Filter className="h-4 w-4 text-surface-400 shrink-0" />
+          <select
+            value={filtroDepartamento}
+            onChange={(e) => setFiltroDepartamento(e.target.value)}
+            className="px-3 py-2 text-sm rounded-xl border border-surface-200 bg-white text-surface-700 focus:outline-none focus:ring-2 focus:ring-brand-terracota/20 cursor-pointer"
+          >
+            <option value="todos">Todos los departamentos</option>
+            {departamentosUnicos.map((depto) => (
+              <option key={depto} value={depto}>
+                {depto}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {/* Tabla Oficial (Nº, Identificación, Nombres, Apellidos, Teléfono, Acciones) */}
       <div className="bg-white rounded-2xl border border-surface-200 shadow-2xs overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left">
+          <table ref={tableRef} className="w-full text-sm text-left">
             <thead className="bg-surface-50 border-b border-surface-200 text-surface-600 uppercase text-xs tracking-wider">
               <tr>
                 <th scope="col" className="px-4 py-3.5 font-bold w-12 text-center">Nº</th>
@@ -215,7 +224,7 @@ export default function BrokersPage() {
                     <td className="px-5 py-3.5 font-medium text-surface-700">
                       {b.primerApellido} {b.segundoApellido}
                     </td>
-                    <td className="px-5 py-3.5 text-surface-600 font-mono text-xs">
+                    <td className="px-5 py-3.5 text-surface-600 text-xs">
                       {b.telefono}
                     </td>
                     <td className="px-5 py-3.5 text-center">
@@ -226,22 +235,18 @@ export default function BrokersPage() {
                     </td>
                     <td className="px-5 py-3.5 text-center">
                       <div className="flex items-center justify-center gap-1.5">
-                        <button
-                          type="button"
+                        <ActionButton
+                          icon={Pencil}
+                          title="Editar Broker"
+                          variant="primary"
                           onClick={() => abrirModalEditar(b)}
-                          title="Editar"
-                          className="p-1.5 rounded-lg border border-surface-200 bg-white text-surface-600 hover:text-brand-terracota hover:border-brand-terracota/30 hover:bg-brand-tint transition-colors cursor-pointer shadow-2xs"
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </button>
-                        <button
-                          type="button"
+                        />
+                        <ActionButton
+                          icon={Eye}
+                          title="Ver Broker"
+                          variant="view"
                           onClick={() => abrirModalDetalles(b)}
-                          title="Ver"
-                          className="p-1.5 rounded-lg border border-surface-200 bg-white text-surface-600 hover:text-blue-600 hover:border-blue-300 hover:bg-blue-50 transition-colors cursor-pointer shadow-2xs"
-                        >
-                          <Eye className="h-4 w-4" />
-                        </button>
+                        />
                       </div>
                     </td>
                   </tr>
@@ -389,86 +394,6 @@ export default function BrokersPage() {
         </div>
       )}
 
-      {/* MODAL CONSULTAR BROKER */}
-      {modalConsultarAbierto && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-surface-200">
-            <div className="flex items-center justify-between pb-3 border-b border-surface-200">
-              <div className="flex items-center gap-2">
-                <Search className="h-5 w-5 text-brand-terracota" />
-                <h3 className="text-base font-bold text-surface-900">Consultar Broker</h3>
-              </div>
-              <button
-                onClick={() => setModalConsultarAbierto(false)}
-                className="p-1 rounded-lg text-surface-400 hover:bg-surface-100 cursor-pointer"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
-            <form onSubmit={ejecutarConsulta} className="mt-4 space-y-3">
-              <div>
-                <label className="block text-xs font-bold text-surface-700 mb-1">
-                  Ingrese el número de identificación del broker:
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    required
-                    type="text"
-                    value={cedulaConsulta}
-                    onChange={(e) => setCedulaConsulta(e.target.value)}
-                    placeholder="Ej. 12053621"
-                    className="flex-1 px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
-                  />
-                  <button
-                    type="submit"
-                    className="px-4 py-2 bg-brand-terracota hover:bg-brand-terracota-dark text-white text-xs font-bold rounded-xl shadow-sm cursor-pointer"
-                  >
-                    Buscar
-                  </button>
-                </div>
-              </div>
-            </form>
-
-            {resultadoConsulta === 'NO_ENCONTRADO' && (
-              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700">
-                No se encontró ningún broker registrado con la identificación ingresada.
-              </div>
-            )}
-
-            {resultadoConsulta && resultadoConsulta !== 'NO_ENCONTRADO' && (
-              <div className="mt-4 p-4 bg-brand-tint border border-brand-terracota/20 rounded-xl space-y-2">
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-emerald-600 shrink-0" />
-                  <span className="font-bold text-surface-900 text-sm">
-                    {resultadoConsulta.primerNombre} {resultadoConsulta.primerApellido}
-                  </span>
-                </div>
-                <div className="text-xs text-surface-600">
-                  <strong>Cédula:</strong> {resultadoConsulta.numeroIdentificacion}
-                </div>
-                <div className="text-xs text-surface-600">
-                  <strong>Teléfono:</strong> {resultadoConsulta.telefono}
-                </div>
-                <div className="text-xs text-surface-600">
-                  <strong>Ubicación:</strong> {resultadoConsulta.municipio}, {resultadoConsulta.departamento}
-                </div>
-                <div className="pt-2 border-t border-brand-terracota/10">
-                  <span className="text-xs font-bold text-surface-700">Empresas vinculadas:</span>
-                  <div className="flex flex-wrap gap-1 mt-1">
-                    {resultadoConsulta.empresasVinculadas.map((e) => (
-                      <span key={e} className="px-2 py-0.5 rounded text-[11px] bg-white border border-surface-200 text-surface-700 font-medium">
-                        {e}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
       {/* MODAL DETALLES */}
       {modalDetalleAbierto && brokerActual && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
@@ -487,7 +412,7 @@ export default function BrokersPage() {
                   <h3 className="text-lg font-bold text-surface-900">
                     {brokerActual.primerNombre} {brokerActual.primerApellido}
                   </h3>
-                  <span className="text-xs text-surface-500 font-mono">CC {brokerActual.numeroIdentificacion}</span>
+                  <span className="text-xs text-surface-500">CC {brokerActual.numeroIdentificacion}</span>
                 </div>
               </div>
               <button

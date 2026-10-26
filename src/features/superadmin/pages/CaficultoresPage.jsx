@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import {
   Leaf,
   Search,
@@ -14,6 +14,8 @@ import {
 } from 'lucide-react';
 import { ModuloCabecera } from '@/components/data-display';
 import { QueryState } from '@/components/feedback';
+import ActionButton from '../components/ActionButton';
+import { useTableEntranceAnimation } from '../hooks/useSuperadminAnimations';
 import {
   useSuperadminCaficultores,
   useCrearSuperadminCaficultor,
@@ -35,6 +37,8 @@ export default function CaficultoresPage() {
   const actualizarCaficultor = useActualizarSuperadminCaficultor();
   const [searchTerm, setSearchTerm] = useState('');
   const [filtroEmpresa, setFiltroEmpresa] = useState('todos');
+
+  const tableRef = useRef(null);
 
   // Modales
   const [modalRegistroAbierto, setModalRegistroAbierto] = useState(false);
@@ -152,6 +156,8 @@ export default function CaficultoresPage() {
     return coincideTexto;
   });
 
+  useTableEntranceAnimation(tableRef, [filtrados.length]);
+
   return (
     <div className="space-y-6">
       {/* Cabecera idéntica a cabecera-modulo con portada */}
@@ -198,7 +204,7 @@ export default function CaficultoresPage() {
       {/* Tabla Oficial (Nº, Identificación, Nombres, Apellidos, Teléfono, Acciones) */}
       <div className="bg-white rounded-2xl border border-surface-200 shadow-2xs overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left">
+          <table ref={tableRef} className="w-full text-sm text-left">
             <thead className="bg-surface-50 border-b border-surface-200 text-surface-600 uppercase text-xs tracking-wider">
               <tr>
                 <th scope="col" className="px-4 py-3.5 font-bold w-12 text-center">Nº</th>
@@ -244,7 +250,7 @@ export default function CaficultoresPage() {
                     <td className="px-5 py-3.5 font-medium text-surface-700">
                       {c.primerApellido} {c.segundoApellido}
                     </td>
-                    <td className="px-5 py-3.5 text-surface-600 font-mono text-xs">
+                    <td className="px-5 py-3.5 text-surface-600 text-xs">
                       {c.telefono}
                     </td>
                     <td className="px-5 py-3.5 text-center">
@@ -261,37 +267,26 @@ export default function CaficultoresPage() {
                     </td>
                     <td className="px-5 py-3.5 text-center">
                       <div className="flex items-center justify-center gap-1.5">
-                        {/* Editar */}
-                        <button
-                          type="button"
+                        <ActionButton
+                          icon={Pencil}
+                          title="Editar Caficultor"
+                          variant="primary"
                           onClick={() => abrirModalEditar(c)}
-                          title="Editar"
-                          className="p-1.5 rounded-lg border border-surface-200 bg-white text-surface-600 hover:text-brand-terracota hover:border-brand-terracota/30 hover:bg-brand-tint transition-colors cursor-pointer shadow-2xs"
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </button>
-
-                        {/* Asignar Empresa (si no tiene o para cambiar) */}
+                        />
                         {!c.empresa && (
-                          <button
-                            type="button"
-                            onClick={() => abrirModalAsignar(c)}
+                          <ActionButton
+                            icon={Building2}
                             title="Asignar Empresa"
-                            className="p-1.5 rounded-lg border border-surface-200 bg-white text-emerald-600 hover:bg-emerald-50 hover:border-emerald-300 transition-colors cursor-pointer shadow-2xs"
-                          >
-                            <Building2 className="h-4 w-4" />
-                          </button>
+                            variant="success"
+                            onClick={() => abrirModalAsignar(c)}
+                          />
                         )}
-
-                        {/* Ver Detalles */}
-                        <button
-                          type="button"
-                          onClick={() => abrirModalDetalles(c)}
+                        <ActionButton
+                          icon={Eye}
                           title="Ver Detalles"
-                          className="p-1.5 rounded-lg border border-surface-200 bg-white text-surface-600 hover:text-blue-600 hover:border-blue-300 hover:bg-blue-50 transition-colors cursor-pointer shadow-2xs"
-                        >
-                          <Eye className="h-4 w-4" />
-                        </button>
+                          variant="view"
+                          onClick={() => abrirModalDetalles(c)}
+                        />
                       </div>
                     </td>
                   </tr>
@@ -654,7 +649,7 @@ export default function CaficultoresPage() {
                   <h3 className="text-lg font-bold text-surface-900">
                     {caficultorActual.primerNombre} {caficultorActual.segundoNombre} {caficultorActual.primerApellido} {caficultorActual.segundoApellido}
                   </h3>
-                  <span className="text-xs text-surface-500 font-mono">CC {caficultorActual.numeroIdentificacion}</span>
+                  <span className="text-xs text-surface-500">CC {caficultorActual.numeroIdentificacion}</span>
                 </div>
               </div>
               <button

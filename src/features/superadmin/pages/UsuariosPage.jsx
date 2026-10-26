@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import {
   Users,
   Search,
@@ -9,6 +9,8 @@ import {
 } from 'lucide-react';
 import { ModuloCabecera } from '@/components/data-display';
 import { QueryState } from '@/components/feedback';
+import ActionButton from '../components/ActionButton';
+import { useTableEntranceAnimation } from '../hooks/useSuperadminAnimations';
 import {
   useSuperadminUsuarios,
   useCrearSuperadminUsuario,
@@ -33,6 +35,7 @@ export default function UsuariosPage() {
   const actualizarUsuario = useActualizarSuperadminUsuario();
   const [searchTerm, setSearchTerm] = useState('');
   const [filtroRol, setFiltroRol] = useState('todos');
+  const tableRef = useRef(null);
 
   const [modalRegistroAbierto, setModalRegistroAbierto] = useState(false);
   const [modalRolAbierto, setModalRolAbierto] = useState(false);
@@ -99,6 +102,8 @@ export default function UsuariosPage() {
     return coincideTexto && u.rol === filtroRol;
   });
 
+  useTableEntranceAnimation(tableRef, [filtrados.length]);
+
   return (
     <div className="space-y-6">
       {/* Cabecera idéntica a components.cabecera-modulo */}
@@ -146,7 +151,7 @@ export default function UsuariosPage() {
       {/* Tabla Oficial de Usuarios */}
       <div className="bg-white rounded-2xl border border-surface-200 shadow-2xs overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left">
+          <table ref={tableRef} className="w-full text-sm text-left">
             <thead className="bg-surface-50 border-b border-surface-200 text-surface-600 uppercase text-xs tracking-wider">
               <tr>
                 <th scope="col" className="px-4 py-3.5 font-bold w-12 text-center">Nº</th>
@@ -184,7 +189,7 @@ export default function UsuariosPage() {
                         <span className="font-semibold text-surface-900">{u.nombre}</span>
                       </div>
                     </td>
-                    <td className="px-5 py-3.5 text-surface-600 text-xs font-mono">
+                    <td className="px-5 py-3.5 text-surface-600 text-xs">
                       {u.email}
                     </td>
                     <td className="px-5 py-3.5 text-center">
@@ -206,19 +211,17 @@ export default function UsuariosPage() {
                         {u.estado}
                       </button>
                     </td>
-                    <td className="px-5 py-3.5 text-center text-xs text-surface-500 font-mono">
+                    <td className="px-5 py-3.5 text-center text-xs text-surface-500">
                       {u.ultimoAcceso}
                     </td>
                     <td className="px-5 py-3.5 text-center">
                       <div className="flex items-center justify-center gap-1.5">
-                        <button
-                          type="button"
-                          onClick={() => abrirModalAsignarRol(u)}
+                        <ActionButton
+                          icon={Shield}
                           title="Cambiar Rol"
-                          className="p-1.5 rounded-lg border border-surface-200 bg-white text-surface-600 hover:text-brand-terracota hover:border-brand-terracota/30 hover:bg-brand-tint transition-colors cursor-pointer shadow-2xs"
-                        >
-                          <Shield className="h-4 w-4" />
-                        </button>
+                          variant="primary"
+                          onClick={() => abrirModalAsignarRol(u)}
+                        />
                       </div>
                     </td>
                   </tr>

@@ -1,15 +1,17 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import {
   FlaskConical,
   Search,
+  Filter,
   Pencil,
   Eye,
   X,
   Award,
-  CheckCircle,
 } from 'lucide-react';
 import { ModuloCabecera } from '@/components/data-display';
 import { QueryState } from '@/components/feedback';
+import ActionButton from '../components/ActionButton';
+import { useTableEntranceAnimation } from '../hooks/useSuperadminAnimations';
 import {
   useSuperadminLaboratorios,
   useCrearSuperadminLaboratorio,
@@ -22,15 +24,14 @@ export default function LaboratoriosPage() {
   const crearLaboratorio = useCrearSuperadminLaboratorio();
   const actualizarLaboratorio = useActualizarSuperadminLaboratorio();
   const [searchTerm, setSearchTerm] = useState('');
+  const [filtroDepartamento, setFiltroDepartamento] = useState('todos');
+  const tableRef = useRef(null);
 
   const [modalRegistroAbierto, setModalRegistroAbierto] = useState(false);
   const [modalEditarAbierto, setModalEditarAbierto] = useState(false);
   const [modalDetalleAbierto, setModalDetalleAbierto] = useState(false);
-  const [modalConsultarAbierto, setModalConsultarAbierto] = useState(false);
 
   const [laboratorioActual, setLaboratorioActual] = useState(null);
-  const [nitConsulta, setNitConsulta] = useState('');
-  const [resultadoConsulta, setResultadoConsulta] = useState(null);
 
   const [formData, setFormData] = useState({
     nit: '',
@@ -77,20 +78,6 @@ export default function LaboratoriosPage() {
     setModalDetalleAbierto(true);
   };
 
-  const abrirModalConsultar = () => {
-    setNitConsulta('');
-    setResultadoConsulta(null);
-    setModalConsultarAbierto(true);
-  };
-
-  const ejecutarConsulta = (e) => {
-    e.preventDefault();
-    const encontrado = laboratorios.find(
-      (l) => l.nit.trim() === nitConsulta.trim()
-    );
-    setResultadoConsulta(encontrado || 'NO_ENCONTRADO');
-  };
-
   const guardarCreacion = (e) => {
     e.preventDefault();
     const nuevo = {
@@ -108,16 +95,24 @@ export default function LaboratoriosPage() {
     setModalEditarAbierto(false);
   };
 
+  const departamentosUnicos = Array.from(
+    new Set(laboratorios.map((l) => l.departamento).filter(Boolean))
+  );
+
   const filtrados = laboratorios.filter((l) => {
     const term = searchTerm.toLowerCase();
-    return (
+    const matchesSearch =
       l.nit.toLowerCase().includes(term) ||
       l.nombre.toLowerCase().includes(term) ||
       l.telefono.toLowerCase().includes(term) ||
       l.correo.toLowerCase().includes(term) ||
-      (l.municipio && l.municipio.toLowerCase().includes(term))
-    );
+      (l.municipio && l.municipio.toLowerCase().includes(term));
+    const matchesDepto =
+      filtroDepartamento === 'todos' || l.departamento === filtroDepartamento;
+    return matchesSearch && matchesDepto;
   });
+
+  useTableEntranceAnimation(tableRef, [filtrados.length]);
 
   return (
     <div className="space-y-6">
@@ -129,16 +124,14 @@ export default function LaboratoriosPage() {
         mensaje="En este módulo podrás gestionar y consultar los laboratorios acreditados para análisis de café."
         icono={FlaskConical}
         totalRegistros={filtrados.length}
-        onConsultar={abrirModalConsultar}
-        textoBotonConsultar="Consultar Laboratorio"
         onRegistrar={abrirModalCrear}
         textoBotonRegistrar="Registrar Laboratorio"
       />
 
       <QueryState query={query} />
 
-      {/* Buscador */}
-      <div className="bg-white p-4 rounded-2xl border border-surface-200 shadow-2xs flex items-center justify-between">
+      {/* Barra de Búsqueda y Filtros */}
+      <div className="bg-white p-4 rounded-2xl border border-surface-200 shadow-2xs flex flex-col sm:flex-row gap-3 items-center justify-between">
         <div className="relative w-full sm:w-80">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-surface-400" />
           <input
@@ -149,12 +142,28 @@ export default function LaboratoriosPage() {
             className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-surface-200 focus:outline-none focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
           />
         </div>
+
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <Filter className="h-4 w-4 text-surface-400 shrink-0" />
+          <select
+            value={filtroDepartamento}
+            onChange={(e) => setFiltroDepartamento(e.target.value)}
+            className="px-3 py-2 text-sm rounded-xl border border-surface-200 bg-white text-surface-700 focus:outline-none focus:ring-2 focus:ring-brand-terracota/20 cursor-pointer"
+          >
+            <option value="todos">Todos los departamentos</option>
+            {departamentosUnicos.map((depto) => (
+              <option key={depto} value={depto}>
+                {depto}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {/* Tabla Oficial (Nº, NIT, Nombre, Teléfono, Correo electrónico, Acciones) */}
       <div className="bg-white rounded-2xl border border-surface-200 shadow-2xs overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left">
+          <table ref={tableRef} className="w-full text-sm text-left">
             <thead className="bg-surface-50 border-b border-surface-200 text-surface-600 uppercase text-xs tracking-wider">
               <tr>
                 <th scope="col" className="px-4 py-3.5 font-bold w-12 text-center">Nº</th>
@@ -178,21 +187,16 @@ export default function LaboratoriosPage() {
                     <td className="px-4 py-3.5 text-center font-bold text-surface-500 text-xs">
                       {index + 1}
                     </td>
-                    <td className="px-5 py-3.5 font-mono text-xs font-semibold text-surface-700">
+                    <td className="px-5 py-3.5 text-xs font-semibold text-surface-700">
                       {lab.nit}
                     </td>
                     <td className="px-5 py-3.5">
-                      <div className="flex items-center gap-2.5">
-                        <div className="h-8 w-8 rounded-lg bg-brand-tint text-brand-terracota flex items-center justify-center shrink-0">
-                          <FlaskConical className="h-4 w-4" />
-                        </div>
-                        <div>
-                          <span className="font-semibold text-surface-900 block">{lab.nombre}</span>
-                          <span className="text-[11px] text-surface-400">{lab.municipio}, {lab.departamento}</span>
-                        </div>
+                      <div>
+                        <span className="font-semibold text-surface-900 block">{lab.nombre}</span>
+                        <span className="text-[11px] text-surface-400">{lab.municipio}, {lab.departamento}</span>
                       </div>
                     </td>
-                    <td className="px-5 py-3.5 text-surface-600 font-mono text-xs">
+                    <td className="px-5 py-3.5 text-surface-600 text-xs">
                       {lab.telefono}
                     </td>
                     <td className="px-5 py-3.5 text-surface-600 text-xs">
@@ -200,22 +204,18 @@ export default function LaboratoriosPage() {
                     </td>
                     <td className="px-5 py-3.5 text-center">
                       <div className="flex items-center justify-center gap-1.5">
-                        <button
-                          type="button"
+                        <ActionButton
+                          icon={Pencil}
+                          title="Editar Laboratorio"
+                          variant="primary"
                           onClick={() => abrirModalEditar(lab)}
-                          title="Editar"
-                          className="p-1.5 rounded-lg border border-surface-200 bg-white text-surface-600 hover:text-brand-terracota hover:border-brand-terracota/30 hover:bg-brand-tint transition-colors cursor-pointer shadow-2xs"
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </button>
-                        <button
-                          type="button"
+                        />
+                        <ActionButton
+                          icon={Eye}
+                          title="Ver Laboratorio"
+                          variant="view"
                           onClick={() => abrirModalDetalles(lab)}
-                          title="Ver"
-                          className="p-1.5 rounded-lg border border-surface-200 bg-white text-surface-600 hover:text-blue-600 hover:border-blue-300 hover:bg-blue-50 transition-colors cursor-pointer shadow-2xs"
-                        >
-                          <Eye className="h-4 w-4" />
-                        </button>
+                        />
                       </div>
                     </td>
                   </tr>
@@ -342,79 +342,6 @@ export default function LaboratoriosPage() {
         </div>
       )}
 
-      {/* MODAL CONSULTAR */}
-      {modalConsultarAbierto && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-surface-200">
-            <div className="flex items-center justify-between pb-3 border-b border-surface-200">
-              <div className="flex items-center gap-2">
-                <Search className="h-5 w-5 text-brand-terracota" />
-                <h3 className="text-base font-bold text-surface-900">Consultar Laboratorio</h3>
-              </div>
-              <button
-                onClick={() => setModalConsultarAbierto(false)}
-                className="p-1 rounded-lg text-surface-400 hover:bg-surface-100 cursor-pointer"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
-            <form onSubmit={ejecutarConsulta} className="mt-4 space-y-3">
-              <div>
-                <label className="block text-xs font-bold text-surface-700 mb-1">
-                  Ingrese el NIT del laboratorio:
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    required
-                    type="text"
-                    value={nitConsulta}
-                    onChange={(e) => setNitConsulta(e.target.value)}
-                    placeholder="Ej. 901456789-3"
-                    className="flex-1 px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
-                  />
-                  <button
-                    type="submit"
-                    className="px-4 py-2 bg-brand-terracota hover:bg-brand-terracota-dark text-white text-xs font-bold rounded-xl shadow-sm cursor-pointer"
-                  >
-                    Buscar
-                  </button>
-                </div>
-              </div>
-            </form>
-
-            {resultadoConsulta === 'NO_ENCONTRADO' && (
-              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700">
-                No se encontró ningún laboratorio registrado con ese NIT.
-              </div>
-            )}
-
-            {resultadoConsulta && resultadoConsulta !== 'NO_ENCONTRADO' && (
-              <div className="mt-4 p-4 bg-brand-tint border border-brand-terracota/20 rounded-xl space-y-2">
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-emerald-600 shrink-0" />
-                  <span className="font-bold text-surface-900 text-sm">
-                    {resultadoConsulta.nombre}
-                  </span>
-                </div>
-                <div className="text-xs text-surface-600">
-                  <strong>NIT:</strong> {resultadoConsulta.nit}
-                </div>
-                <div className="text-xs text-surface-600">
-                  <strong>Ubicación:</strong> {resultadoConsulta.municipio}, {resultadoConsulta.departamento}
-                </div>
-                <div className="text-xs text-surface-600">
-                  <strong>Muestras Analizadas:</strong> {resultadoConsulta.muestrasAnalizadas}
-                </div>
-                <div className="text-xs text-surface-600">
-                  <strong>Acreditación:</strong> {resultadoConsulta.certificaciones}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
       {/* MODAL DETALLES */}
       {modalDetalleAbierto && laboratorioActual && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
@@ -426,7 +353,7 @@ export default function LaboratoriosPage() {
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-surface-900">{laboratorioActual.nombre}</h3>
-                  <span className="text-xs text-surface-500 font-mono">NIT {laboratorioActual.nit}</span>
+                  <span className="text-xs text-surface-500">NIT {laboratorioActual.nit}</span>
                 </div>
               </div>
               <button

@@ -1,13 +1,16 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import {
   Building2,
   Search,
+  Filter,
   Pencil,
   Eye,
   X,
 } from 'lucide-react';
 import { ModuloCabecera } from '@/components/data-display';
 import { QueryState } from '@/components/feedback';
+import ActionButton from '../components/ActionButton';
+import { useTableEntranceAnimation } from '../hooks/useSuperadminAnimations';
 import {
   useSuperadminEmpresas,
   useCrearSuperadminEmpresa,
@@ -20,6 +23,8 @@ export default function EmpresasPage() {
   const crearEmpresa = useCrearSuperadminEmpresa();
   const actualizarEmpresa = useActualizarSuperadminEmpresa();
   const [searchTerm, setSearchTerm] = useState('');
+  const [filtroDepartamento, setFiltroDepartamento] = useState('todos');
+  const tableRef = useRef(null);
 
   const [modalRegistroAbierto, setModalRegistroAbierto] = useState(false);
   const [modalEditarAbierto, setModalEditarAbierto] = useState(false);
@@ -88,16 +93,24 @@ export default function EmpresasPage() {
     setModalEditarAbierto(false);
   };
 
+  const departamentosUnicos = Array.from(
+    new Set(empresas.map((e) => e.departamento).filter(Boolean))
+  );
+
   const filtradas = empresas.filter((emp) => {
     const term = searchTerm.toLowerCase();
-    return (
+    const matchesSearch =
       emp.nit.toLowerCase().includes(term) ||
       emp.nombre.toLowerCase().includes(term) ||
       emp.telefono.toLowerCase().includes(term) ||
       emp.correo.toLowerCase().includes(term) ||
-      (emp.municipio && emp.municipio.toLowerCase().includes(term))
-    );
+      (emp.municipio && emp.municipio.toLowerCase().includes(term));
+    const matchesDepto =
+      filtroDepartamento === 'todos' || emp.departamento === filtroDepartamento;
+    return matchesSearch && matchesDepto;
   });
+
+  useTableEntranceAnimation(tableRef, [filtradas.length]);
 
   return (
     <div className="space-y-6">
@@ -115,8 +128,8 @@ export default function EmpresasPage() {
 
       <QueryState query={query} />
 
-      {/* Buscador */}
-      <div className="bg-white p-4 rounded-2xl border border-surface-200 shadow-2xs flex items-center justify-between">
+      {/* Barra de Búsqueda y Filtros */}
+      <div className="bg-white p-4 rounded-2xl border border-surface-200 shadow-2xs flex flex-col sm:flex-row gap-3 items-center justify-between">
         <div className="relative w-full sm:w-80">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-surface-400" />
           <input
@@ -127,12 +140,28 @@ export default function EmpresasPage() {
             className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-surface-200 focus:outline-none focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
           />
         </div>
+
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <Filter className="h-4 w-4 text-surface-400 shrink-0" />
+          <select
+            value={filtroDepartamento}
+            onChange={(e) => setFiltroDepartamento(e.target.value)}
+            className="px-3 py-2 text-sm rounded-xl border border-surface-200 bg-white text-surface-700 focus:outline-none focus:ring-2 focus:ring-brand-terracota/20 cursor-pointer"
+          >
+            <option value="todos">Todos los departamentos</option>
+            {departamentosUnicos.map((depto) => (
+              <option key={depto} value={depto}>
+                {depto}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {/* Tabla Oficial (Nº, NIT, Nombre, Teléfono, Correo, Acciones) */}
       <div className="bg-white rounded-2xl border border-surface-200 shadow-2xs overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left">
+          <table ref={tableRef} className="w-full text-sm text-left">
             <thead className="bg-surface-50 border-b border-surface-200 text-surface-600 uppercase text-xs tracking-wider">
               <tr>
                 <th scope="col" className="px-4 py-3.5 font-bold w-12 text-center">Nº</th>
@@ -156,25 +185,20 @@ export default function EmpresasPage() {
                     <td className="px-4 py-3.5 text-center font-bold text-surface-500 text-xs">
                       {index + 1}
                     </td>
-                    <td className="px-5 py-3.5 font-mono text-xs font-semibold text-surface-700">
+                    <td className="px-5 py-3.5 text-xs font-semibold text-surface-700">
                       {emp.nit}
                     </td>
                     <td className="px-5 py-3.5">
-                      <div className="flex items-center gap-2.5">
-                        <div className="h-8 w-8 rounded-lg bg-brand-tint text-brand-terracota flex items-center justify-center shrink-0">
-                          <Building2 className="h-4 w-4" />
-                        </div>
-                        <div>
-                          <span className="font-semibold text-surface-900 block">
-                            {emp.nombre}
-                          </span>
-                          <span className="text-[11px] text-surface-400">
-                            {emp.municipio}, {emp.departamento}
-                          </span>
-                        </div>
+                      <div>
+                        <span className="font-semibold text-surface-900 block">
+                          {emp.nombre}
+                        </span>
+                        <span className="text-[11px] text-surface-400">
+                          {emp.municipio}, {emp.departamento}
+                        </span>
                       </div>
                     </td>
-                    <td className="px-5 py-3.5 text-surface-600 font-mono text-xs">
+                    <td className="px-5 py-3.5 text-surface-600 text-xs">
                       {emp.telefono}
                     </td>
                     <td className="px-5 py-3.5 text-surface-600 text-xs">
@@ -182,22 +206,18 @@ export default function EmpresasPage() {
                     </td>
                     <td className="px-5 py-3.5 text-center">
                       <div className="flex items-center justify-center gap-1.5">
-                        <button
-                          type="button"
+                        <ActionButton
+                          icon={Pencil}
+                          title="Editar Empresa"
+                          variant="primary"
                           onClick={() => abrirModalEditar(emp)}
-                          title="Editar"
-                          className="p-1.5 rounded-lg border border-surface-200 bg-white text-surface-600 hover:text-brand-terracota hover:border-brand-terracota/30 hover:bg-brand-tint transition-colors cursor-pointer shadow-2xs"
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </button>
-                        <button
-                          type="button"
+                        />
+                        <ActionButton
+                          icon={Eye}
+                          title="Ver Empresa"
+                          variant="view"
                           onClick={() => abrirModalDetalles(emp)}
-                          title="Ver"
-                          className="p-1.5 rounded-lg border border-surface-200 bg-white text-surface-600 hover:text-blue-600 hover:border-blue-300 hover:bg-blue-50 transition-colors cursor-pointer shadow-2xs"
-                        >
-                          <Eye className="h-4 w-4" />
-                        </button>
+                        />
                       </div>
                     </td>
                   </tr>
@@ -438,7 +458,7 @@ export default function EmpresasPage() {
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-surface-900">{empresaActual.nombre}</h3>
-                  <span className="text-xs text-surface-500 font-mono">NIT {empresaActual.nit}</span>
+                  <span className="text-xs text-surface-500">NIT {empresaActual.nit}</span>
                 </div>
               </div>
               <button

@@ -1,14 +1,16 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import {
   Coffee,
   Search,
+  Filter,
   Eye,
   X,
-  Mountain,
   Layers,
 } from 'lucide-react';
 import { ModuloCabecera } from '@/components/data-display';
 import { QueryState } from '@/components/feedback';
+import ActionButton from '../components/ActionButton';
+import { useTableEntranceAnimation } from '../hooks/useSuperadminAnimations';
 import {
   useSuperadminFincas,
   useCrearSuperadminFinca,
@@ -28,6 +30,10 @@ export default function FincasPage() {
   const crearLote = useCrearSuperadminLote();
 
   const [searchTerm, setSearchTerm] = useState('');
+  const [filtroDepartamento, setFiltroDepartamento] = useState('todos');
+
+  const tableFincasRef = useRef(null);
+  const tableLotesRef = useRef(null);
 
   const [modalRegistroFinca, setModalRegistroFinca] = useState(false);
   const [modalRegistroLote, setModalRegistroLote] = useState(false);
@@ -109,13 +115,19 @@ export default function FincasPage() {
     setModalRegistroLote(false);
   };
 
+  const departamentosUnicos = Array.from(
+    new Set(fincas.map((f) => f.departamento).filter(Boolean))
+  );
+
   const fincasFiltradas = fincas.filter((f) => {
     const term = searchTerm.toLowerCase();
-    return (
+    const matchesSearch =
       f.nombre.toLowerCase().includes(term) ||
       f.municipio.toLowerCase().includes(term) ||
-      f.caficultor.toLowerCase().includes(term)
-    );
+      f.caficultor.toLowerCase().includes(term);
+    const matchesDepto =
+      filtroDepartamento === 'todos' || f.departamento === filtroDepartamento;
+    return matchesSearch && matchesDepto;
   });
 
   const lotesFiltrados = lotes.filter((l) => {
@@ -126,6 +138,9 @@ export default function FincasPage() {
       l.variedadCafe.toLowerCase().includes(term)
     );
   });
+
+  useTableEntranceAnimation(tableFincasRef, [fincasFiltradas.length, pestanaActiva]);
+  useTableEntranceAnimation(tableLotesRef, [lotesFiltrados.length, pestanaActiva]);
 
   return (
     <div className="space-y-6">
@@ -173,8 +188,8 @@ export default function FincasPage() {
         </div>
       </div>
 
-      {/* Buscador */}
-      <div className="bg-white p-4 rounded-2xl border border-surface-200 shadow-2xs flex items-center justify-between">
+      {/* Barra de Búsqueda y Filtros */}
+      <div className="bg-white p-4 rounded-2xl border border-surface-200 shadow-2xs flex flex-col sm:flex-row gap-3 items-center justify-between">
         <div className="relative w-full sm:w-80">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-surface-400" />
           <input
@@ -189,13 +204,31 @@ export default function FincasPage() {
             className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-surface-200 focus:outline-none focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
           />
         </div>
+
+        {pestanaActiva === 'fincas' && (
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <Filter className="h-4 w-4 text-surface-400 shrink-0" />
+            <select
+              value={filtroDepartamento}
+              onChange={(e) => setFiltroDepartamento(e.target.value)}
+              className="px-3 py-2 text-sm rounded-xl border border-surface-200 bg-white text-surface-700 focus:outline-none focus:ring-2 focus:ring-brand-terracota/20 cursor-pointer"
+            >
+              <option value="todos">Todos los departamentos</option>
+              {departamentosUnicos.map((depto) => (
+                <option key={depto} value={depto}>
+                  {depto}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
 
       {/* TABLA OFICIAL FINCAS: Nº, Nombre, Altura, Área café, Acciones */}
       {pestanaActiva === 'fincas' && (
         <div className="bg-white rounded-2xl border border-surface-200 shadow-2xs overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left">
+            <table ref={tableFincasRef} className="w-full text-sm text-left">
               <thead className="bg-surface-50 border-b border-surface-200 text-surface-600 uppercase text-xs tracking-wider">
                 <tr>
                   <th scope="col" className="px-4 py-3.5 font-bold w-12 text-center">Nº</th>
@@ -220,21 +253,13 @@ export default function FincasPage() {
                         {index + 1}
                       </td>
                       <td className="px-5 py-3.5">
-                        <div className="flex items-center gap-2.5">
-                          <div className="h-8 w-8 rounded-lg bg-brand-tint text-brand-terracota flex items-center justify-center shrink-0">
-                            <Coffee className="h-4 w-4" />
-                          </div>
-                          <div>
-                            <span className="font-semibold text-surface-900 block">{f.nombre}</span>
-                            <span className="text-[11px] text-surface-400">{f.municipio}, {f.departamento}</span>
-                          </div>
+                        <div>
+                          <span className="font-semibold text-surface-900 block">{f.nombre}</span>
+                          <span className="text-[11px] text-surface-400">{f.municipio}, {f.departamento}</span>
                         </div>
                       </td>
                       <td className="px-5 py-3.5 font-medium text-surface-700">
-                        <span className="inline-flex items-center gap-1">
-                          <Mountain className="h-3.5 w-3.5 text-surface-400" />
-                          {f.altura.toLocaleString('es-CO')} msnm
-                        </span>
+                        {f.altura.toLocaleString('es-CO')} msnm
                       </td>
                       <td className="px-5 py-3.5 font-semibold text-surface-800">
                         {f.areaCafe.toLocaleString('es-CO', { minimumFractionDigits: 2 })} ha
@@ -244,14 +269,12 @@ export default function FincasPage() {
                       </td>
                       <td className="px-5 py-3.5 text-center">
                         <div className="flex items-center justify-center gap-1.5">
-                          <button
-                            type="button"
+                          <ActionButton
+                            icon={Eye}
+                            title="Ver Finca"
+                            variant="view"
                             onClick={() => abrirDetalleFinca(f)}
-                            title="Ver"
-                            className="p-1.5 rounded-lg border border-surface-200 bg-white text-surface-600 hover:text-blue-600 hover:border-blue-300 hover:bg-blue-50 transition-colors cursor-pointer shadow-2xs"
-                          >
-                            <Eye className="h-4 w-4" />
-                          </button>
+                          />
                         </div>
                       </td>
                     </tr>
@@ -267,7 +290,7 @@ export default function FincasPage() {
       {pestanaActiva === 'lotes' && (
         <div className="bg-white rounded-2xl border border-surface-200 shadow-2xs overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left">
+            <table ref={tableLotesRef} className="w-full text-sm text-left">
               <thead className="bg-surface-50 border-b border-surface-200 text-surface-600 uppercase text-xs tracking-wider">
                 <tr>
                   <th scope="col" className="px-4 py-3.5 font-bold w-12 text-center">Nº</th>

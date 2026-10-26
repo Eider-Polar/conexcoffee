@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -15,9 +15,11 @@ import {
   Package,
   UserCheck,
   Users,
+  Search,
 } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
 import { QueryState } from '@/components/feedback';
+import ModalBase from '@/components/modals/ModalBase';
 import StatKPI from '../components/StatKPI';
 import ActivityItem from '../components/ActivityItem';
 import ModuleCard from '../components/ModuleCard';
@@ -28,6 +30,7 @@ import {
   useSuperadminActivity,
   useSuperadminModules,
 } from '../hooks/useSuperadminData';
+import { useDashboardEntranceAnimation } from '../hooks/useSuperadminAnimations';
 
 const ICON_MAP = {
   Leaf,
@@ -60,7 +63,18 @@ export default function SuperAdminDashboardPage() {
   const modules = modulesQuery.data || [];
 
   const [activeTab, setActiveTab] = useState('general');
+  const [modalHistorialAbierto, setModalHistorialAbierto] = useState(false);
+  const [filtroHistorial, setFiltroHistorial] = useState('');
   const displayName = user?.name || user?.nombres || 'Administrador';
+
+  const kpisRef = useRef(null);
+  const quickModulesRef = useRef(null);
+
+  useDashboardEntranceAnimation(kpisRef, quickModulesRef, [stats.length, modules.length]);
+
+  const actividadesFiltradas = activities.filter((act) =>
+    act.message.toLowerCase().includes(filtroHistorial.toLowerCase())
+  );
 
   return (
     <div className="space-y-8">
@@ -83,7 +97,7 @@ export default function SuperAdminDashboardPage() {
 
       {/* KPIs */}
       <QueryState query={statsQuery} />
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div ref={kpisRef} className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat) => <StatKPI key={stat.id} stat={stat} />)}
       </div>
 
@@ -131,7 +145,13 @@ export default function SuperAdminDashboardPage() {
                 <Activity className="h-5 w-5 text-brand-terracota" />
                 <h2 className="text-base font-bold text-surface-900">Actividad Reciente</h2>
               </div>
-              <span className="text-xs text-surface-400">Últimas 24 horas</span>
+              <button
+                type="button"
+                onClick={() => setModalHistorialAbierto(true)}
+                className="text-xs font-semibold text-brand-terracota hover:text-brand-orange transition-colors cursor-pointer"
+              >
+                Ver historial completo
+              </button>
             </div>
             {activities.map((item) => <ActivityItem key={item.id} item={item} />)}
           </div>
@@ -148,13 +168,20 @@ export default function SuperAdminDashboardPage() {
       {/* Tab: Actividad */}
       {activeTab === 'actividad' && (
         <div className="bg-white rounded-2xl border border-surface-200 p-6">
-          <div className="flex items-center gap-2 mb-6">
-            <Activity className="h-5 w-5 text-brand-terracota" />
-            <h2 className="text-base font-bold text-surface-900">Registro de Actividad</h2>
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-2">
+              <Activity className="h-5 w-5 text-brand-terracota" />
+              <h2 className="text-base font-bold text-surface-900">Registro de Actividad</h2>
+            </div>
+            <span className="text-xs text-surface-500">Total eventos: {activities.length}</span>
           </div>
           {activities.map((item) => <ActivityItem key={item.id} item={item} />)}
-          <div className="mt-4 flex justify-center">
-            <button className="flex items-center gap-2 text-sm font-semibold text-brand-terracota hover:text-brand-orange transition-colors cursor-pointer">
+          <div className="mt-6 flex justify-center">
+            <button
+              type="button"
+              onClick={() => setModalHistorialAbierto(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl border border-brand-terracota/30 text-sm font-semibold text-brand-terracota hover:bg-brand-tint transition-colors cursor-pointer"
+            >
               <span>Ver historial completo</span>
               <ArrowRight className="h-4 w-4" />
             </button>
@@ -162,13 +189,57 @@ export default function SuperAdminDashboardPage() {
         </div>
       )}
 
+      {/* Modal Historial Completo de Actividad */}
+      <ModalBase
+        isOpen={modalHistorialAbierto}
+        onClose={() => setModalHistorialAbierto(false)}
+        title="Historial Completo de Actividad"
+        size="2xl"
+      >
+        <div className="space-y-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-surface-400" />
+            <input
+              type="text"
+              placeholder="Buscar en el historial de actividades…"
+              value={filtroHistorial}
+              onChange={(e) => setFiltroHistorial(e.target.value)}
+              className="w-full pl-9 pr-4 py-2 text-sm rounded-xl border border-surface-200 focus:outline-none focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
+            />
+          </div>
+
+          <div className="max-h-96 overflow-y-auto divide-y divide-surface-100 pr-1">
+            {actividadesFiltradas.length === 0 ? (
+              <p className="text-center py-8 text-sm text-surface-500">
+                No se encontraron actividades que coincidan con la búsqueda.
+              </p>
+            ) : (
+              actividadesFiltradas.map((item) => (
+                <ActivityItem key={item.id} item={item} />
+              ))
+            )}
+          </div>
+
+          <div className="pt-3 border-t border-surface-200 flex items-center justify-between text-xs text-surface-500">
+            <span>Mostrando {actividadesFiltradas.length} de {activities.length} eventos</span>
+            <button
+              type="button"
+              onClick={() => setModalHistorialAbierto(false)}
+              className="px-4 py-1.5 text-xs font-semibold rounded-lg bg-surface-100 text-surface-700 hover:bg-surface-200 transition-colors cursor-pointer"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </ModalBase>
+
       {/* Accesos rápidos */}
       <div className="bg-white rounded-2xl border border-surface-200 p-6">
         <div className="flex items-center gap-2 mb-5">
           <Globe className="h-5 w-5 text-brand-terracota" />
           <h2 className="text-base font-bold text-surface-900">Accesos Rápidos</h2>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <div ref={quickModulesRef} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           {modules.slice(0, 6).map((mod) => {
             const Icon = mod.icon || ICON_MAP[mod.iconName] || Globe;
             return (

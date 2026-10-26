@@ -1,4 +1,4 @@
-import { TrendingUp, TrendingDown, Users, Leaf, Building2, ShoppingBag } from 'lucide-react';
+import { Users, Leaf, Building2, ShoppingBag } from 'lucide-react';
 
 const ICON_MAP = {
   Users,
@@ -16,15 +16,6 @@ export default function StatKPI({ stat }) {
         <div>
           <p className="text-xs font-semibold text-surface-500 uppercase tracking-wider">{stat.label}</p>
           <p className="text-3xl font-extrabold text-surface-900 mt-1 tabular-nums">{stat.value}</p>
-          <div className="flex items-center gap-1 mt-2">
-            {stat.up
-              ? <TrendingUp className="h-3.5 w-3.5 text-brand-terracota" />
-              : <TrendingDown className="h-3.5 w-3.5 text-danger-500" />
-            }
-            <span className={`text-xs font-semibold ${stat.up ? 'text-brand-terracota' : 'text-danger-500'}`}>
-              {stat.change} este mes
-            </span>
-          </div>
         </div>
         <div className="p-3 rounded-2xl shrink-0" style={{ backgroundColor: stat.bg }}>
           <Icon className="h-6 w-6" style={{ color: stat.color }} />
