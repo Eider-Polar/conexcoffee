@@ -61,10 +61,8 @@ export default function IntensityBar({
       {/* 1. Barra Segmentada Pura (Sin números internos, estilo 21st.dev) */}
       <div
         className="flex items-center gap-[3px] py-1.5 px-1 bg-surface-50 rounded-xl border border-surface-200/70 select-none"
-        role="progressbar"
-        aria-valuenow={value}
-        aria-valuemin={1}
-        aria-valuemax={15}
+        role="group"
+        aria-label="Selector de intensidad"
       >
         {Array.from({ length: segments }).map((_, i) => {
           const segmentNumber = i + 1;
@@ -74,7 +72,9 @@ export default function IntensityBar({
           const colorClass = isFilled ? 'bg-primary-600' : 'bg-surface-200';
 
           return (
-            <div
+            <button
+              type="button"
+              aria-label={`Nivel ${segmentNumber}`}
               key={segmentNumber}
               onClick={() => onChange(segmentNumber)}
               onMouseEnter={() => setHoveredIndex(i)}

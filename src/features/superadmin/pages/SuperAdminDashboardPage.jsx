@@ -1,6 +1,21 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { LayoutDashboard, BarChart3, Globe, Activity, ArrowRight } from 'lucide-react';
+import {
+  LayoutDashboard,
+  BarChart3,
+  Globe,
+  Activity,
+  ArrowRight,
+  Leaf,
+  Building2,
+  Handshake,
+  ShoppingBag,
+  Coffee,
+  FlaskConical,
+  Package,
+  UserCheck,
+  Users,
+} from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
 import { QueryState } from '@/components/feedback';
 import StatKPI from '../components/StatKPI';
@@ -13,6 +28,19 @@ import {
   useSuperadminActivity,
   useSuperadminModules,
 } from '../hooks/useSuperadminData';
+
+const ICON_MAP = {
+  Leaf,
+  Building2,
+  Handshake,
+  ShoppingBag,
+  Coffee,
+  FlaskConical,
+  Package,
+  UserCheck,
+  Users,
+  Globe,
+};
 
 const TABS = [
   { id: 'general',   label: 'Vista General', icon: BarChart3 },
@@ -142,9 +170,9 @@ export default function SuperAdminDashboardPage() {
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           {modules.slice(0, 6).map((mod) => {
-            const Icon = mod.icon;
+            const Icon = mod.icon || ICON_MAP[mod.iconName] || Globe;
             return (
-              <Link key={mod.id} to={mod.path} className="flex flex-col items-center gap-2 p-4 rounded-xl border border-surface-200 hover:border-brand-terracota/40 hover:bg-brand-tint transition-all duration-200 group text-center">
+              <Link key={mod.id} to={mod.path} className="flex flex-col items-center gap-2 p-4 rounded-xl border border-surface-200 hover:border-brand-terracota/40 hover:bg-brand-tint transition-colors duration-200 group text-center">
                 <div className="p-2.5 bg-surface-100 group-hover:bg-brand-terracota rounded-xl transition-colors duration-200">
                   <Icon className="h-5 w-5 text-surface-600 group-hover:text-white transition-colors duration-200" />
                 </div>

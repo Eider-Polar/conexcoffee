@@ -170,8 +170,10 @@ export default function Sidebar() {
     <>
       {/* Overlay mobile */}
       {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity duration-300"
+        <button
+          type="button"
+          aria-label="Cerrar menú de navegación"
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity duration-300 w-full h-full cursor-default border-none"
           onClick={() => setSidebarOpen(false)}
         />
       )}

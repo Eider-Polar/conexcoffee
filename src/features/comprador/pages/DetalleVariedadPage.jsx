@@ -359,6 +359,7 @@ export default function DetalleVariedadPage() {
                   width="100%"
                   height="100%"
                   loading="lazy"
+                  sandbox="allow-scripts allow-popups"
                   referrerPolicy="no-referrer-when-downgrade"
                   src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY&q=${variedad.ubicacionFinca.lat},${variedad.ubicacionFinca.lng}&zoom=12`}
                   style={{ border: 0 }}

@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -25,8 +26,10 @@ export default function DescriptoresSelector({
   onChange,
   titulo = 'Selecciona al menos una opción:',
 }) {
+  const selectedSet = useMemo(() => new Set(selected), [selected]);
+
   const toggleOption = (opcion) => {
-    if (selected.includes(opcion)) {
+    if (selectedSet.has(opcion)) {
       onChange(selected.filter((x) => x !== opcion));
     } else {
       onChange([...selected, opcion]);
@@ -34,7 +37,7 @@ export default function DescriptoresSelector({
   };
 
   // Categorías cuyas sub-opciones tienen alguna selección
-  const catHasSelection = (cat) => cat.opciones.some((op) => selected.includes(op));
+  const catHasSelection = (cat) => cat.opciones.some((op) => selectedSet.has(op));
 
   return (
     <div className="space-y-1">
@@ -75,7 +78,7 @@ export default function DescriptoresSelector({
               {cat.opciones.length > 0 && (
                 <div className="flex flex-wrap gap-1.5">
                   {cat.opciones.map((op) => {
-                    const isSelected = selected.includes(op);
+                    const isSelected = selectedSet.has(op);
                     return (
                       <button
                         key={op}

@@ -48,8 +48,8 @@ export default function EmpresaCaficultoresPage() {
     variedad_predominante: 'Caturra Chiroso',
   });
 
+  const term = searchTerm.toLowerCase();
   const caficultoresFiltrados = caficultores.filter((c) => {
-    const term = searchTerm.toLowerCase();
     const fullName = `${c.primer_nombre || ''} ${c.segundo_nombre || ''} ${c.primer_apellido || ''} ${c.segundo_apellido || ''}`.toLowerCase();
     return (
       (c.numero_identificacion || '').includes(term) ||

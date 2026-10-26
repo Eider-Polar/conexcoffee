@@ -171,7 +171,7 @@ export default function ContenedorRealistaViewer({ contenedor }) {
               CAPA FONDO: Fotografía Real del Interior con Sacos de Café
               ====================================================== */}
           <div
-            className="absolute inset-0 w-full h-full will-change-transform transition-all duration-700 ease-out"
+            className="absolute inset-0 w-full h-full transition-all duration-700 ease-out"
             style={{
               transform: isDoorOpen ? 'scale(1.02)' : 'scale(0.98)',
               filter: isDoorOpen ? 'brightness(1.0)' : 'brightness(0.3)',
@@ -254,7 +254,7 @@ export default function ContenedorRealistaViewer({ contenedor }) {
               COMPUERTA IZQUIERDA REAL (FOTOGRAFÍA 8K DEL CONTENEDOR CERRADO)
               ====================================================== */}
           <div
-            className="absolute top-0 bottom-0 left-0 w-1/2 overflow-hidden will-change-transform z-30 pointer-events-none"
+            className="absolute top-0 bottom-0 left-0 w-1/2 overflow-hidden z-30 pointer-events-none"
             style={{
               transformOrigin: 'left center',
               transform: isDoorOpen ? 'rotateY(-108deg)' : 'rotateY(0deg)',
@@ -277,7 +277,7 @@ export default function ContenedorRealistaViewer({ contenedor }) {
               COMPUERTA DERECHA REAL (FOTOGRAFÍA 8K DEL CONTENEDOR CERRADO)
               ====================================================== */}
           <div
-            className="absolute top-0 bottom-0 right-0 w-1/2 overflow-hidden will-change-transform z-30 pointer-events-none"
+            className="absolute top-0 bottom-0 right-0 w-1/2 overflow-hidden z-30 pointer-events-none"
             style={{
               transformOrigin: 'right center',
               transform: isDoorOpen ? 'rotateY(108deg)' : 'rotateY(0deg)',

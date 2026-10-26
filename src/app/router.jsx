@@ -213,6 +213,7 @@ const router = createBrowserRouter([
     errorElement: <RouteError />,
     children: [
       roleRoutes(ROLES.SUPERADMIN, [
+        { path: '/superadmin',              element: <Navigate to="/superadmin/dashboard" replace /> },
         { path: '/superadmin/dashboard',    element: page(SuperAdminDashboardPage) },
         { path: '/superadmin/caficultores', element: page(CaficultoresPage) },
         { path: '/superadmin/catadores',    element: page(CatadoresPage) },
@@ -227,10 +228,13 @@ const router = createBrowserRouter([
         { path: '/superadmin/ofertas',      element: page(OfertasPage) },
         { path: '/superadmin/tecnicos',     element: page(TecnicosPage) },
         { path: '/superadmin/users',        element: page(UsuariosPage) },
+        { path: '/superadmin/usuarios',     element: <Navigate to="/superadmin/users" replace /> },
         { path: '/superadmin/settings',     element: page(ConfiguracionPage) },
+        { path: '/superadmin/configuracion', element: <Navigate to="/superadmin/settings" replace /> },
       ]),
 
       roleRoutes(ROLES.EMPRESA, [
+        { path: '/empresa',                element: <Navigate to="/empresa/dashboard" replace /> },
         { path: '/empresa/dashboard',      element: page(EmpresaDashboardPage) },
         { path: '/empresa/ofertas-libres', element: page(EmpresaOfertasLibresPage) },
         { path: '/empresa/brokers',        element: page(EmpresaBrokersPage) },
@@ -244,11 +248,13 @@ const router = createBrowserRouter([
       ]),
 
       roleRoutes(ROLES.BROKER, [
+        { path: '/broker',           element: <Navigate to="/broker/dashboard" replace /> },
         { path: '/broker/dashboard', element: page(BrokerDashboardPage) },
         // { path: '/broker/negotiations', element: page(NegotiationsPage) },
       ]),
 
       roleRoutes(ROLES.CAFICULTOR, [
+        { path: '/caficultor',             element: <Navigate to="/caficultor/dashboard" replace /> },
         { path: '/caficultor/dashboard',   element: page(CaficultorDashboardPage) },
         { path: '/caficultor/fincas',      element: page(CaficultorFincasPage) },
         { path: '/caficultor/lotes',       element: page(CaficultorLotesPage) },
@@ -258,12 +264,14 @@ const router = createBrowserRouter([
       ]),
 
       roleRoutes(ROLES.COMPRADOR, [
+        { path: '/comprador',                      element: <Navigate to="/comprador/dashboard" replace /> },
         { path: '/comprador/dashboard',            element: page(CompradorDashboardPage) },
         { path: '/comprador/contenedores',         element: page(CompradorContenedoresPage) },
         { path: '/comprador/catalogo/:variedadId', element: page(DetalleVariedadPage) },
       ]),
 
       roleRoutes(ROLES.LABORATORIO, [
+        { path: '/laboratorio',                    element: <Navigate to="/laboratorio/dashboard" replace /> },
         { path: '/laboratorio/dashboard',          element: page(LaboratorioDashboardPage) },
         { path: '/laboratorio/catadores',          element: page(LaboratorioCatadoresPage) },
         { path: '/laboratorio/analisis-fisico',    element: page(LaboratorioAnalisisFisicoPage) },
@@ -274,10 +282,12 @@ const router = createBrowserRouter([
       ]),
 
       roleRoutes(ROLES.TECNICO, [
+        { path: '/tecnico',           element: <Navigate to="/tecnico/dashboard" replace /> },
         { path: '/tecnico/dashboard', element: page(TecnicoDashboardPage) },
       ]),
 
       roleRoutes(ROLES.CATADOR, [
+        { path: '/catador',            element: <Navigate to="/catador/dashboard" replace /> },
         { path: '/catador/dashboard',  element: page(CatadorDashboardPage) },
         { path: '/catador/evaluacion', element: page(EvaluacionPage) },
       ]),

@@ -129,7 +129,7 @@ export default function ConfiguracionPage() {
                 type="number"
                 step="0.5"
                 value={config.puntajeMinimoSca}
-                onChange={(e) => setConfig({ ...config, puntajeMinimoSca: Number(e.target.value) })}
+                onChange={(e) => setConfig({ ...config, puntajeMinimoSca: e.target.value === '' ? 0 : Number(e.target.value) || 0 })}
                 className="w-full px-3.5 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
               />
             </div>
@@ -141,7 +141,7 @@ export default function ConfiguracionPage() {
                 type="number"
                 step="0.1"
                 value={config.umbralHumedadMax}
-                onChange={(e) => setConfig({ ...config, umbralHumedadMax: Number(e.target.value) })}
+                onChange={(e) => setConfig({ ...config, umbralHumedadMax: e.target.value === '' ? 0 : Number(e.target.value) || 0 })}
                 className="w-full px-3.5 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
               />
             </div>

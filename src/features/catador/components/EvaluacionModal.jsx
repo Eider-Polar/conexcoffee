@@ -68,10 +68,11 @@ function SubSection({ label, children }) {
 
 /** Pills de selección múltiple */
 function Chips({ items, selected, onToggle }) {
+  const selectedSet = new Set(selected);
   return (
     <div className="flex flex-wrap gap-2">
       {items.map((item) => {
-        const isSelected = selected.includes(item.id);
+        const isSelected = selectedSet.has(item.id);
         return (
           <button
             key={item.id}
