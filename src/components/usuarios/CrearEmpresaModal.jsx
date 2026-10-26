@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { X, Building2, MapPin, Mail, Phone, FileText, Lock } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const INITIAL_FORM_STATE = {
   nit: '',
@@ -7,6 +8,7 @@ const INITIAL_FORM_STATE = {
   telefono: '',
   correo: '',
   password: '',
+  confirmarPassword: '',
   direccion: '',
   municipio: '',
   departamento: '',
@@ -30,6 +32,8 @@ export default function CrearEmpresaModal({
         nombre: initialData.nombre || '',
         telefono: initialData.telefono || '',
         correo: initialData.correo || '',
+        password: '',
+        confirmarPassword: '',
         direccion: initialData.direccion || '',
         municipio: initialData.municipio || '',
         departamento: initialData.departamento || '',
@@ -44,7 +48,20 @@ export default function CrearEmpresaModal({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+
+    if (!initialData) {
+      if (!formData.password || formData.password.length < 6) {
+        toast.error('La contraseña debe tener al menos 6 caracteres');
+        return;
+      }
+      if (formData.password !== formData.confirmarPassword) {
+        toast.error('Las contraseñas no coinciden');
+        return;
+      }
+    }
+
+    const { confirmarPassword, ...datosLimpios } = formData;
+    onSubmit(datosLimpios);
   };
 
   return (
@@ -137,19 +154,35 @@ export default function CrearEmpresaModal({
             </div>
 
             {!initialData && (
-              <div>
-                <label className="block text-xs font-semibold text-surface-700 mb-1 flex items-center gap-1">
-                  <Lock className="h-3.5 w-3.5 text-brand-terracota" />
-                  Contraseña de Acceso al Portal *
-                </label>
-                <input
-                  required
-                  type="password"
-                  placeholder="•••••••• (Contraseña para el usuario administrador de la empresa)"
-                  value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota bg-white"
-                />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 border-t border-surface-200">
+                <div>
+                  <label className="block text-xs font-semibold text-surface-700 mb-1 flex items-center gap-1">
+                    <Lock className="h-3.5 w-3.5 text-brand-terracota" />
+                    Contraseña del Portal *
+                  </label>
+                  <input
+                    required
+                    type="password"
+                    placeholder="Mínimo 6 caracteres"
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota bg-white"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-surface-700 mb-1 flex items-center gap-1">
+                    <Lock className="h-3.5 w-3.5 text-brand-terracota" />
+                    Confirmar Contraseña *
+                  </label>
+                  <input
+                    required
+                    type="password"
+                    placeholder="Repita la contraseña"
+                    value={formData.confirmarPassword}
+                    onChange={(e) => setFormData({ ...formData, confirmarPassword: e.target.value })}
+                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota bg-white"
+                  />
+                </div>
               </div>
             )}
           </div>

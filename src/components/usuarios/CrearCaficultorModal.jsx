@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { X, UserPlus, Sprout, MapPin, FileText, Lock } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const INITIAL_FORM_STATE = {
   numeroIdentificacion: '',
@@ -10,6 +11,7 @@ const INITIAL_FORM_STATE = {
   telefono: '',
   correo: '',
   password: '',
+  confirmarPassword: '',
   fechaNacimiento: '',
   genero: 'M',
   direccion: '',
@@ -40,6 +42,8 @@ export default function CrearCaficultorModal({
         segundoApellido: initialData.segundoApellido || initialData.segundo_apellido || '',
         telefono: initialData.telefono || '',
         correo: initialData.correo || '',
+        password: '',
+        confirmarPassword: '',
         fechaNacimiento: initialData.fechaNacimiento || initialData.fecha_nacimiento || '',
         genero: initialData.genero || 'M',
         direccion: initialData.direccion || '',
@@ -57,7 +61,20 @@ export default function CrearCaficultorModal({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+
+    if (!initialData) {
+      if (!formData.password || formData.password.length < 6) {
+        toast.error('La contraseña debe tener al menos 6 caracteres');
+        return;
+      }
+      if (formData.password !== formData.confirmarPassword) {
+        toast.error('Las contraseñas no coinciden');
+        return;
+      }
+    }
+
+    const { confirmarPassword, ...datosLimpios } = formData;
+    onSubmit(datosLimpios);
   };
 
   return (
@@ -201,7 +218,7 @@ export default function CrearCaficultorModal({
               <span>Contacto y Ubicación</span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="block text-xs font-semibold text-surface-700 mb-1">Teléfono *</label>
                 <input
@@ -225,8 +242,10 @@ export default function CrearCaficultorModal({
                   className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20 bg-white"
                 />
               </div>
+            </div>
 
-              {!initialData && (
+            {!initialData && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 border-t border-surface-200">
                 <div>
                   <label className="block text-xs font-semibold text-surface-700 mb-1 flex items-center gap-1">
                     <Lock className="h-3.5 w-3.5 text-brand-terracota" />
@@ -235,14 +254,28 @@ export default function CrearCaficultorModal({
                   <input
                     required
                     type="password"
-                    placeholder="••••••••"
+                    placeholder="Mínimo 6 caracteres"
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota bg-white"
                   />
                 </div>
-              )}
-            </div>
+                <div>
+                  <label className="block text-xs font-semibold text-surface-700 mb-1 flex items-center gap-1">
+                    <Lock className="h-3.5 w-3.5 text-brand-terracota" />
+                    Confirmar Contraseña *
+                  </label>
+                  <input
+                    required
+                    type="password"
+                    placeholder="Repita la contraseña"
+                    value={formData.confirmarPassword}
+                    onChange={(e) => setFormData({ ...formData, confirmarPassword: e.target.value })}
+                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota bg-white"
+                  />
+                </div>
+              </div>
+            )}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>

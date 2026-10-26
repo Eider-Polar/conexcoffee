@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { X, UserCheck, Briefcase, Phone, Mail, MapPin, Lock } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const INITIAL_FORM_STATE = {
   numeroIdentificacion: '',
@@ -10,6 +11,7 @@ const INITIAL_FORM_STATE = {
   telefono: '',
   correo: '',
   password: '',
+  confirmarPassword: '',
   especialidad: '',
   zonaAsignada: '',
 };
@@ -34,6 +36,8 @@ export default function CrearTecnicoModal({
         segundoApellido: initialData.segundoApellido || initialData.segundo_apellido || '',
         telefono: initialData.telefono || '',
         correo: initialData.correo || '',
+        password: '',
+        confirmarPassword: '',
         especialidad: initialData.especialidad || '',
         zonaAsignada: initialData.zonaAsignada || initialData.zona_asignada || '',
       });
@@ -46,7 +50,20 @@ export default function CrearTecnicoModal({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+
+    if (!initialData) {
+      if (!formData.password || formData.password.length < 6) {
+        toast.error('La contraseña debe tener al menos 6 caracteres');
+        return;
+      }
+      if (formData.password !== formData.confirmarPassword) {
+        toast.error('Las contraseñas no coinciden');
+        return;
+      }
+    }
+
+    const { confirmarPassword, ...datosLimpios } = formData;
+    onSubmit(datosLimpios);
   };
 
   return (
@@ -168,19 +185,35 @@ export default function CrearTecnicoModal({
           </div>
 
           {!initialData && (
-            <div>
-              <label className="block text-xs font-semibold text-surface-700 mb-1 flex items-center gap-1">
-                <Lock className="h-3.5 w-3.5 text-brand-terracota" />
-                Contraseña de Acceso al Sistema *
-              </label>
-              <input
-                required
-                type="password"
-                placeholder="•••••••• (Contraseña inicial para el técnico)"
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota bg-white"
-              />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 border-t border-surface-200">
+              <div>
+                <label className="block text-xs font-semibold text-surface-700 mb-1 flex items-center gap-1">
+                  <Lock className="h-3.5 w-3.5 text-brand-terracota" />
+                  Contraseña *
+                </label>
+                <input
+                  required
+                  type="password"
+                  placeholder="Mínimo 6 caracteres"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota bg-white"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-surface-700 mb-1 flex items-center gap-1">
+                  <Lock className="h-3.5 w-3.5 text-brand-terracota" />
+                  Confirmar Contraseña *
+                </label>
+                <input
+                  required
+                  type="password"
+                  placeholder="Repita la contraseña"
+                  value={formData.confirmarPassword}
+                  onChange={(e) => setFormData({ ...formData, confirmarPassword: e.target.value })}
+                  className="w-full px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota bg-white"
+                />
+              </div>
             </div>
           )}
 
