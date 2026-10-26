@@ -2,7 +2,7 @@ import { TrendingUp, TrendingDown } from 'lucide-react';
 
 // Tarjeta KPI para el dashboard del SuperAdmin
 export default function StatKPI({ stat }) {
-  const Icon = stat.icon;
+  const Icon = stat.icon || TrendingUp;
   return (
     <div className="bg-white rounded-2xl border border-surface-200 p-5 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
       <div className="flex items-start justify-between">

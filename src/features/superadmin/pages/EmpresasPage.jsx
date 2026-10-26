@@ -7,64 +7,10 @@ import {
   X,
 } from 'lucide-react';
 import ModuloCabecera from '../components/ModuloCabecera';
-
-const INITIAL_EMPRESAS = [
-  {
-    id: 1,
-    nit: '900123456-1',
-    nombre: 'Café Especial Huila SAS',
-    telefono: '3112343550',
-    correo: 'contacto@cafehuila.com',
-    direccion: 'Carrera 1 # 10-25, Parque Central',
-    municipio: 'Pitalito',
-    departamento: 'Huila',
-    caficultoresCount: 48,
-    ofertasActivas: 12,
-    descripcion: 'Empresa exportadora dedicada a la comercialización internacional de cafés especiales del sur del Huila.',
-  },
-  {
-    id: 2,
-    nit: '900654321-8',
-    nombre: 'Exportadora Andina de Café',
-    telefono: '3132564790',
-    correo: 'operaciones@andinaexport.com',
-    direccion: 'Carrera 9 # 18-40, Zona Franca',
-    municipio: 'Popayán',
-    departamento: 'Cauca',
-    caficultoresCount: 35,
-    ofertasActivas: 9,
-    descripcion: 'Alianza de exportadores con certificación de comercio justo y sellos de origen volcánico.',
-  },
-  {
-    id: 3,
-    nit: '901234876-5',
-    nombre: 'Origen Café Colombia',
-    telefono: '3157890123',
-    correo: 'info@origencafe.com.co',
-    direccion: 'Avenida El Poblado # 25-60',
-    municipio: 'Medellín',
-    departamento: 'Antioquia',
-    caficultoresCount: 62,
-    ofertasActivas: 18,
-    descripcion: 'Consorcio enfocado en microlotes de alta puntuación SCA y subastas electrónicas mundiales.',
-  },
-  {
-    id: 4,
-    nit: '900987123-4',
-    nombre: 'Alianza Cafetera del Sur',
-    telefono: '3174561234',
-    correo: 'contacto@alianzasur.com',
-    direccion: 'Calle 5 # 12-08',
-    municipio: 'La Unión',
-    departamento: 'Nariño',
-    caficultoresCount: 29,
-    ofertasActivas: 7,
-    descripcion: 'Agrupación regional que aglutina caficultores de alta montaña en el cañón de Juanambú.',
-  },
-];
+import { useSuperAdmin } from '@/hooks/useSuperAdmin';
 
 export default function EmpresasPage() {
-  const [empresas, setEmpresas] = useState(INITIAL_EMPRESAS);
+  const { empresas = [], createEmpresa, updateEmpresa } = useSuperAdmin();
   const [searchTerm, setSearchTerm] = useState('');
 
   const [modalRegistroAbierto, setModalRegistroAbierto] = useState(false);
@@ -117,26 +63,24 @@ export default function EmpresasPage() {
     setModalDetalleAbierto(true);
   };
 
-  const guardarCreacion = (e) => {
+  const guardarCreacion = async (e) => {
     e.preventDefault();
-    const nueva = {
-      id: Date.now(),
-      ...formData,
-      caficultoresCount: 0,
-      ofertasActivas: 0,
-    };
-    setEmpresas([nueva, ...empresas]);
-    setModalRegistroAbierto(false);
+    try {
+      await createEmpresa(formData);
+      setModalRegistroAbierto(false);
+    } catch {
+      // Error manejado por el provider
+    }
   };
 
-  const guardarEdicion = (e) => {
+  const guardarEdicion = async (e) => {
     e.preventDefault();
-    setEmpresas(
-      empresas.map((emp) =>
-        emp.id === empresaActual.id ? { ...emp, ...formData } : emp
-      )
-    );
-    setModalEditarAbierto(false);
+    try {
+      await updateEmpresa(empresaActual.id, formData);
+      setModalEditarAbierto(false);
+    } catch {
+      // Error manejado por el provider
+    }
   };
 
   const filtradas = empresas.filter((emp) => {

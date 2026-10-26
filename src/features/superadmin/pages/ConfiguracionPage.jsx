@@ -8,24 +8,27 @@ import {
   Lock,
 } from 'lucide-react';
 import ModuloCabecera from '../components/ModuloCabecera';
+import { useSuperAdmin } from '@/hooks/useSuperAdmin';
 
 export default function ConfiguracionPage() {
+  const { configuracion, updateConfiguracion } = useSuperAdmin();
   const [guardadoExitoso, setGuardadoExitoso] = useState(false);
   const [config, setConfig] = useState({
-    nombrePlataforma: 'ConexCoffee — Plataforma de Café Especial',
-    emailSoporte: 'soporte@conexcoffee.com',
-    telefonoContacto: '+57 311 234 4546',
+    nombrePlataforma: configuracion?.nombrePlataforma || 'ConexCoffee — Plataforma de Café Especial',
+    emailSoporte: configuracion?.correoSoporte || 'soporte@conexcoffee.com',
+    telefonoContacto: configuracion?.telefonoSoporte || '+57 311 234 4546',
     registroPublicoHabilitado: true,
     captchaHabilitado: true,
-    notificacionesEmail: true,
+    notificacionesEmail: configuracion?.notificacionesEmail ?? true,
     monedaPrincipal: 'USD / COP',
     unidadPesoDefecto: 'Kilogramos (kg)',
-    umbralHumedadMax: 12.5,
-    puntajeMinimoSca: 84.0,
+    umbralHumedadMax: configuracion?.humedadMaximaPermitida || 12.5,
+    puntajeMinimoSca: configuracion?.puntajeScaMinimo || 84.0,
   });
 
-  const guardarConfiguracion = (e) => {
+  const guardarConfiguracion = async (e) => {
     e.preventDefault();
+    await updateConfiguracion(config);
     setGuardadoExitoso(true);
     setTimeout(() => setGuardadoExitoso(false), 3000);
   };

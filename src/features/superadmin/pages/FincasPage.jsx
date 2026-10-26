@@ -8,95 +8,11 @@ import {
   Layers,
 } from 'lucide-react';
 import ModuloCabecera from '../components/ModuloCabecera';
-
-const INITIAL_FINCAS = [
-  {
-    id: 1,
-    nombre: 'Finca El Paraíso',
-    altura: 1750,
-    areaCafe: 4.5,
-    areaTotal: 6.0,
-    municipio: 'Pitalito',
-    departamento: 'Huila',
-    caficultor: 'Miguel Florez',
-    variedades: ['Castillo', 'Geisha', 'Pink Bourbon'],
-    lotesCount: 3,
-  },
-  {
-    id: 2,
-    nombre: 'Finca Los Rosales',
-    altura: 1820,
-    areaCafe: 3.2,
-    areaTotal: 5.0,
-    municipio: 'Popayán',
-    departamento: 'Cauca',
-    caficultor: 'Pedro Prueba',
-    variedades: ['Colombia', 'Caturra'],
-    lotesCount: 2,
-  },
-  {
-    id: 3,
-    nombre: 'Finca Buena Vista',
-    altura: 1950,
-    areaCafe: 5.8,
-    areaTotal: 8.5,
-    municipio: 'La Unión',
-    departamento: 'Nariño',
-    caficultor: 'María del Rosario Ruiz',
-    variedades: ['Geisha', 'Typica'],
-    lotesCount: 4,
-  },
-  {
-    id: 4,
-    nombre: 'Finca La Colina',
-    altura: 1680,
-    areaCafe: 2.5,
-    areaTotal: 3.8,
-    municipio: 'Planadas',
-    departamento: 'Tolima',
-    caficultor: 'Jorge Enrique Martínez',
-    variedades: ['Caturra', 'Castillo'],
-    lotesCount: 2,
-  },
-];
-
-const INITIAL_LOTES = [
-  {
-    id: 1,
-    nombreLote: 'Lote El Mirador',
-    finca: 'Finca El Paraíso',
-    variedadCafe: 'Pink Bourbon',
-    area: 1.5,
-    proceso: 'Honey Fermentado',
-    altura: 1780,
-    estado: 'En Cosecha',
-  },
-  {
-    id: 2,
-    nombreLote: 'Lote Las Palmas',
-    finca: 'Finca El Paraíso',
-    variedadCafe: 'Geisha',
-    area: 1.2,
-    proceso: 'Lavado Anaeróbico',
-    altura: 1800,
-    estado: 'Listo para Muestreo',
-  },
-  {
-    id: 3,
-    nombreLote: 'Lote El Cedro',
-    finca: 'Finca Buena Vista',
-    variedadCafe: 'Typica Mejorado',
-    area: 2.0,
-    proceso: 'Natural 72h',
-    altura: 1950,
-    estado: 'Secado en Camas',
-  },
-];
+import { useSuperAdmin } from '@/hooks/useSuperAdmin';
 
 export default function FincasPage() {
   const [pestanaActiva, setPestanaActiva] = useState('fincas');
-  const [fincas, setFincas] = useState(INITIAL_FINCAS);
-  const [lotes, setLotes] = useState(INITIAL_LOTES);
+  const { fincas = [], lotes = [], createFinca, createLote } = useSuperAdmin();
   const [searchTerm, setSearchTerm] = useState('');
 
   const [modalRegistroFinca, setModalRegistroFinca] = useState(false);
@@ -153,32 +69,25 @@ export default function FincasPage() {
     setModalDetalleFinca(true);
   };
 
-  const guardarFinca = (e) => {
+  const guardarFinca = async (e) => {
     e.preventDefault();
-    const nueva = {
-      id: Date.now(),
-      ...formDataFinca,
-      altura: Number(formDataFinca.altura),
-      areaCafe: Number(formDataFinca.areaCafe),
-      areaTotal: Number(formDataFinca.areaTotal || formDataFinca.areaCafe),
-      variedades: ['Castillo'],
-      lotesCount: 0,
-    };
-    setFincas([nueva, ...fincas]);
-    setModalRegistroFinca(false);
+    try {
+      await createFinca(formDataFinca);
+      setModalRegistroFinca(false);
+    } catch {
+      // Error manejado por el provider
+    }
   };
 
-  const guardarLote = (e) => {
+  const guardarLote = async (e) => {
     e.preventDefault();
-    const nuevo = {
-      id: Date.now(),
-      ...formDataLote,
-      area: Number(formDataLote.area),
-      altura: Number(formDataLote.altura || 1700),
-      estado: 'Activo',
-    };
-    setLotes([nuevo, ...lotes]);
-    setModalRegistroLote(false);
+    try {
+      const fincaObj = fincas.find((f) => f.nombre === formDataLote.finca) || fincas[0];
+      await createLote(fincaObj?.id, formDataLote);
+      setModalRegistroLote(false);
+    } catch {
+      // Error manejado por el provider
+    }
   };
 
   const fincasFiltradas = fincas.filter((f) => {

@@ -17,197 +17,18 @@ import {
   X,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-
-// Datos de Compras / Pedidos basados en livewire/compras/historial-compras-component.blade.php
-const INITIAL_PEDIDOS = [
-  {
-    id: 1,
-    codigo_pedido: 'ORD-2026-0814',
-    fecha: '2026-08-14',
-    comprador_nombre: 'John Smith',
-    comprador_empresa: 'Blue Coffee Roasters Inc.',
-    pais_destino: 'Estados Unidos (San Francisco)',
-    lotes: [
-      { codigo: 'OFR-HUILA-001', variedad: 'Pink Bourbon', cantidad_sacos: 25, peso_kg: 1500, precio_kg: 9.8 },
-      { codigo: 'OFR-CAUCA-014', variedad: 'Geisha Lavado', cantidad_sacos: 10, peso_kg: 600, precio_kg: 14.5 },
-    ],
-    subtotal: 23400.0,
-    flete: 1250.0,
-    total: 24650.0,
-    estado: 'Pago aceptado',
-    metodo_pago: 'Transferencia Bancaria Internacional (SWIFT)',
-    referencia_pago: 'SWIFT-US7849102',
-    naviera: 'Maersk Sealand - Línea Buenaventura',
-  },
-  {
-    id: 2,
-    codigo_pedido: 'ORD-2026-0820',
-    fecha: '2026-08-20',
-    comprador_nombre: 'Hans Weber',
-    comprador_empresa: 'Hamburg Kaffee Import GmbH',
-    pais_destino: 'Alemania (Hamburgo)',
-    lotes: [
-      { codigo: 'OFR-NAR-003', variedad: 'Castillo Fermentado', cantidad_sacos: 30, peso_kg: 1800, precio_kg: 8.2 },
-    ],
-    subtotal: 14760.0,
-    flete: 980.0,
-    total: 15740.0,
-    estado: 'Compra en camino',
-    metodo_pago: 'Carta de Crédito Irrevocable (L/C)',
-    referencia_pago: 'LC-DE998231',
-    naviera: 'Hapag-Lloyd - Puerto Cartagena',
-  },
-  {
-    id: 3,
-    codigo_pedido: 'ORD-2026-0829',
-    fecha: '2026-08-29',
-    comprador_nombre: 'Kenji Takahashi',
-    comprador_empresa: 'Tokyo Specialty Bean Co.',
-    pais_destino: 'Japón (Yokohama)',
-    lotes: [
-      { codigo: 'OFR-ANT-008', variedad: 'Bourbon Chiroso', cantidad_sacos: 20, peso_kg: 1200, precio_kg: 12.0 },
-    ],
-    subtotal: 14400.0,
-    flete: 1400.0,
-    total: 15800.0,
-    estado: 'Pago pendiente',
-    metodo_pago: 'Transferencia Bancaria Internacional',
-    referencia_pago: 'Pendiente de confirmación',
-    naviera: 'ONE Ocean Network Express',
-  },
-  {
-    id: 4,
-    codigo_pedido: 'ORD-2026-0902',
-    fecha: '2026-09-02',
-    comprador_nombre: 'Sophie Laurent',
-    comprador_empresa: 'Cafés de Terroir Paris',
-    pais_destino: 'Francia (Le Havre)',
-    lotes: [
-      { codigo: 'OFR-HUILA-005', variedad: 'Caturra Chiroso', cantidad_sacos: 15, peso_kg: 900, precio_kg: 10.5 },
-    ],
-    subtotal: 9450.0,
-    flete: 850.0,
-    total: 10300.0,
-    estado: 'Entregado',
-    metodo_pago: 'Stripe / Tarjeta Corporativa',
-    referencia_pago: 'ch_3NzK81LEe92X',
-    naviera: 'CMA CGM - Cartagena',
-  },
-  {
-    id: 5,
-    codigo_pedido: 'ORD-2026-0906',
-    fecha: '2026-09-06',
-    comprador_nombre: 'Liam O’Connor',
-    comprador_empresa: 'Dublin Artisan Roasters',
-    pais_destino: 'Irlanda (Dublín)',
-    lotes: [
-      { codigo: 'OFR-TOL-002', variedad: 'Geisha Natural', cantidad_sacos: 8, peso_kg: 480, precio_kg: 16.0 },
-    ],
-    subtotal: 7680.0,
-    flete: 620.0,
-    total: 8300.0,
-    estado: 'Pago rechazado',
-    metodo_pago: 'Transferencia Rechazada por Límite',
-    referencia_pago: 'REJ-IRL-9921',
-    naviera: 'Por asignar',
-  },
-];
-
-// Datos de Compradores basados en modulos/compradores/
-const INITIAL_COMPRADORES = [
-  {
-    id: 1,
-    numero_identificacion: 'US-9823412',
-    tipo_documento: 'PAS',
-    primer_nombre: 'JOHN',
-    segundo_nombre: 'DAVID',
-    primer_apellido: 'SMITH',
-    segundo_apellido: 'MILLER',
-    telefono: '+1 415 892 3411',
-    correo: 'john.smith@bluecoffeeroasters.com',
-    empresa: 'Blue Coffee Roasters Inc.',
-    pais: 'Estados Unidos',
-    ciudad: 'San Francisco, CA',
-    pedidos_totales: 14,
-    volumen_kg: 25200,
-    estado: 'Activo',
-  },
-  {
-    id: 2,
-    numero_identificacion: 'DE-4581290',
-    tipo_documento: 'PAS',
-    primer_nombre: 'HANS',
-    segundo_nombre: 'PETER',
-    primer_apellido: 'WEBER',
-    segundo_apellido: 'KLEIN',
-    telefono: '+49 40 7654 3210',
-    correo: 'h.weber@hamburgkaffee.de',
-    empresa: 'Hamburg Kaffee Import GmbH',
-    pais: 'Alemania',
-    ciudad: 'Hamburgo',
-    pedidos_totales: 8,
-    volumen_kg: 16800,
-    estado: 'Activo',
-  },
-  {
-    id: 3,
-    numero_identificacion: 'JP-1192834',
-    tipo_documento: 'PAS',
-    primer_nombre: 'KENJI',
-    segundo_nombre: '',
-    primer_apellido: 'TAKAHASHI',
-    segundo_apellido: 'SATO',
-    telefono: '+81 3 5555 0192',
-    correo: 'takahashi@tokyospecialty.jp',
-    empresa: 'Tokyo Specialty Bean Co.',
-    pais: 'Japón',
-    ciudad: 'Tokio',
-    pedidos_totales: 22,
-    volumen_kg: 39000,
-    estado: 'Activo',
-  },
-  {
-    id: 4,
-    numero_identificacion: 'FR-8829104',
-    tipo_documento: 'PAS',
-    primer_nombre: 'SOPHIE',
-    segundo_nombre: 'MARIE',
-    primer_apellido: 'LAURENT',
-    segundo_apellido: 'DUBOIS',
-    telefono: '+33 1 42 68 55 00',
-    correo: 'slaurent@cafesdeterroir.fr',
-    empresa: 'Cafés de Terroir Paris',
-    pais: 'Francia',
-    ciudad: 'París',
-    pedidos_totales: 6,
-    volumen_kg: 9200,
-    estado: 'Activo',
-  },
-  {
-    id: 5,
-    numero_identificacion: 'GB-3349182',
-    tipo_documento: 'PAS',
-    primer_nombre: 'LIAM',
-    segundo_nombre: '',
-    primer_apellido: 'O’CONNOR',
-    segundo_apellido: '',
-    telefono: '+353 1 496 2200',
-    correo: 'liam@dublinartisan.ie',
-    empresa: 'Dublin Artisan Roasters',
-    pais: 'Irlanda',
-    ciudad: 'Dublín',
-    pedidos_totales: 4,
-    volumen_kg: 5400,
-    estado: 'Activo',
-  },
-];
+import { useSuperAdmin } from '@/hooks/useSuperAdmin';
 
 export default function ComprasPage() {
   const [pestanaActiva, setPestanaActiva] = useState('compras'); // 'compras' | 'compradores'
 
-  // Datos
-  const [pedidos] = useState(INITIAL_PEDIDOS);
-  const [compradores, setCompradores] = useState(INITIAL_COMPRADORES);
+  // Datos desde el Contexto Global
+  const {
+    compras: pedidos = [],
+    compradores = [],
+    createComprador,
+    updateComprador,
+  } = useSuperAdmin();
 
   // Filtros
   const [searchTerm, setSearchTerm] = useState('');
@@ -271,52 +92,44 @@ export default function ComprasPage() {
   });
 
   // Guardar nuevo comprador
-  const handleGuardarComprador = (e) => {
+  const handleGuardarComprador = async (e) => {
     e.preventDefault();
     if (!nuevoComprador.numero_identificacion || !nuevoComprador.primer_nombre || !nuevoComprador.primer_apellido) {
       toast.error('Complete los campos obligatorios (*)');
       return;
     }
 
-    const nuevo = {
-      id: Date.now(),
-      ...nuevoComprador,
-      primer_nombre: nuevoComprador.primer_nombre.toUpperCase(),
-      segundo_nombre: nuevoComprador.segundo_nombre.toUpperCase(),
-      primer_apellido: nuevoComprador.primer_apellido.toUpperCase(),
-      segundo_apellido: nuevoComprador.segundo_apellido.toUpperCase(),
-      pedidos_totales: 0,
-      volumen_kg: 0,
-      estado: 'Activo',
-    };
-
-    setCompradores([nuevo, ...compradores]);
-    toast.success('Comprador internacional registrado correctamente');
-    setModalRegistrarComprador(false);
-    setNuevoComprador({
-      numero_identificacion: '',
-      tipo_documento: 'PAS',
-      primer_nombre: '',
-      segundo_nombre: '',
-      primer_apellido: '',
-      segundo_apellido: '',
-      telefono: '',
-      correo: '',
-      empresa: '',
-      pais: 'Estados Unidos',
-      ciudad: '',
-    });
+    try {
+      await createComprador(nuevoComprador);
+      setModalRegistrarComprador(false);
+      setNuevoComprador({
+        numero_identificacion: '',
+        tipo_documento: 'PAS',
+        primer_nombre: '',
+        segundo_nombre: '',
+        primer_apellido: '',
+        segundo_apellido: '',
+        telefono: '',
+        correo: '',
+        empresa: '',
+        pais: 'Estados Unidos',
+        ciudad: '',
+      });
+    } catch {
+      // Error manejado por el provider
+    }
   };
 
   // Guardar edición comprador
-  const handleGuardarEdicionComprador = (e) => {
+  const handleGuardarEdicionComprador = async (e) => {
     e.preventDefault();
     if (!compradorSeleccionado) return;
-    setCompradores((prev) =>
-      prev.map((c) => (c.id === compradorSeleccionado.id ? compradorSeleccionado : c))
-    );
-    toast.success('Comprador actualizado correctamente');
-    setModalEditarComprador(false);
+    try {
+      await updateComprador(compradorSeleccionado.id, compradorSeleccionado);
+      setModalEditarComprador(false);
+    } catch {
+      // Error manejado por el provider
+    }
   };
 
   // Consultar comprador por documento

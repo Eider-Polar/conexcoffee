@@ -9,74 +9,11 @@ import {
   Award,
 } from 'lucide-react';
 import ModuloCabecera from '../components/ModuloCabecera';
-
-const INITIAL_OFERTAS = [
-  {
-    id: 1,
-    codigo: 'OFR-HUILA-001',
-    cantidad: 1500.0, // kg
-    variedadCafe: 'Pink Bourbon',
-    puntajeSca: 88.5,
-    proceso: 'Honey Anaeróbico',
-    precioKg: 18.5, // USD
-    caficultor: 'Miguel Florez',
-    empresa: 'Café Especial Huila SAS',
-    estado: 'Publicada',
-    notasCata: 'Jazmín, frutos rojos, acidez fosfórica brillante y postgusto dulce prolongado.',
-  },
-  {
-    id: 2,
-    codigo: 'OFR-CAUCA-024',
-    cantidad: 2400.0,
-    variedadCafe: 'Castillo / Colombia',
-    puntajeSca: 86.0,
-    proceso: 'Lavado Tradicional',
-    precioKg: 12.0,
-    caficultor: 'Pedro Prueba',
-    empresa: 'Exportadora Andina de Café',
-    estado: 'Negociación',
-    notasCata: 'Panela, cítricos dulces, chocolate con leche y cuerpo cremoso.',
-  },
-  {
-    id: 3,
-    codigo: 'OFR-NARINO-089',
-    cantidad: 800.0,
-    variedadCafe: 'Geisha de Altura',
-    puntajeSca: 90.2,
-    proceso: 'Natural 96h',
-    precioKg: 35.0,
-    caficultor: 'María del Rosario Ruiz',
-    empresa: 'Origen Café Colombia',
-    estado: 'Vendida',
-    notasCata: 'Floral intenso, bergamota, melocotón maduro y acidez málica compleja.',
-  },
-];
-
-const INITIAL_PREOFERTAS = [
-  {
-    id: 1,
-    codigo: 'PRE-TOLIMA-012',
-    caficultor: 'Jorge Enrique Martínez',
-    finca: 'Finca La Colina',
-    variedad: 'Caturra Orgánico',
-    cantidadEstimada: 1200,
-    estado: 'En Catación',
-  },
-  {
-    id: 2,
-    codigo: 'PRE-HUILA-055',
-    caficultor: 'Ana Lucía Pérez',
-    finca: 'Finca El Mirador',
-    variedad: 'Bourbon Rosado',
-    cantidadEstimada: 900,
-    estado: 'Muestra Enviada',
-  },
-];
+import { useSuperAdmin } from '@/hooks/useSuperAdmin';
 
 export default function OfertasPage() {
   const [pestanaActiva, setPestanaActiva] = useState('ofertas');
-  const [ofertas] = useState(INITIAL_OFERTAS);
-  const [preofertas] = useState(INITIAL_PREOFERTAS);
+  const { ofertas = [], preofertas = [] } = useSuperAdmin();
   const [searchTerm, setSearchTerm] = useState('');
 
   const [modalDetalleAbierto, setModalDetalleAbierto] = useState(false);
@@ -91,22 +28,24 @@ export default function OfertasPage() {
     alert(`Generando y descargando Ficha Técnica PDF para la oferta ${o.codigo} (Certificado SCA)...`);
   };
 
+  const getStr = (val) => (typeof val === 'string' ? val : val?.nombre || '');
+
   const ofertasFiltradas = ofertas.filter((o) => {
     const term = searchTerm.toLowerCase();
     return (
-      o.codigo.toLowerCase().includes(term) ||
-      o.variedadCafe.toLowerCase().includes(term) ||
-      o.caficultor.toLowerCase().includes(term) ||
-      o.estado.toLowerCase().includes(term)
+      String(o.codigo || '').toLowerCase().includes(term) ||
+      String(o.variedadCafe || o.variedad || '').toLowerCase().includes(term) ||
+      getStr(o.caficultor).toLowerCase().includes(term) ||
+      String(o.estado || '').toLowerCase().includes(term)
     );
   });
 
   const preofertasFiltradas = preofertas.filter((p) => {
     const term = searchTerm.toLowerCase();
     return (
-      p.codigo.toLowerCase().includes(term) ||
-      p.caficultor.toLowerCase().includes(term) ||
-      p.variedad.toLowerCase().includes(term)
+      String(p.codigo || '').toLowerCase().includes(term) ||
+      getStr(p.caficultor).toLowerCase().includes(term) ||
+      String(p.variedad || '').toLowerCase().includes(term)
     );
   });
 
@@ -279,10 +218,10 @@ export default function OfertasPage() {
                       {p.codigo}
                     </td>
                     <td className="px-5 py-3.5 font-medium text-surface-800">
-                      {p.caficultor}
+                      {getStr(p.caficultor)}
                     </td>
                     <td className="px-5 py-3.5 text-surface-600 text-xs">
-                      {p.finca}
+                      {getStr(p.finca)}
                     </td>
                     <td className="px-5 py-3.5 text-surface-700">
                       {p.variedad}
@@ -349,7 +288,7 @@ export default function OfertasPage() {
                 </div>
                 <div>
                   <span className="text-surface-500 block">Productor</span>
-                  <span className="font-semibold text-surface-800">{ofertaActual.caficultor}</span>
+                  <span className="font-semibold text-surface-800">{getStr(ofertaActual.caficultor)}</span>
                 </div>
               </div>
 

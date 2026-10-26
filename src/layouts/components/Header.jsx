@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { animate } from 'animejs';
-import useAuthStore from '@/store/useAuthStore';
+import useAuth from '@/hooks/useAuth';
 import useUIStore from '@/store/useUIStore';
 import { Menu, LogOut, User, Bell } from 'lucide-react';
 
@@ -12,8 +12,9 @@ import { Menu, LogOut, User, Bell } from 'lucide-react';
 // ============================================
 
 export default function Header() {
-  const { user, role, clearAuth } = useAuthStore();
-  const { sidebarOpen, toggleSidebar } = useUIStore();
+  const { user, role, logout } = useAuth();
+  const sidebarOpen = useUIStore((s) => s.sidebarOpen);
+  const toggleSidebar = useUIStore((s) => s.toggleSidebar);
   const navigate = useNavigate();
   const menuBtnRef = useRef(null);
 
@@ -50,16 +51,8 @@ export default function Header() {
   };
 
   const handleLogout = async () => {
-    try {
-      // TODO: Llamar al endpoint de logout del backend
-      // await api.post('/auth/logout');
-      clearAuth();
-      navigate('/login');
-    } catch {
-      // Si falla el logout en backend, igual limpiamos el frontend
-      clearAuth();
-      navigate('/login');
-    }
+    await logout();
+    navigate('/login');
   };
 
   const rolMostrar =

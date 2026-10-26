@@ -9,69 +9,10 @@ import {
   CheckCircle,
 } from 'lucide-react';
 import ModuloCabecera from '../components/ModuloCabecera';
-
-const INITIAL_BROKERS = [
-  {
-    id: 1,
-    numeroIdentificacion: '12053621',
-    primerNombre: 'OSCAR',
-    segundoNombre: '',
-    primerApellido: 'VALVERDE',
-    segundoApellido: 'CASTILLO',
-    telefono: '3104256987',
-    correo: 'oscar.valverde@brokerconex.com',
-    fechaNacimiento: '1988-09-12',
-    genero: 'M',
-    direccion: 'Carrera 5 # 14-20, Centro Empresarial',
-    municipio: 'Bogotá D.C.',
-    departamento: 'Cundinamarca',
-    empresasVinculadas: ['Café Especial Huila SAS', 'Exportadora Andina de Café'],
-    totalNegociaciones: 28,
-    activo: true,
-    avatar: '/images/users/avatar-7.jpg',
-  },
-  {
-    id: 2,
-    numeroIdentificacion: '12055621',
-    primerNombre: 'ALFONSO',
-    segundoNombre: 'JAVIER',
-    primerApellido: 'ZULUAGA',
-    segundoApellido: 'RESTREPO',
-    telefono: '3148901234',
-    correo: 'alfonso.zuluaga@brokerconex.com',
-    fechaNacimiento: '1984-06-25',
-    genero: 'M',
-    direccion: 'Calle 10 # 43E-12, Poblado',
-    municipio: 'Medellín',
-    departamento: 'Antioquia',
-    empresasVinculadas: ['Origen Café Colombia'],
-    totalNegociaciones: 45,
-    activo: true,
-    avatar: '/images/users/avatar-8.jpg',
-  },
-  {
-    id: 3,
-    numeroIdentificacion: '10948372',
-    primerNombre: 'VALENTINA',
-    segundoNombre: 'SOFÍA',
-    primerApellido: 'HERRERA',
-    segundoApellido: 'DUQUE',
-    telefono: '3167788990',
-    correo: 'valentina.herrera@brokerconex.com',
-    fechaNacimiento: '1992-12-04',
-    genero: 'F',
-    direccion: 'Avenida Santander # 55-10',
-    municipio: 'Manizales',
-    departamento: 'Caldas',
-    empresasVinculadas: ['Alianza Cafetera del Sur', 'Café Especial Huila SAS'],
-    totalNegociaciones: 19,
-    activo: true,
-    avatar: '/images/users/avatar-9.jpg',
-  },
-];
+import { useSuperAdmin } from '@/hooks/useSuperAdmin';
 
 export default function BrokersPage() {
-  const [brokers, setBrokers] = useState(INITIAL_BROKERS);
+  const { brokers = [], createBroker, updateBroker } = useSuperAdmin();
   const [searchTerm, setSearchTerm] = useState('');
 
   // Modales
@@ -155,28 +96,24 @@ export default function BrokersPage() {
     setResultadoConsulta(encontrado || 'NO_ENCONTRADO');
   };
 
-  const guardarCreacion = (e) => {
+  const guardarCreacion = async (e) => {
     e.preventDefault();
-    const nuevo = {
-      id: Date.now(),
-      ...formData,
-      empresasVinculadas: [],
-      totalNegociaciones: 0,
-      activo: true,
-      avatar: '/images/users/user-dummy-img.jpg',
-    };
-    setBrokers([nuevo, ...brokers]);
-    setModalRegistroAbierto(false);
+    try {
+      await createBroker(formData);
+      setModalRegistroAbierto(false);
+    } catch {
+      // Error manejado por el provider
+    }
   };
 
-  const guardarEdicion = (e) => {
+  const guardarEdicion = async (e) => {
     e.preventDefault();
-    setBrokers(
-      brokers.map((b) =>
-        b.id === brokerActual.id ? { ...b, ...formData } : b
-      )
-    );
-    setModalEditarAbierto(false);
+    try {
+      await updateBroker(brokerActual.id, formData);
+      setModalEditarAbierto(false);
+    } catch {
+      // Error manejado por el provider
+    }
   };
 
   const filtrados = brokers.filter((b) => {

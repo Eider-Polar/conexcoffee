@@ -9,57 +9,23 @@ import {
   Droplets,
 } from 'lucide-react';
 import ModuloCabecera from '../components/ModuloCabecera';
-
-const INITIAL_MUESTRAS = [
-  {
-    id: 1,
-    codigoPreoferta: 'PRE-HUILA-2026-001',
-    fecha: '2026-08-15',
-    peso: 350.0,
-    humedad: 10.8,
-    factorRendimiento: 88.5,
-    caficultor: 'Miguel Florez',
-    finca: 'Finca El Paraíso',
-    variedad: 'Pink Bourbon',
-    laboratorio: 'Laboratorio Central TecniCafé',
-    estado: 'Evaluada',
-  },
-  {
-    id: 2,
-    codigoPreoferta: 'PRE-CAUCA-2026-042',
-    fecha: '2026-08-20',
-    peso: 320.0,
-    humedad: 11.2,
-    factorRendimiento: 89.2,
-    caficultor: 'Pedro Prueba',
-    finca: 'Finca Los Rosales',
-    variedad: 'Honey Caturra',
-    laboratorio: null, // Sin laboratorio asignado
-    estado: 'Pendiente Laboratorio',
-  },
-  {
-    id: 3,
-    codigoPreoferta: 'PRE-NARINO-2026-105',
-    fecha: '2026-08-28',
-    peso: 400.0,
-    humedad: 10.5,
-    factorRendimiento: 91.0,
-    caficultor: 'María del Rosario Ruiz',
-    finca: 'Finca Buena Vista',
-    variedad: 'Geisha Lavado',
-    laboratorio: 'Centro Sensorial Café Nariño',
-    estado: 'En Análisis',
-  },
-];
-
-const LABORATORIOS_DISPONIBLES = [
-  'Laboratorio Central TecniCafé',
-  'Laboratorio de Calidad Sur Huila',
-  'Centro Sensorial Café Nariño',
-];
+import { useSuperAdmin } from '@/hooks/useSuperAdmin';
 
 export default function MuestrasPage() {
-  const [muestras, setMuestras] = useState(INITIAL_MUESTRAS);
+  const {
+    muestras = [],
+    laboratorios = [],
+    createMuestra,
+    asignarLaboratorioMuestra,
+  } = useSuperAdmin();
+  const LABORATORIOS_DISPONIBLES =
+    laboratorios.length > 0
+      ? laboratorios.map((l) => l.nombre)
+      : [
+          'Laboratorio Central TecniCafé',
+          'Laboratorio de Calidad Sur Huila',
+          'Centro Sensorial Café Nariño',
+        ];
   const [searchTerm, setSearchTerm] = useState('');
 
   const [modalRegistroAbierto, setModalRegistroAbierto] = useState(false);
@@ -105,28 +71,18 @@ export default function MuestrasPage() {
     setModalDetalleAbierto(true);
   };
 
-  const guardarCreacion = (e) => {
+  const guardarCreacion = async (e) => {
     e.preventDefault();
-    const nueva = {
-      id: Date.now(),
-      ...formData,
-      peso: Number(formData.peso),
-      humedad: Number(formData.humedad),
-      factorRendimiento: Number(formData.factorRendimiento || 88),
-      estado: formData.laboratorio ? 'En Análisis' : 'Pendiente Laboratorio',
-    };
-    setMuestras([nueva, ...muestras]);
-    setModalRegistroAbierto(false);
+    try {
+      await createMuestra(formData);
+      setModalRegistroAbierto(false);
+    } catch {
+      // Error manejado por el provider
+    }
   };
 
-  const asignarLaboratorio = (nombreLab) => {
-    setMuestras(
-      muestras.map((m) =>
-        m.id === muestraActual.id
-          ? { ...m, laboratorio: nombreLab, estado: 'En Análisis' }
-          : m
-      )
-    );
+  const asignarLaboratorio = async (nombreLab) => {
+    await asignarLaboratorioMuestra(muestraActual.id, nombreLab);
     setModalAsignarAbierto(false);
   };
 
@@ -206,12 +162,12 @@ export default function MuestrasPage() {
                       {m.fecha}
                     </td>
                     <td className="px-5 py-3.5 font-semibold text-surface-800">
-                      {m.peso.toLocaleString('es-CO', { minimumFractionDigits: 1 })} g
+                      {Number(m.pesoNum ?? parseFloat(m.peso) ?? 350).toLocaleString('es-CO', { minimumFractionDigits: 1 })} g
                     </td>
                     <td className="px-5 py-3.5 font-medium text-surface-700">
                       <span className="inline-flex items-center gap-1">
                         <Droplets className="h-3.5 w-3.5 text-blue-500" />
-                        {m.humedad.toFixed(1)}%
+                        {Number(m.humedadNum ?? parseFloat(m.humedad) ?? 11.2).toFixed(1)}%
                       </span>
                     </td>
                     <td className="px-5 py-3.5 text-center">

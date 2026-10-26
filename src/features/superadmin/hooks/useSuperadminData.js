@@ -1,19 +1,22 @@
-import { createResourceHooks } from '@/hooks/createResourceHooks';
-import {
-  superadminStatsApi,
-  superadminMetricsApi,
-  superadminActivityApi,
-  superadminModulesApi,
-} from '../api/superadminApi';
+import { useSuperAdmin } from '@/hooks/useSuperAdmin';
+import { toQueryResult } from '@/hooks/contextAdapter';
 
-const stats = createResourceHooks('superadmin-stats', superadminStatsApi);
-export const useSuperadminStats = stats.useList;
+export const useSuperadminStats = () => {
+  const { stats, loading, error, refetch } = useSuperAdmin();
+  return toQueryResult(stats, loading, error, refetch);
+};
 
-const metrics = createResourceHooks('superadmin-metrics', superadminMetricsApi);
-export const useSuperadminMetrics = metrics.useList;
+export const useSuperadminMetrics = () => {
+  const { metrics, loading, error, refetch } = useSuperAdmin();
+  return toQueryResult(metrics, loading, error, refetch);
+};
 
-const activity = createResourceHooks('superadmin-activity', superadminActivityApi);
-export const useSuperadminActivity = activity.useList;
+export const useSuperadminActivity = () => {
+  const { activity, loading, error, refetch } = useSuperAdmin();
+  return toQueryResult(activity, loading, error, refetch);
+};
 
-const modules = createResourceHooks('superadmin-modules', superadminModulesApi);
-export const useSuperadminModules = modules.useList;
+export const useSuperadminModules = () => {
+  const { modules, loading, error, refetch } = useSuperAdmin();
+  return toQueryResult(modules, loading, error, refetch);
+};

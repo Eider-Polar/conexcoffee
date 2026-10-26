@@ -7,57 +7,10 @@ import {
   X,
 } from 'lucide-react';
 import ModuloCabecera from '../components/ModuloCabecera';
-
-const INITIAL_TECNICOS = [
-  {
-    id: 1,
-    numeroIdentificacion: '79845123',
-    primerNombre: 'CARLOS',
-    segundoNombre: 'EDUARDO',
-    primerApellido: 'RAMÍREZ',
-    segundoApellido: 'VARGAS',
-    telefono: '3138901234',
-    correo: 'carlos.ramirez@conexcoffee.com',
-    especialidad: 'Q-Grader / Agrónomo Especialista en Suelos',
-    zonaAsignada: 'Huila (Pitalito, Acevedo)',
-    visitasRealizadas: 84,
-    activo: true,
-    avatar: '/images/users/avatar-8.jpg',
-  },
-  {
-    id: 2,
-    numeroIdentificacion: '10882341',
-    primerNombre: 'ANDRÉS',
-    segundoNombre: 'FELIPE',
-    primerApellido: 'GUTIÉRREZ',
-    segundoApellido: 'MORA',
-    telefono: '3156789012',
-    correo: 'andres.gutierrez@conexcoffee.com',
-    especialidad: 'Técnico de Campo en Buenas Prácticas Agrícolas',
-    zonaAsignada: 'Cauca (Popayán, Cajibío)',
-    visitasRealizadas: 62,
-    activo: true,
-    avatar: '/images/users/avatar-7.jpg',
-  },
-  {
-    id: 3,
-    numeroIdentificacion: '52987412',
-    primerNombre: 'DIANA',
-    segundoNombre: 'MARCELA',
-    primerApellido: 'ORTEGA',
-    segundoApellido: 'LÓPEZ',
-    telefono: '3174567890',
-    correo: 'diana.ortega@conexcoffee.com',
-    especialidad: 'Catadora Q Arabica Grader / Auditora Fair Trade',
-    zonaAsignada: 'Nariño (La Unión, Buesaco)',
-    visitasRealizadas: 95,
-    activo: true,
-    avatar: '/images/users/avatar-4.jpg',
-  },
-];
+import { useSuperAdmin } from '@/hooks/useSuperAdmin';
 
 export default function TecnicosPage() {
-  const [tecnicos, setTecnicos] = useState(INITIAL_TECNICOS);
+  const { tecnicos = [], createTecnico, updateTecnico } = useSuperAdmin();
   const [searchTerm, setSearchTerm] = useState('');
 
   const [modalRegistroAbierto, setModalRegistroAbierto] = useState(false);
@@ -114,27 +67,24 @@ export default function TecnicosPage() {
     setModalDetalleAbierto(true);
   };
 
-  const guardarCreacion = (e) => {
+  const guardarCreacion = async (e) => {
     e.preventDefault();
-    const nuevo = {
-      id: Date.now(),
-      ...formData,
-      visitasRealizadas: 0,
-      activo: true,
-      avatar: '/images/users/user-dummy-img.jpg',
-    };
-    setTecnicos([nuevo, ...tecnicos]);
-    setModalRegistroAbierto(false);
+    try {
+      await createTecnico(formData);
+      setModalRegistroAbierto(false);
+    } catch {
+      // Error manejado por el provider
+    }
   };
 
-  const guardarEdicion = (e) => {
+  const guardarEdicion = async (e) => {
     e.preventDefault();
-    setTecnicos(
-      tecnicos.map((t) =>
-        t.id === tecnicoActual.id ? { ...t, ...formData } : t
-      )
-    );
-    setModalEditarAbierto(false);
+    try {
+      await updateTecnico(tecnicoActual.id, formData);
+      setModalEditarAbierto(false);
+    } catch {
+      // Error manejado por el provider
+    }
   };
 
   const filtrados = tecnicos.filter((t) => {

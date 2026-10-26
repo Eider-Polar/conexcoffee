@@ -3,7 +3,7 @@ import { ArrowRight } from 'lucide-react';
 
 // Tarjeta de acceso rápido a un módulo (usada en el dashboard overview)
 export default function ModuleCard({ mod }) {
-  const Icon = mod.icon;
+  const Icon = mod.icon || ArrowRight;
   return (
     <div className="bg-white rounded-2xl border border-surface-200 p-5 hover:shadow-lg hover:-translate-y-1 transition-all duration-200 group flex flex-col justify-between gap-4">
       <div className="flex items-start gap-3">

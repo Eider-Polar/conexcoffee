@@ -9,51 +9,10 @@ import {
   CheckCircle,
 } from 'lucide-react';
 import ModuloCabecera from '../components/ModuloCabecera';
-
-const INITIAL_LABORATORIOS = [
-  {
-    id: 1,
-    nit: '901456789-3',
-    nombre: 'Laboratorio Central TecniCafé',
-    telefono: '3124567890',
-    correo: 'laboratorio@tecnicafe.co',
-    direccion: 'Km 3 Vía Cajibío',
-    municipio: 'Cajibío',
-    departamento: 'Cauca',
-    certificaciones: 'CQI Q-Venue Certified / SCAA Campus',
-    muestrasAnalizadas: 1450,
-    activo: true,
-  },
-  {
-    id: 2,
-    nit: '900876543-2',
-    nombre: 'Laboratorio de Calidad Sur Huila',
-    telefono: '3145678901',
-    correo: 'calidad@surhuila-lab.com',
-    direccion: 'Avenida Pastrana # 12-40',
-    municipio: 'Pitalito',
-    departamento: 'Huila',
-    certificaciones: 'Laboratorio Acreditado Almacafé',
-    muestrasAnalizadas: 890,
-    activo: true,
-  },
-  {
-    id: 3,
-    nit: '900234567-9',
-    nombre: 'Centro Sensorial Café Nariño',
-    telefono: '3167890123',
-    correo: 'sensorial@cafenarino.org',
-    direccion: 'Calle 18 # 24-50',
-    municipio: 'Pasto',
-    departamento: 'Nariño',
-    certificaciones: 'SCA Specialty Training Lab',
-    muestrasAnalizadas: 620,
-    activo: true,
-  },
-];
+import { useSuperAdmin } from '@/hooks/useSuperAdmin';
 
 export default function LaboratoriosPage() {
-  const [laboratorios, setLaboratorios] = useState(INITIAL_LABORATORIOS);
+  const { laboratorios = [], createLaboratorio, updateLaboratorio } = useSuperAdmin();
   const [searchTerm, setSearchTerm] = useState('');
 
   const [modalRegistroAbierto, setModalRegistroAbierto] = useState(false);
@@ -124,26 +83,24 @@ export default function LaboratoriosPage() {
     setResultadoConsulta(encontrado || 'NO_ENCONTRADO');
   };
 
-  const guardarCreacion = (e) => {
+  const guardarCreacion = async (e) => {
     e.preventDefault();
-    const nuevo = {
-      id: Date.now(),
-      ...formData,
-      muestrasAnalizadas: 0,
-      activo: true,
-    };
-    setLaboratorios([nuevo, ...laboratorios]);
-    setModalRegistroAbierto(false);
+    try {
+      await createLaboratorio(formData);
+      setModalRegistroAbierto(false);
+    } catch {
+      // Error manejado por el provider
+    }
   };
 
-  const guardarEdicion = (e) => {
+  const guardarEdicion = async (e) => {
     e.preventDefault();
-    setLaboratorios(
-      laboratorios.map((l) =>
-        l.id === laboratorioActual.id ? { ...l, ...formData } : l
-      )
-    );
-    setModalEditarAbierto(false);
+    try {
+      await updateLaboratorio(laboratorioActual.id, formData);
+      setModalEditarAbierto(false);
+    } catch {
+      // Error manejado por el provider
+    }
   };
 
   const filtrados = laboratorios.filter((l) => {

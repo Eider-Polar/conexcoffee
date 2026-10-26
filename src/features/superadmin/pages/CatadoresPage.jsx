@@ -12,77 +12,10 @@ import {
   FileCheck,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-
-// Datos iniciales de demostración basados en el seeder de ConexCoffee
-const INITIAL_CATADORES = [
-  {
-    id: 1,
-    numero_identificacion: '1088324567',
-    tipo_documento: 'CC',
-    primer_nombre: 'ANDRÉS',
-    segundo_nombre: 'FELIPE',
-    primer_apellido: 'MARTÍNEZ',
-    segundo_apellido: 'ZAPATA',
-    telefono: '3128904561',
-    correo: 'andres.martinez@tecnicafe.co',
-    certificacion: 'Q-Grader Arábica (CQI #4892)',
-    laboratorio: 'Laboratorio Central TecniCafé',
-    experiencia: '8 años',
-    muestras_evaluadas: 142,
-    estado: 'Activo',
-  },
-  {
-    id: 2,
-    numero_identificacion: '52893412',
-    tipo_documento: 'CC',
-    primer_nombre: 'CAROLINA',
-    segundo_nombre: 'PAOLA',
-    primer_apellido: 'HERRERA',
-    segundo_apellido: 'GIRALDO',
-    telefono: '3104567890',
-    correo: 'carolina.herrera@cafecauca.com',
-    certificacion: 'Q-Grader Arábica (CQI #6104)',
-    laboratorio: 'Centro Sensorial Café Nariño',
-    experiencia: '5 años',
-    muestras_evaluadas: 98,
-    estado: 'Activo',
-  },
-  {
-    id: 3,
-    numero_identificacion: '1094857234',
-    tipo_documento: 'CC',
-    primer_nombre: 'JORGE',
-    segundo_nombre: 'LUIS',
-    primer_apellido: 'QUINTERO',
-    segundo_apellido: 'VALENCIA',
-    telefono: '3157891234',
-    correo: 'jorge.quintero@cafespecial.org',
-    certificacion: 'Q-Processing Level 2 & Q-Grader',
-    laboratorio: 'Laboratorio Calidad Huila',
-    experiencia: '10 años',
-    muestras_evaluadas: 310,
-    estado: 'Activo',
-  },
-  {
-    id: 4,
-    numero_identificacion: '43872910',
-    tipo_documento: 'CC',
-    primer_nombre: 'MARÍA',
-    segundo_nombre: 'FERNANDA',
-    primer_apellido: 'SUÁREZ',
-    segundo_apellido: 'MONTOYA',
-    telefono: '3189923412',
-    correo: 'mafe.suarez@conexcata.com',
-    certificacion: 'Q-Grader Arábica (CQI #7721)',
-    laboratorio: 'Laboratorio Central TecniCafé',
-    experiencia: '4 años',
-    muestras_evaluadas: 64,
-    estado: 'Activo',
-  },
-];
+import { useSuperAdmin } from '@/hooks/useSuperAdmin';
 
 export default function CatadoresPage() {
-  const [catadores, setCatadores] = useState(INITIAL_CATADORES);
+  const { catadores = [], createCatador, updateCatador } = useSuperAdmin();
   const [searchTerm, setSearchTerm] = useState('');
   const [filtroLaboratorio, setFiltroLaboratorio] = useState('todos');
 
@@ -129,7 +62,7 @@ export default function CatadoresPage() {
   });
 
   // Guardar nuevo catador
-  const handleGuardarNuevo = (e) => {
+  const handleGuardarNuevo = async (e) => {
     e.preventDefault();
     if (
       !nuevoCatador.numero_identificacion ||
@@ -141,45 +74,37 @@ export default function CatadoresPage() {
       return;
     }
 
-    const nuevo = {
-      id: Date.now(),
-      ...nuevoCatador,
-      primer_nombre: nuevoCatador.primer_nombre.toUpperCase(),
-      segundo_nombre: nuevoCatador.segundo_nombre.toUpperCase(),
-      primer_apellido: nuevoCatador.primer_apellido.toUpperCase(),
-      segundo_apellido: nuevoCatador.segundo_apellido.toUpperCase(),
-      muestras_evaluadas: 0,
-      estado: 'Activo',
-    };
-
-    setCatadores([nuevo, ...catadores]);
-    toast.success('Catador registrado correctamente');
-    setModalRegistrarAbierto(false);
-    setNuevoCatador({
-      tipo_documento: 'CC',
-      numero_identificacion: '',
-      primer_nombre: '',
-      segundo_nombre: '',
-      primer_apellido: '',
-      segundo_apellido: '',
-      telefono: '',
-      correo: '',
-      certificacion: 'Q-Grader Arábica (CQI)',
-      laboratorio: 'Laboratorio Central TecniCafé',
-      experiencia: '',
-    });
+    try {
+      await createCatador(nuevoCatador);
+      setModalRegistrarAbierto(false);
+      setNuevoCatador({
+        tipo_documento: 'CC',
+        numero_identificacion: '',
+        primer_nombre: '',
+        segundo_nombre: '',
+        primer_apellido: '',
+        segundo_apellido: '',
+        telefono: '',
+        correo: '',
+        certificacion: 'Q-Grader Arábica (CQI)',
+        laboratorio: 'Laboratorio Central TecniCafé',
+        experiencia: '',
+      });
+    } catch {
+      // Error manejado por el provider
+    }
   };
 
   // Guardar edición
-  const handleGuardarEdicion = (e) => {
+  const handleGuardarEdicion = async (e) => {
     e.preventDefault();
     if (!catadorSeleccionado) return;
-
-    setCatadores((prev) =>
-      prev.map((c) => (c.id === catadorSeleccionado.id ? catadorSeleccionado : c))
-    );
-    toast.success('Catador actualizado correctamente');
-    setModalEditarAbierto(false);
+    try {
+      await updateCatador(catadorSeleccionado.id, catadorSeleccionado);
+      setModalEditarAbierto(false);
+    } catch {
+      // Error manejado por el provider
+    }
   };
 
   // Consultar catador por documento

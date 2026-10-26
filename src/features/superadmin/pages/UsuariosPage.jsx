@@ -8,72 +8,7 @@ import {
   Check,
 } from 'lucide-react';
 import ModuloCabecera from '../components/ModuloCabecera';
-
-const INITIAL_USUARIOS = [
-  {
-    id: 1,
-    nombre: 'SuperAdmin Conex',
-    email: 'admin@conexcoffee.com',
-    rol: 'SuperAdmin',
-    estado: 'Activo',
-    ultimoAcceso: '2026-09-11 22:40',
-    avatar: '/images/users/avatar-1.jpg',
-  },
-  {
-    id: 2,
-    nombre: 'Café Especial Huila SAS',
-    email: 'contacto@cafehuila.com',
-    rol: 'Empresa',
-    estado: 'Activo',
-    ultimoAcceso: '2026-09-11 18:25',
-    avatar: '/images/users/avatar-2.jpg',
-  },
-  {
-    id: 3,
-    nombre: 'Oscar Valverde',
-    email: 'oscar.valverde@brokerconex.com',
-    rol: 'Broker',
-    estado: 'Activo',
-    ultimoAcceso: '2026-09-11 15:10',
-    avatar: '/images/users/avatar-7.jpg',
-  },
-  {
-    id: 4,
-    nombre: 'Miguel Florez',
-    email: 'miguel.florez@conexcoffee.com',
-    rol: 'Productor',
-    estado: 'Activo',
-    ultimoAcceso: '2026-09-10 09:30',
-    avatar: '/images/users/avatar-3.jpg',
-  },
-  {
-    id: 5,
-    nombre: 'Blue Coffee Roasters Inc.',
-    email: 'john.smith@bluecoffeeroasters.com',
-    rol: 'Comprador',
-    estado: 'Activo',
-    ultimoAcceso: '2026-09-11 14:15',
-    avatar: '/images/users/avatar-10.jpg',
-  },
-  {
-    id: 6,
-    nombre: 'Laboratorio Central TecniCafé',
-    email: 'laboratorio@tecnicafe.co',
-    rol: 'Laboratorio',
-    estado: 'Activo',
-    ultimoAcceso: '2026-09-09 11:45',
-    avatar: '/images/users/avatar-5.jpg',
-  },
-  {
-    id: 7,
-    nombre: 'Carlos Eduardo Ramírez',
-    email: 'carlos.ramirez@conexcoffee.com',
-    rol: 'Tecnico',
-    estado: 'Activo',
-    ultimoAcceso: '2026-09-11 08:20',
-    avatar: '/images/users/avatar-8.jpg',
-  },
-];
+import { useSuperAdmin } from '@/hooks/useSuperAdmin';
 
 const ROLES_DISPONIBLES = [
   'SuperAdmin',
@@ -87,7 +22,12 @@ const ROLES_DISPONIBLES = [
 ];
 
 export default function UsuariosPage() {
-  const [usuarios, setUsuarios] = useState(INITIAL_USUARIOS);
+  const {
+    usuarios = [],
+    createUsuario,
+    updateUsuario,
+    toggleEstadoUsuario,
+  } = useSuperAdmin();
   const [searchTerm, setSearchTerm] = useState('');
   const [filtroRol, setFiltroRol] = useState('todos');
 
@@ -117,38 +57,27 @@ export default function UsuariosPage() {
     setModalRolAbierto(true);
   };
 
-  const guardarCreacion = (e) => {
+  const guardarCreacion = async (e) => {
     e.preventDefault();
-    const nuevo = {
-      id: Date.now(),
-      nombre: formData.nombre,
-      email: formData.email,
-      rol: formData.rol,
-      estado: 'Activo',
-      ultimoAcceso: 'Recién registrado',
-      avatar: '/images/users/user-dummy-img.jpg',
-    };
-    setUsuarios([nuevo, ...usuarios]);
-    setModalRegistroAbierto(false);
+    try {
+      await createUsuario(formData);
+      setModalRegistroAbierto(false);
+    } catch {
+      // Error manejado por el provider
+    }
   };
 
-  const asignarRol = (nuevoRol) => {
-    setUsuarios(
-      usuarios.map((u) =>
-        u.id === usuarioActual.id ? { ...u, rol: nuevoRol } : u
-      )
-    );
-    setModalRolAbierto(false);
+  const asignarRol = async (nuevoRol) => {
+    try {
+      await updateUsuario(usuarioActual.id, { rol: nuevoRol });
+      setModalRolAbierto(false);
+    } catch {
+      // Error manejado por el provider
+    }
   };
 
-  const toggleEstado = (id) => {
-    setUsuarios(
-      usuarios.map((u) =>
-        u.id === id
-          ? { ...u, estado: u.estado === 'Activo' ? 'Inactivo' : 'Activo' }
-          : u
-      )
-    );
+  const toggleEstado = async (id) => {
+    await toggleEstadoUsuario(id);
   };
 
   const filtrados = usuarios.filter((u) => {

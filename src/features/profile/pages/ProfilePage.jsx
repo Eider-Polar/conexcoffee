@@ -1,4 +1,4 @@
-import useAuthStore from '@/store/useAuthStore';
+import useAuth from '@/hooks/useAuth';
 import { Card, Button } from '@/components/ui';
 import { Badge } from '@/components/ui';
 import { User, Mail, Shield } from 'lucide-react';
@@ -10,7 +10,7 @@ import { User, Mail, Shield } from 'lucide-react';
 // ============================================
 
 export default function ProfilePage() {
-  const { user, role } = useAuthStore();
+  const { user, role } = useAuth();
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
