@@ -1,17 +1,31 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import {
   UserCheck,
   Search,
+  Filter,
   Pencil,
   Eye,
   X,
 } from 'lucide-react';
-import ModuloCabecera from '../components/ModuloCabecera';
-import { useSuperAdmin } from '@/hooks/useSuperAdmin';
+import { ModuloCabecera } from '@/components/data-display';
+import { QueryState } from '@/components/feedback';
+import ActionButton from '../components/ActionButton';
+import { useTableEntranceAnimation } from '../hooks/useSuperadminAnimations';
+import {
+  useSuperadminTecnicos,
+  useCrearSuperadminTecnico,
+  useActualizarSuperadminTecnico,
+} from '../hooks/useSuperadminData';
 
 export default function TecnicosPage() {
-  const { tecnicos = [], createTecnico, updateTecnico } = useSuperAdmin();
+  const query = useSuperadminTecnicos();
+  const tecnicos = query.data ?? [];
+  const crearTecnico = useCrearSuperadminTecnico();
+  const actualizarTecnico = useActualizarSuperadminTecnico();
+
   const [searchTerm, setSearchTerm] = useState('');
+  const [filtroZona, setFiltroZona] = useState('todos');
+  const tableRef = useRef(null);
 
   const [modalRegistroAbierto, setModalRegistroAbierto] = useState(false);
   const [modalEditarAbierto, setModalEditarAbierto] = useState(false);
@@ -67,36 +81,42 @@ export default function TecnicosPage() {
     setModalDetalleAbierto(true);
   };
 
-  const guardarCreacion = async (e) => {
+  const guardarCreacion = (e) => {
     e.preventDefault();
-    try {
-      await createTecnico(formData);
-      setModalRegistroAbierto(false);
-    } catch {
-      // Error manejado por el provider
-    }
+    const nuevo = {
+      ...formData,
+      visitasRealizadas: 0,
+      activo: true,
+      avatar: '/images/users/user-dummy-img.jpg',
+    };
+    crearTecnico.mutate(nuevo);
+    setModalRegistroAbierto(false);
   };
 
-  const guardarEdicion = async (e) => {
+  const guardarEdicion = (e) => {
     e.preventDefault();
-    try {
-      await updateTecnico(tecnicoActual.id, formData);
-      setModalEditarAbierto(false);
-    } catch {
-      // Error manejado por el provider
-    }
+    actualizarTecnico.mutate({ ...tecnicoActual, ...formData });
+    setModalEditarAbierto(false);
   };
+
+
+  const zonasUnicas = Array.from(
+    new Set(tecnicos.map((t) => t.zonaAsignada).filter(Boolean))
+  );
 
   const filtrados = tecnicos.filter((t) => {
     const term = searchTerm.toLowerCase();
-    return (
+    const matchesSearch =
       t.numeroIdentificacion.toLowerCase().includes(term) ||
       t.primerNombre.toLowerCase().includes(term) ||
       t.primerApellido.toLowerCase().includes(term) ||
       t.telefono.toLowerCase().includes(term) ||
-      t.zonaAsignada.toLowerCase().includes(term)
-    );
+      t.zonaAsignada.toLowerCase().includes(term);
+    const matchesZona = filtroZona === 'todos' || t.zonaAsignada === filtroZona;
+    return matchesSearch && matchesZona;
   });
+
+  useTableEntranceAnimation(tableRef, [filtrados.length]);
 
   return (
     <div className="space-y-6">
@@ -112,8 +132,10 @@ export default function TecnicosPage() {
         textoBotonRegistrar="Registrar Técnico"
       />
 
-      {/* Buscador */}
-      <div className="bg-white p-4 rounded-2xl border border-surface-200 shadow-2xs flex items-center justify-between">
+      <QueryState query={query} />
+
+      {/* Barra de Búsqueda y Filtros */}
+      <div className="bg-white p-4 rounded-2xl border border-surface-200 shadow-2xs flex flex-col sm:flex-row gap-3 items-center justify-between">
         <div className="relative w-full sm:w-80">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-surface-400" />
           <input
@@ -124,12 +146,28 @@ export default function TecnicosPage() {
             className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-surface-200 focus:outline-none focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
           />
         </div>
+
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <Filter className="h-4 w-4 text-surface-400 shrink-0" />
+          <select
+            value={filtroZona}
+            onChange={(e) => setFiltroZona(e.target.value)}
+            className="px-3 py-2 text-sm rounded-xl border border-surface-200 bg-white text-surface-700 focus:outline-none focus:ring-2 focus:ring-brand-terracota/20 cursor-pointer"
+          >
+            <option value="todos">Todas las zonas</option>
+            {zonasUnicas.map((zona) => (
+              <option key={zona} value={zona}>
+                {zona}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {/* Tabla Oficial (Nº, Identificación, Nombres, Apellidos, Teléfono, Acciones) */}
       <div className="bg-white rounded-2xl border border-surface-200 shadow-2xs overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left">
+          <table ref={tableRef} className="w-full text-sm text-left">
             <thead className="bg-surface-50 border-b border-surface-200 text-surface-600 uppercase text-xs tracking-wider">
               <tr>
                 <th scope="col" className="px-4 py-3.5 font-bold w-12 text-center">Nº</th>
@@ -154,7 +192,7 @@ export default function TecnicosPage() {
                     <td className="px-4 py-3.5 text-center font-bold text-surface-500 text-xs">
                       {index + 1}
                     </td>
-                    <td className="px-5 py-3.5 font-semibold text-surface-900 font-mono text-xs">
+                    <td className="px-5 py-3.5 font-semibold text-surface-900 text-xs">
                       {t.numeroIdentificacion}
                     </td>
                     <td className="px-5 py-3.5">
@@ -175,7 +213,7 @@ export default function TecnicosPage() {
                     <td className="px-5 py-3.5 font-medium text-surface-700">
                       {t.primerApellido} {t.segundoApellido}
                     </td>
-                    <td className="px-5 py-3.5 text-surface-600 font-mono text-xs">
+                    <td className="px-5 py-3.5 text-surface-600 text-xs">
                       {t.telefono}
                     </td>
                     <td className="px-5 py-3.5 text-center">
@@ -185,22 +223,18 @@ export default function TecnicosPage() {
                     </td>
                     <td className="px-5 py-3.5 text-center">
                       <div className="flex items-center justify-center gap-1.5">
-                        <button
-                          type="button"
+                        <ActionButton
+                          icon={Pencil}
+                          title="Editar Técnico"
+                          variant="primary"
                           onClick={() => abrirModalEditar(t)}
-                          title="Editar"
-                          className="p-1.5 rounded-lg border border-surface-200 bg-white text-surface-600 hover:text-brand-terracota hover:border-brand-terracota/30 hover:bg-brand-tint transition-colors cursor-pointer shadow-2xs"
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </button>
-                        <button
-                          type="button"
+                        />
+                        <ActionButton
+                          icon={Eye}
+                          title="Ver Técnico"
+                          variant="view"
                           onClick={() => abrirModalDetalles(t)}
-                          title="Ver"
-                          className="p-1.5 rounded-lg border border-surface-200 bg-white text-surface-600 hover:text-blue-600 hover:border-blue-300 hover:bg-blue-50 transition-colors cursor-pointer shadow-2xs"
-                        >
-                          <Eye className="h-4 w-4" />
-                        </button>
+                        />
                       </div>
                     </td>
                   </tr>
@@ -348,7 +382,7 @@ export default function TecnicosPage() {
                   <h3 className="text-lg font-bold text-surface-900">
                     {tecnicoActual.primerNombre} {tecnicoActual.primerApellido}
                   </h3>
-                  <span className="text-xs text-surface-500 font-mono">CC {tecnicoActual.numeroIdentificacion}</span>
+                  <span className="text-xs text-surface-500">CC {tecnicoActual.numeroIdentificacion}</span>
                 </div>
               </div>
               <button

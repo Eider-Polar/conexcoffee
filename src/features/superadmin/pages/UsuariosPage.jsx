@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import {
   Users,
   Search,
@@ -7,8 +7,15 @@ import {
   X,
   Check,
 } from 'lucide-react';
-import ModuloCabecera from '../components/ModuloCabecera';
-import { useSuperAdmin } from '@/hooks/useSuperAdmin';
+import { ModuloCabecera } from '@/components/data-display';
+import { QueryState } from '@/components/feedback';
+import ActionButton from '../components/ActionButton';
+import { useTableEntranceAnimation } from '../hooks/useSuperadminAnimations';
+import {
+  useSuperadminUsuarios,
+  useCrearSuperadminUsuario,
+  useActualizarSuperadminUsuario,
+} from '../hooks/useSuperadminData';
 
 const ROLES_DISPONIBLES = [
   'SuperAdmin',
@@ -22,14 +29,14 @@ const ROLES_DISPONIBLES = [
 ];
 
 export default function UsuariosPage() {
-  const {
-    usuarios = [],
-    createUsuario,
-    updateUsuario,
-    toggleEstadoUsuario,
-  } = useSuperAdmin();
+  const query = useSuperadminUsuarios();
+  const usuarios = query.data ?? [];
+  const crearUsuario = useCrearSuperadminUsuario();
+  const actualizarUsuario = useActualizarSuperadminUsuario();
+
   const [searchTerm, setSearchTerm] = useState('');
   const [filtroRol, setFiltroRol] = useState('todos');
+  const tableRef = useRef(null);
 
   const [modalRegistroAbierto, setModalRegistroAbierto] = useState(false);
   const [modalRolAbierto, setModalRolAbierto] = useState(false);
@@ -57,28 +64,35 @@ export default function UsuariosPage() {
     setModalRolAbierto(true);
   };
 
-  const guardarCreacion = async (e) => {
+  const guardarCreacion = (e) => {
     e.preventDefault();
-    try {
-      await createUsuario(formData);
-      setModalRegistroAbierto(false);
-    } catch {
-      // Error manejado por el provider
-    }
+
+    const nuevo = {
+      nombre: formData.nombre,
+      email: formData.email,
+      rol: formData.rol,
+      estado: 'Activo',
+      ultimoAcceso: 'Recién registrado',
+      avatar: '/images/users/user-dummy-img.jpg',
+    };
+    crearUsuario.mutate(nuevo);
+    setModalRegistroAbierto(false);
   };
 
-  const asignarRol = async (nuevoRol) => {
-    try {
-      await updateUsuario(usuarioActual.id, { rol: nuevoRol });
-      setModalRolAbierto(false);
-    } catch {
-      // Error manejado por el provider
-    }
+  const asignarRol = (nuevoRol) => {
+    actualizarUsuario.mutate({ ...usuarioActual, rol: nuevoRol });
+    setModalRolAbierto(false);
   };
 
-  const toggleEstado = async (id) => {
-    await toggleEstadoUsuario(id);
+  const toggleEstado = (id) => {
+    const target = usuarios.find((u) => u.id === id);
+    if (!target) return;
+    actualizarUsuario.mutate({
+      ...target,
+      estado: target.estado === 'Activo' ? 'Inactivo' : 'Activo',
+    });
   };
+
 
   const filtrados = usuarios.filter((u) => {
     const term = searchTerm.toLowerCase();
@@ -90,6 +104,8 @@ export default function UsuariosPage() {
     if (filtroRol === 'todos') return coincideTexto;
     return coincideTexto && u.rol === filtroRol;
   });
+
+  useTableEntranceAnimation(tableRef, [filtrados.length]);
 
   return (
     <div className="space-y-6">
@@ -104,6 +120,8 @@ export default function UsuariosPage() {
         onRegistrar={abrirModalCrear}
         textoBotonRegistrar="Crear Usuario"
       />
+
+      <QueryState query={query} />
 
       {/* Buscador y Filtro por Rol */}
       <div className="bg-white p-4 rounded-2xl border border-surface-200 shadow-2xs flex flex-col sm:flex-row gap-3 items-center justify-between">
@@ -136,7 +154,7 @@ export default function UsuariosPage() {
       {/* Tabla Oficial de Usuarios */}
       <div className="bg-white rounded-2xl border border-surface-200 shadow-2xs overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left">
+          <table ref={tableRef} className="w-full text-sm text-left">
             <thead className="bg-surface-50 border-b border-surface-200 text-surface-600 uppercase text-xs tracking-wider">
               <tr>
                 <th scope="col" className="px-4 py-3.5 font-bold w-12 text-center">Nº</th>
@@ -174,7 +192,7 @@ export default function UsuariosPage() {
                         <span className="font-semibold text-surface-900">{u.nombre}</span>
                       </div>
                     </td>
-                    <td className="px-5 py-3.5 text-surface-600 text-xs font-mono">
+                    <td className="px-5 py-3.5 text-surface-600 text-xs">
                       {u.email}
                     </td>
                     <td className="px-5 py-3.5 text-center">
@@ -196,19 +214,17 @@ export default function UsuariosPage() {
                         {u.estado}
                       </button>
                     </td>
-                    <td className="px-5 py-3.5 text-center text-xs text-surface-500 font-mono">
+                    <td className="px-5 py-3.5 text-center text-xs text-surface-500">
                       {u.ultimoAcceso}
                     </td>
                     <td className="px-5 py-3.5 text-center">
                       <div className="flex items-center justify-center gap-1.5">
-                        <button
-                          type="button"
-                          onClick={() => abrirModalAsignarRol(u)}
+                        <ActionButton
+                          icon={Shield}
                           title="Cambiar Rol"
-                          className="p-1.5 rounded-lg border border-surface-200 bg-white text-surface-600 hover:text-brand-terracota hover:border-brand-terracota/30 hover:bg-brand-tint transition-colors cursor-pointer shadow-2xs"
-                        >
-                          <Shield className="h-4 w-4" />
-                        </button>
+                          variant="primary"
+                          onClick={() => abrirModalAsignarRol(u)}
+                        />
                       </div>
                     </td>
                   </tr>

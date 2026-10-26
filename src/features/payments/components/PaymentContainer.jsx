@@ -62,8 +62,11 @@ export default function PaymentContainer({
       //   onPaymentToken(token.id);
       // ============================================
 
-      // Simulación de token
-      const mockToken = 'tok_' + Math.random().toString(36).substr(2, 9);
+      // Simulación segura de token
+      const randomPart = typeof crypto !== 'undefined' && crypto.randomUUID
+        ? crypto.randomUUID().replace(/-/g, '').slice(0, 12)
+        : 'simulated_tok_12345';
+      const mockToken = `tok_${randomPart}`;
       onPaymentToken?.(mockToken);
     } catch (error) {
       onError?.(error);

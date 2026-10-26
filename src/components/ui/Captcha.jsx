@@ -1,22 +1,24 @@
 import { useState, useEffect } from 'react';
 import { Turnstile } from '@marsidev/react-turnstile';
-import { ShieldCheck } from 'lucide-react';
+import { ShieldCheck, AlertTriangle } from 'lucide-react';
+import { TURNSTILE_SITE_KEY, IS_DEMO_MODE } from '@/lib/env';
 
 // ============================================
 // Captcha — Componente reutilizable de verificación
 // ============================================
 // Utiliza Cloudflare Turnstile vía @marsidev/react-turnstile.
-// Si no se define VITE_TURNSTILE_SITE_KEY en el .env, entra en modo
-// interactivo de desarrollo (checkbox simulado seguro) para no bloquear el flujo local.
+// Si no se define VITE_TURNSTILE_SITE_KEY en el .env y se está en modo demo,
+// entra en modo interactivo de desarrollo (checkbox simulado seguro).
+// Fuera de demo, bloquea el formulario si no hay llave Turnstile configurada.
 // ============================================
 
 export default function Captcha({ onVerify, onExpire, onError, className = '' }) {
-  const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
+  const siteKey = TURNSTILE_SITE_KEY;
   const [devChecked, setDevChecked] = useState(false);
 
   useEffect(() => {
     // Si no hay llave real y estamos en dev, avisar que está en modo mock
-    if (!siteKey) {
+    if (!siteKey && IS_DEMO_MODE) {
       console.info('[Captcha] Modo desarrollo activo (sin VITE_TURNSTILE_SITE_KEY).');
     }
   }, [siteKey]);
@@ -39,7 +41,17 @@ export default function Captcha({ onVerify, onExpire, onError, className = '' })
     );
   }
 
-  // Fallback desarrollo / testing local
+  // Fuera del modo demo, prohibir bypass silencioso en producción
+  if (!IS_DEMO_MODE) {
+    return (
+      <div className={`p-3 rounded-xl border border-danger-200 bg-danger-50 text-danger-700 text-xs flex items-center gap-2 ${className}`}>
+        <AlertTriangle className="h-4 w-4 shrink-0 text-danger-500" />
+        <span>Error de configuración: VITE_TURNSTILE_SITE_KEY no está configurada en producción.</span>
+      </div>
+    );
+  }
+
+  // Fallback solo permitido en desarrollo / testing local (IS_DEMO_MODE = true)
   const handleDevCheck = (e) => {
     const checked = e.target.checked;
     setDevChecked(checked);

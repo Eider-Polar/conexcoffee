@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import {
   Gift,
   Search,
@@ -8,13 +8,24 @@ import {
   Layers,
   Award,
 } from 'lucide-react';
-import ModuloCabecera from '../components/ModuloCabecera';
-import { useSuperAdmin } from '@/hooks/useSuperAdmin';
+import { ModuloCabecera } from '@/components/data-display';
+import { QueryState } from '@/components/feedback';
+import ActionButton from '../components/ActionButton';
+import { useTableEntranceAnimation } from '../hooks/useSuperadminAnimations';
+import { useSuperadminOfertas, useSuperadminPreofertas } from '../hooks/useSuperadminData';
 
 export default function OfertasPage() {
   const [pestanaActiva, setPestanaActiva] = useState('ofertas');
-  const { ofertas = [], preofertas = [] } = useSuperAdmin();
+
+  const ofertasQuery = useSuperadminOfertas();
+  const ofertas = ofertasQuery.data ?? [];
+
+  const preofertasQuery = useSuperadminPreofertas();
+  const preofertas = preofertasQuery.data ?? [];
+
   const [searchTerm, setSearchTerm] = useState('');
+  const tableOfertasRef = useRef(null);
+  const tablePreofertasRef = useRef(null);
 
   const [modalDetalleAbierto, setModalDetalleAbierto] = useState(false);
   const [ofertaActual, setOfertaActual] = useState(null);
@@ -49,6 +60,9 @@ export default function OfertasPage() {
     );
   });
 
+  useTableEntranceAnimation(tableOfertasRef, [ofertasFiltradas.length, pestanaActiva]);
+  useTableEntranceAnimation(tablePreofertasRef, [preofertasFiltradas.length, pestanaActiva]);
+
   return (
     <div className="space-y-6">
       {/* Cabecera idéntica a components.cabecera-modulo con portada oferta.jpg */}
@@ -60,6 +74,8 @@ export default function OfertasPage() {
         icono={Gift}
         totalRegistros={pestanaActiva === 'ofertas' ? ofertasFiltradas.length : preofertasFiltradas.length}
       />
+
+      <QueryState query={ofertasQuery} />
 
       {/* Pestañas Submódulos */}
       <div className="flex items-center justify-between border-b border-surface-200">
@@ -109,7 +125,7 @@ export default function OfertasPage() {
       {pestanaActiva === 'ofertas' && (
         <div className="bg-white rounded-2xl border border-surface-200 shadow-2xs overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left">
+            <table ref={tableOfertasRef} className="w-full text-sm text-left">
               <thead className="bg-surface-50 border-b border-surface-200 text-surface-600 uppercase text-xs tracking-wider">
                 <tr>
                   <th scope="col" className="px-4 py-3.5 font-bold w-12 text-center">Nº</th>
@@ -134,7 +150,7 @@ export default function OfertasPage() {
                       <td className="px-4 py-3.5 text-center font-bold text-surface-500 text-xs">
                         {index + 1}
                       </td>
-                      <td className="px-5 py-3.5 font-mono text-xs font-bold text-surface-900">
+                      <td className="px-5 py-3.5 text-xs font-bold text-surface-900">
                         {o.codigo}
                       </td>
                       <td className="px-5 py-3.5 font-semibold text-surface-800">
@@ -165,22 +181,18 @@ export default function OfertasPage() {
                       </td>
                       <td className="px-5 py-3.5 text-center">
                         <div className="flex items-center justify-center gap-1.5">
-                          <button
-                            type="button"
-                            onClick={() => abrirDetalles(o)}
+                          <ActionButton
+                            icon={Eye}
                             title="Ver Detalles"
-                            className="p-1.5 rounded-lg border border-surface-200 bg-white text-surface-600 hover:text-blue-600 hover:border-blue-300 hover:bg-blue-50 transition-colors cursor-pointer shadow-2xs"
-                          >
-                            <Eye className="h-4 w-4" />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => descargarFichaPdf(o)}
+                            variant="view"
+                            onClick={() => abrirDetalles(o)}
+                          />
+                          <ActionButton
+                            icon={FileDown}
                             title="Descargar Ficha Técnica PDF"
-                            className="p-1.5 rounded-lg border border-surface-200 bg-white text-surface-600 hover:text-brand-terracota hover:border-brand-terracota/30 hover:bg-brand-tint transition-colors cursor-pointer shadow-2xs"
-                          >
-                            <FileDown className="h-4 w-4" />
-                          </button>
+                            variant="primary"
+                            onClick={() => descargarFichaPdf(o)}
+                          />
                         </div>
                       </td>
                     </tr>
@@ -196,7 +208,7 @@ export default function OfertasPage() {
       {pestanaActiva === 'preofertas' && (
         <div className="bg-white rounded-2xl border border-surface-200 shadow-2xs overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left">
+            <table ref={tablePreofertasRef} className="w-full text-sm text-left">
               <thead className="bg-surface-50 border-b border-surface-200 text-surface-600 uppercase text-xs tracking-wider">
                 <tr>
                   <th scope="col" className="px-4 py-3.5 font-bold w-12 text-center">Nº</th>
@@ -214,7 +226,7 @@ export default function OfertasPage() {
                     <td className="px-4 py-3.5 text-center font-bold text-surface-500 text-xs">
                       {index + 1}
                     </td>
-                    <td className="px-5 py-3.5 font-mono text-xs font-bold text-surface-900">
+                    <td className="px-5 py-3.5 text-xs font-bold text-surface-900">
                       {p.codigo}
                     </td>
                     <td className="px-5 py-3.5 font-medium text-surface-800">
@@ -252,7 +264,7 @@ export default function OfertasPage() {
                   <Gift className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-surface-900 font-mono">{ofertaActual.codigo}</h3>
+                  <h3 className="text-lg font-bold text-surface-900">{ofertaActual.codigo}</h3>
                   <span className="text-xs text-surface-500">{ofertaActual.empresa}</span>
                 </div>
               </div>

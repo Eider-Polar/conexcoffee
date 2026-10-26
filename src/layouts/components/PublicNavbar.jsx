@@ -27,7 +27,8 @@ export default function PublicNavbar({ onOpenAddProduct }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
-  const { isAuthenticated, role } = useAuthStore();
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const role = useAuthStore((s) => s.role);
   const mobileToggleRef = useRef(null);
   const mobileMenuRef = useRef(null);
 

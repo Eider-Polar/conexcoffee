@@ -49,7 +49,7 @@ export default function BarcoRealistaZoom({ zoomProgress = 0 }) {
           Una sola toma continua y nítida (sin doble exposición fantasma)
           ========================================================== */}
       <div
-        className="absolute inset-0 w-full h-full will-change-transform"
+        className="absolute inset-0 w-full h-full"
         style={{
           transform: `
             scale(${camScale})

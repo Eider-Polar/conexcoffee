@@ -203,7 +203,7 @@ const INITIAL_STATE = {
 
 export default function RegisterForm({ onSuccess, onCancel }) {
   const [formData, setFormData] = useState(INITIAL_STATE);
-  const [captchaToken, setCaptchaToken] = useState('');
+  const captchaTokenRef = useRef('');
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
@@ -281,7 +281,7 @@ export default function RegisterForm({ onSuccess, onCancel }) {
     if (formData.password.length < 8) e.password = 'Mínimo 8 caracteres';
     if (formData.password !== formData.confirmPassword) e.confirmPassword = 'Las contraseñas no coinciden';
     if (!formData.acceptTerms) e.acceptTerms = 'Debes aceptar los términos y condiciones';
-    if (!captchaToken) e.captcha = 'Por favor completa la verificación de seguridad';
+    if (!captchaTokenRef.current) e.captcha = 'Por favor completa la verificación de seguridad';
     return e;
   };
 
@@ -311,7 +311,7 @@ export default function RegisterForm({ onSuccess, onCancel }) {
         paisCompra: formData.paisCompra,
         email: formData.email,
         password: formData.password,
-        captchaToken,
+        captchaToken: captchaTokenRef.current,
         role: 'comprador',
       });
       toast.success('¡Registro enviado! Revisa tu correo para verificar tu cuenta.');
@@ -341,7 +341,9 @@ export default function RegisterForm({ onSuccess, onCancel }) {
         {/* Avatar / Foto de perfil */}
         <div className="flex justify-center mb-2">
           <div className="relative">
-            <div
+            <button
+              type="button"
+              aria-label="Cambiar foto de perfil"
               className="w-20 h-20 rounded-full border-2 border-surface-200 bg-surface-100 flex items-center justify-center overflow-hidden cursor-pointer hover:border-primary-400 transition-colors"
               onClick={() => fileInputRef.current?.click()}
               title="Cambiar foto de perfil"
@@ -357,10 +359,11 @@ export default function RegisterForm({ onSuccess, onCancel }) {
                   <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
                 </svg>
               )}
-            </div>
+            </button>
             {/* Botón cámara */}
             <button
               type="button"
+              aria-label="Subir foto"
               onClick={() => fileInputRef.current?.click()}
               className="absolute bottom-0 right-0 w-6 h-6 bg-surface-700 rounded-full flex items-center justify-center hover:bg-primary-600 transition-colors"
               title="Subir foto"
@@ -371,6 +374,7 @@ export default function RegisterForm({ onSuccess, onCancel }) {
             {formData.photoPreview && (
               <button
                 type="button"
+                aria-label="Eliminar foto"
                 onClick={removePhoto}
                 className="absolute -top-1 -right-1 w-5 h-5 bg-danger-500 rounded-full flex items-center justify-center hover:bg-danger-600 transition-colors"
                 title="Eliminar foto"
@@ -587,10 +591,12 @@ export default function RegisterForm({ onSuccess, onCancel }) {
         <div>
           <Captcha
             onVerify={(token) => {
-              setCaptchaToken(token);
+              captchaTokenRef.current = token;
               if (errors.captcha) setErrors((prev) => ({ ...prev, captcha: '' }));
             }}
-            onExpire={() => setCaptchaToken('')}
+            onExpire={() => {
+              captchaTokenRef.current = '';
+            }}
           />
           {errors.captcha && (
             <p className="text-xs text-danger-500 text-center mt-1">{errors.captcha}</p>

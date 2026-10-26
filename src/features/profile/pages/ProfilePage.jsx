@@ -9,8 +9,8 @@ import { User, Mail, Shield } from 'lucide-react';
 // Compartida por todos los roles.
 // ============================================
 
-export default function ProfilePage() {
   const { user, role } = useAuth();
+
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">

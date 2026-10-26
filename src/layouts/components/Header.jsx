@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { animate } from 'animejs';
 import useAuth from '@/hooks/useAuth';
 import useUIStore from '@/store/useUIStore';
+import { ROLES } from '@/lib/constants';
 import { Menu, LogOut, User, Bell } from 'lucide-react';
 
 // ============================================
@@ -15,6 +16,7 @@ export default function Header() {
   const { user, role, logout } = useAuth();
   const sidebarOpen = useUIStore((s) => s.sidebarOpen);
   const toggleSidebar = useUIStore((s) => s.toggleSidebar);
+
   const navigate = useNavigate();
   const menuBtnRef = useRef(null);
 
@@ -51,12 +53,17 @@ export default function Header() {
   };
 
   const handleLogout = async () => {
-    await logout();
-    navigate('/login');
+    try {
+      await logout();
+      navigate('/login');
+    } catch {
+      navigate('/login');
+    }
   };
 
+
   const rolMostrar =
-    role === 'caficultor' || user?.role === 'caficultor'
+    role === ROLES.CAFICULTOR || user?.role === ROLES.CAFICULTOR
       ? 'Caficultor'
       : role
       ? role.charAt(0).toUpperCase() + role.slice(1)

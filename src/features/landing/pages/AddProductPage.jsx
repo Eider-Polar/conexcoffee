@@ -12,17 +12,22 @@ import useAuthStore from '@/store/useAuthStore';
 
 // ============================================
 // AddProductPage — Información & Publicación de Lote
+import { ROLES } from '@/lib/constants';
+
+// ============================================
+// AddProductPage — Publicar Lote de Café
 // ============================================
 
 export default function AddProductPage() {
   const navigate = useNavigate();
-  const { isAuthenticated, role } = useAuthStore();
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const role = useAuthStore((s) => s.role);
 
   const handlePublishClick = () => {
     if (isAuthenticated) {
-      if (role === 'productor') {
-        navigate('/productor/dashboard');
-      } else if (role === 'empresa') {
+      if (role === ROLES.CAFICULTOR) {
+        navigate('/caficultor/dashboard');
+      } else if (role === ROLES.EMPRESA) {
         navigate('/empresa/dashboard');
       } else {
         navigate(`/${role}/dashboard`);

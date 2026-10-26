@@ -1,27 +1,37 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import {
   ShoppingCart,
   Search,
+  Filter,
   Pencil,
   Eye,
   X,
-  CheckCircle,
 } from 'lucide-react';
-import ModuloCabecera from '../components/ModuloCabecera';
-import { useSuperAdmin } from '@/hooks/useSuperAdmin';
+import { ModuloCabecera } from '@/components/data-display';
+import { QueryState } from '@/components/feedback';
+import ActionButton from '../components/ActionButton';
+import { useTableEntranceAnimation } from '../hooks/useSuperadminAnimations';
+import {
+  useSuperadminCompradores,
+  useCrearSuperadminComprador,
+  useActualizarSuperadminComprador,
+} from '../hooks/useSuperadminData';
 
 export default function CompradoresPage() {
-  const { compradores = [], createComprador, updateComprador } = useSuperAdmin();
+  const query = useSuperadminCompradores();
+  const compradores = query.data ?? [];
+  const crearComprador = useCrearSuperadminComprador();
+  const actualizarComprador = useActualizarSuperadminComprador();
+
   const [searchTerm, setSearchTerm] = useState('');
+  const [filtroPais, setFiltroPais] = useState('todos');
+  const tableRef = useRef(null);
 
   const [modalRegistroAbierto, setModalRegistroAbierto] = useState(false);
   const [modalEditarAbierto, setModalEditarAbierto] = useState(false);
   const [modalDetalleAbierto, setModalDetalleAbierto] = useState(false);
-  const [modalConsultarAbierto, setModalConsultarAbierto] = useState(false);
 
   const [compradorActual, setCompradorActual] = useState(null);
-  const [cedulaConsulta, setCedulaConsulta] = useState('');
-  const [resultadoConsulta, setResultadoConsulta] = useState(null);
 
   const [formData, setFormData] = useState({
     numeroIdentificacion: '',
@@ -74,55 +84,48 @@ export default function CompradoresPage() {
     setModalDetalleAbierto(true);
   };
 
-  const abrirModalConsultar = () => {
-    setCedulaConsulta('');
-    setResultadoConsulta(null);
-    setModalConsultarAbierto(true);
+  const guardarCreacion = (e) => {
+    e.preventDefault();
+    const nuevo = {
+      ...formData,
+      pedidosCount: 0,
+      volumenSacos: 0,
+      activo: true,
+      avatar: '/images/users/user-dummy-img.jpg',
+    };
+    crearComprador.mutate(nuevo);
+    setModalRegistroAbierto(false);
   };
 
-  const ejecutarConsulta = (e) => {
+  const guardarEdicion = (e) => {
     e.preventDefault();
-    const encontrado = compradores.find(
-      (c) => c.numeroIdentificacion.trim() === cedulaConsulta.trim()
-    );
-    setResultadoConsulta(encontrado || 'NO_ENCONTRADO');
+    actualizarComprador.mutate({ ...compradorActual, ...formData });
+    setModalEditarAbierto(false);
   };
 
-  const guardarCreacion = async (e) => {
-    e.preventDefault();
-    try {
-      await createComprador(formData);
-      setModalRegistroAbierto(false);
-    } catch {
-      // Error manejado por el provider
-    }
-  };
 
-  const guardarEdicion = async (e) => {
-    e.preventDefault();
-    try {
-      await updateComprador(compradorActual.id, formData);
-      setModalEditarAbierto(false);
-    } catch {
-      // Error manejado por el provider
-    }
-  };
+  const paisesUnicos = Array.from(
+    new Set(compradores.map((c) => c.pais).filter(Boolean))
+  );
 
   const filtrados = compradores.filter((c) => {
     const term = searchTerm.toLowerCase();
-    return (
+    const matchesSearch =
       c.numeroIdentificacion.toLowerCase().includes(term) ||
       c.primerNombre.toLowerCase().includes(term) ||
       c.primerApellido.toLowerCase().includes(term) ||
       c.telefono.toLowerCase().includes(term) ||
       c.empresaCompradora.toLowerCase().includes(term) ||
-      c.pais.toLowerCase().includes(term)
-    );
+      c.pais.toLowerCase().includes(term);
+    const matchesPais = filtroPais === 'todos' || c.pais === filtroPais;
+    return matchesSearch && matchesPais;
   });
+
+  useTableEntranceAnimation(tableRef, [filtrados.length]);
 
   return (
     <div className="space-y-6">
-      {/* Cabecera idéntica a components.cabecera-modulo con botones oficiales Consultar y Registrar */}
+      {/* Cabecera idéntica a components.cabecera-modulo con botón oficial Registrar */}
       <ModuloCabecera
         titulo="Compradores"
         subtitulo="Clientes e importadores internacionales de café de especialidad"
@@ -130,14 +133,14 @@ export default function CompradoresPage() {
         mensaje="En este módulo podrás registrar la información detallada de cada uno de tus compradores."
         icono={ShoppingCart}
         totalRegistros={filtrados.length}
-        onConsultar={abrirModalConsultar}
-        textoBotonConsultar="Consultar Comprador"
         onRegistrar={abrirModalCrear}
         textoBotonRegistrar="Registrar Comprador"
       />
 
-      {/* Buscador */}
-      <div className="bg-white p-4 rounded-2xl border border-surface-200 shadow-2xs flex items-center justify-between">
+      <QueryState query={query} />
+
+      {/* Barra de Búsqueda y Filtros */}
+      <div className="bg-white p-4 rounded-2xl border border-surface-200 shadow-2xs flex flex-col sm:flex-row gap-3 items-center justify-between">
         <div className="relative w-full sm:w-80">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-surface-400" />
           <input
@@ -148,12 +151,28 @@ export default function CompradoresPage() {
             className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-surface-200 focus:outline-none focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
           />
         </div>
+
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <Filter className="h-4 w-4 text-surface-400 shrink-0" />
+          <select
+            value={filtroPais}
+            onChange={(e) => setFiltroPais(e.target.value)}
+            className="px-3 py-2 text-sm rounded-xl border border-surface-200 bg-white text-surface-700 focus:outline-none focus:ring-2 focus:ring-brand-terracota/20 cursor-pointer"
+          >
+            <option value="todos">Todos los países</option>
+            {paisesUnicos.map((p) => (
+              <option key={p} value={p}>
+                {p}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {/* Tabla Oficial (Nº, IDENTIFICACION, NOMBRES, APELLIDOS, TELEFONO, ACCIONES) */}
       <div className="bg-white rounded-2xl border border-surface-200 shadow-2xs overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left">
+          <table ref={tableRef} className="w-full text-sm text-left">
             <thead className="bg-surface-50 border-b border-surface-200 text-surface-600 uppercase text-xs tracking-wider">
               <tr>
                 <th scope="col" className="px-4 py-3.5 font-bold w-12 text-center">Nº</th>
@@ -178,7 +197,7 @@ export default function CompradoresPage() {
                     <td className="px-4 py-3.5 text-center font-bold text-surface-500 text-xs">
                       {index + 1}
                     </td>
-                    <td className="px-5 py-3.5 font-semibold text-surface-900 font-mono text-xs">
+                    <td className="px-5 py-3.5 font-semibold text-surface-900 text-xs">
                       {c.numeroIdentificacion}
                     </td>
                     <td className="px-5 py-3.5">
@@ -199,7 +218,7 @@ export default function CompradoresPage() {
                     <td className="px-5 py-3.5 font-medium text-surface-700">
                       {c.primerApellido} {c.segundoApellido}
                     </td>
-                    <td className="px-5 py-3.5 text-surface-600 font-mono text-xs">
+                    <td className="px-5 py-3.5 text-surface-600 text-xs">
                       {c.telefono}
                     </td>
                     <td className="px-5 py-3.5 text-center">
@@ -210,22 +229,18 @@ export default function CompradoresPage() {
                     </td>
                     <td className="px-5 py-3.5 text-center">
                       <div className="flex items-center justify-center gap-1.5">
-                        <button
-                          type="button"
+                        <ActionButton
+                          icon={Pencil}
+                          title="Editar Comprador"
+                          variant="primary"
                           onClick={() => abrirModalEditar(c)}
-                          title="Editar"
-                          className="p-1.5 rounded-lg border border-surface-200 bg-white text-surface-600 hover:text-brand-terracota hover:border-brand-terracota/30 hover:bg-brand-tint transition-colors cursor-pointer shadow-2xs"
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </button>
-                        <button
-                          type="button"
+                        />
+                        <ActionButton
+                          icon={Eye}
+                          title="Ver Comprador"
+                          variant="view"
                           onClick={() => abrirModalDetalles(c)}
-                          title="Ver"
-                          className="p-1.5 rounded-lg border border-surface-200 bg-white text-surface-600 hover:text-blue-600 hover:border-blue-300 hover:bg-blue-50 transition-colors cursor-pointer shadow-2xs"
-                        >
-                          <Eye className="h-4 w-4" />
-                        </button>
+                        />
                       </div>
                     </td>
                   </tr>
@@ -367,76 +382,6 @@ export default function CompradoresPage() {
         </div>
       )}
 
-      {/* MODAL CONSULTAR COMPRADOR */}
-      {modalConsultarAbierto && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-surface-200">
-            <div className="flex items-center justify-between pb-3 border-b border-surface-200">
-              <div className="flex items-center gap-2">
-                <Search className="h-5 w-5 text-brand-terracota" />
-                <h3 className="text-base font-bold text-surface-900">Consultar Comprador</h3>
-              </div>
-              <button
-                onClick={() => setModalConsultarAbierto(false)}
-                className="p-1 rounded-lg text-surface-400 hover:bg-surface-100 cursor-pointer"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
-            <form onSubmit={ejecutarConsulta} className="mt-4 space-y-3">
-              <div>
-                <label className="block text-xs font-bold text-surface-700 mb-1">
-                  Ingrese la identificación / Tax ID:
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    required
-                    type="text"
-                    value={cedulaConsulta}
-                    onChange={(e) => setCedulaConsulta(e.target.value)}
-                    placeholder="Ej. US-9823412"
-                    className="flex-1 px-3 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
-                  />
-                  <button
-                    type="submit"
-                    className="px-4 py-2 bg-brand-terracota hover:bg-brand-terracota-dark text-white text-xs font-bold rounded-xl shadow-sm cursor-pointer"
-                  >
-                    Buscar
-                  </button>
-                </div>
-              </div>
-            </form>
-
-            {resultadoConsulta === 'NO_ENCONTRADO' && (
-              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700">
-                No se encontró ningún comprador con esa identificación.
-              </div>
-            )}
-
-            {resultadoConsulta && resultadoConsulta !== 'NO_ENCONTRADO' && (
-              <div className="mt-4 p-4 bg-brand-tint border border-brand-terracota/20 rounded-xl space-y-2">
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-emerald-600 shrink-0" />
-                  <span className="font-bold text-surface-900 text-sm">
-                    {resultadoConsulta.primerNombre} {resultadoConsulta.primerApellido}
-                  </span>
-                </div>
-                <div className="text-xs text-surface-600">
-                  <strong>Empresa:</strong> {resultadoConsulta.empresaCompradora}
-                </div>
-                <div className="text-xs text-surface-600">
-                  <strong>País / Destino:</strong> {resultadoConsulta.pais} ({resultadoConsulta.ciudad})
-                </div>
-                <div className="text-xs text-surface-600">
-                  <strong>Volumen comprado:</strong> {resultadoConsulta.volumenSacos} sacos en {resultadoConsulta.pedidosCount} pedidos
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
       {/* MODAL DETALLES */}
       {modalDetalleAbierto && compradorActual && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
@@ -470,7 +415,7 @@ export default function CompradoresPage() {
               <div className="grid grid-cols-2 gap-3 bg-surface-50 p-3 rounded-xl border border-surface-200 text-xs">
                 <div>
                   <span className="text-surface-500 block">Identificación Fiscal</span>
-                  <span className="font-semibold text-surface-800 font-mono">{compradorActual.numeroIdentificacion}</span>
+                  <span className="font-semibold text-surface-800">{compradorActual.numeroIdentificacion}</span>
                 </div>
                 <div>
                   <span className="text-surface-500 block">País / Ciudad</span>

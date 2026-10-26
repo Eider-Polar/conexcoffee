@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import ModuloCabecera from '../components/ModuloCabecera';
+import { ModuloCabecera } from '@/components/data-display';
 import {
   Search,
   Eye,
@@ -52,8 +52,8 @@ export default function EmpresaBrokersPage() {
   const [criterioConsulta, setCriterioConsulta] = useState('');
   const [resultadoConsulta, setResultadoConsulta] = useState(null);
 
+  const term = searchTerm.toLowerCase();
   const brokersFiltrados = brokers.filter((b) => {
-    const term = searchTerm.toLowerCase();
     const fullName = `${b.primer_nombre || ''} ${b.segundo_nombre || ''} ${b.primer_apellido || ''} ${b.segundo_apellido || ''}`.toLowerCase();
     return (
       (b.numero_identificacion || '').toLowerCase().includes(term) ||

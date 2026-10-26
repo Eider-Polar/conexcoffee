@@ -23,7 +23,10 @@ export function SegmentedProgress({
   const startTimeRef = useRef(0);
 
   const displayValueRef = useRef(displayValue);
-  displayValueRef.current = displayValue;
+
+  useEffect(() => {
+    displayValueRef.current = displayValue;
+  }, [displayValue]);
 
   const filledSegments = Math.round((displayValue / 100) * segments);
 
@@ -154,6 +157,7 @@ export function SegmentedProgress({
         <div className="flex flex-col gap-2 pt-1">
           <input
             type="range"
+            aria-label={label || 'Control de progreso'}
             min={0}
             max={100}
             value={currentValue}

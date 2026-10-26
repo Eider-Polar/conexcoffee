@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 import { getErrorMessage } from '@/lib/axios';
@@ -17,7 +17,7 @@ import RegisterForm from './RegisterForm';
 
 export default function LoginForm() {
   const [formData, setFormData] = useState({ email: '', password: '' });
-  const [captchaToken, setCaptchaToken] = useState('');
+  const captchaTokenRef = useRef('');
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -39,7 +39,7 @@ export default function LoginForm() {
     const newErrors = {};
     if (!formData.email) newErrors.email = 'El email es requerido';
     if (!formData.password) newErrors.password = 'La contraseña es requerida';
-    if (!captchaToken) newErrors.captcha = 'Por favor completa la verificación de seguridad';
+    if (!captchaTokenRef.current) newErrors.captcha = 'Por favor completa la verificación de seguridad';
     return newErrors;
   };
 
@@ -52,7 +52,7 @@ export default function LoginForm() {
     }
     setLoading(true);
     try {
-      const user = await login({ ...formData, captchaToken });
+      const user = await login({ ...formData, captchaToken: captchaTokenRef.current });
       const dashboardRoute = ROLE_DASHBOARD_ROUTES[user.role] || '/';
       toast.success('¡Bienvenido!');
       navigate(dashboardRoute);
@@ -116,10 +116,12 @@ export default function LoginForm() {
           <div>
             <Captcha
               onVerify={(token) => {
-                setCaptchaToken(token);
+                captchaTokenRef.current = token;
                 if (errors.captcha) setErrors((prev) => ({ ...prev, captcha: '' }));
               }}
-              onExpire={() => setCaptchaToken('')}
+              onExpire={() => {
+                captchaTokenRef.current = '';
+              }}
             />
             {errors.captcha && (
               <p className="text-xs text-danger-500 text-center mt-1">{errors.captcha}</p>

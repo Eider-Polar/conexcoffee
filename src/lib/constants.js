@@ -32,16 +32,7 @@ export const ROLE_DASHBOARD_ROUTES = {
   [ROLES.CATADOR]: '/catador/dashboard',
 };
 
-/**
- * Nombre de la aplicación desde variables de entorno.
- */
-export const APP_NAME = import.meta.env.VITE_APP_NAME || 'ConexCoffee';
-
-/**
- * Llave pública de la pasarela de pagos.
- * ⚠️ Solo llave PÚBLICA. La llave secreta NUNCA debe estar en el frontend.
- */
-export const PAYMENT_PUBLIC_KEY = import.meta.env.VITE_PAYMENT_PUBLIC_KEY || '';
+export { APP_NAME, PAYMENT_PUBLIC_KEY } from './env';
 
 /**
  * Tiempo de inactividad antes de cerrar sesión (en milisegundos).

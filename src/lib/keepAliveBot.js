@@ -10,9 +10,7 @@
 // ============================================
 
 import api from './axios';
-import { HAS_API, IS_DEMO_MODE } from './env';
-
-const KEEPALIVE_ENABLED = import.meta.env.VITE_ENABLE_KEEPALIVE === 'true';
+import { HAS_API, IS_DEMO_MODE, KEEPALIVE_ENABLED } from './env';
 
 let keepAliveInterval = null;
 const PING_INTERVAL_MS = 4 * 60 * 1000; // Cada 4 minutos

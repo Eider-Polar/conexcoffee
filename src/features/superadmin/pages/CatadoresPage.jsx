@@ -1,9 +1,10 @@
-import { useState } from 'react';
-import ModuloCabecera from '../components/ModuloCabecera';
+import { useState, useRef } from 'react';
+import { ModuloCabecera } from '@/components/data-display';
 import {
   Search,
+  Filter,
   Eye,
-  Edit,
+  Pencil,
   X,
   Award,
   Phone,
@@ -12,23 +13,33 @@ import {
   FileCheck,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { useSuperAdmin } from '@/hooks/useSuperAdmin';
+import { QueryState } from '@/components/feedback';
+import ActionButton from '../components/ActionButton';
+import { useTableEntranceAnimation } from '../hooks/useSuperadminAnimations';
+import {
+  useSuperadminCatadores,
+  useCrearSuperadminCatador,
+  useActualizarSuperadminCatador,
+} from '../hooks/useSuperadminData';
 
 export default function CatadoresPage() {
-  const { catadores = [], createCatador, updateCatador } = useSuperAdmin();
+  const query = useSuperadminCatadores();
+  const catadores = query.data ?? [];
+  const crearCatador = useCrearSuperadminCatador();
+  const actualizarCatador = useActualizarSuperadminCatador();
+
   const [searchTerm, setSearchTerm] = useState('');
   const [filtroLaboratorio, setFiltroLaboratorio] = useState('todos');
+
+  const tableRef = useRef(null);
 
   // Modales
   const [modalRegistrarAbierto, setModalRegistrarAbierto] = useState(false);
   const [modalEditarAbierto, setModalEditarAbierto] = useState(false);
-  const [modalConsultarAbierto, setModalConsultarAbierto] = useState(false);
   const [modalDetalleAbierto, setModalDetalleAbierto] = useState(false);
 
-  // Estados de edición / detalle / consulta
+  // Estados de edición / detalle
   const [catadorSeleccionado, setCatadorSeleccionado] = useState(null);
-  const [cedulaConsulta, setCedulaConsulta] = useState('');
-  const [resultadoConsulta, setResultadoConsulta] = useState(null);
 
   // Formulario nuevo
   const [nuevoCatador, setNuevoCatador] = useState({
@@ -74,55 +85,49 @@ export default function CatadoresPage() {
       return;
     }
 
-    try {
-      await createCatador(nuevoCatador);
-      setModalRegistrarAbierto(false);
-      setNuevoCatador({
-        tipo_documento: 'CC',
-        numero_identificacion: '',
-        primer_nombre: '',
-        segundo_nombre: '',
-        primer_apellido: '',
-        segundo_apellido: '',
-        telefono: '',
-        correo: '',
-        certificacion: 'Q-Grader Arábica (CQI)',
-        laboratorio: 'Laboratorio Central TecniCafé',
-        experiencia: '',
-      });
-    } catch {
-      // Error manejado por el provider
-    }
+    const nuevo = {
+      id: Date.now(),
+      ...nuevoCatador,
+      primer_nombre: nuevoCatador.primer_nombre.toUpperCase(),
+      segundo_nombre: nuevoCatador.segundo_nombre.toUpperCase(),
+      primer_apellido: nuevoCatador.primer_apellido.toUpperCase(),
+      segundo_apellido: nuevoCatador.segundo_apellido.toUpperCase(),
+      muestras_evaluadas: 0,
+      estado: 'Activo',
+    };
+
+    crearCatador.mutate(nuevo);
+    toast.success('Catador registrado correctamente');
+    setModalRegistrarAbierto(false);
+    setNuevoCatador({
+      tipo_documento: 'CC',
+      numero_identificacion: '',
+      primer_nombre: '',
+      segundo_nombre: '',
+      primer_apellido: '',
+      segundo_apellido: '',
+      telefono: '',
+      correo: '',
+      certificacion: 'Q-Grader Arábica (CQI)',
+      laboratorio: 'Laboratorio Central TecniCafé',
+      experiencia: '',
+    });
   };
 
   // Guardar edición
-  const handleGuardarEdicion = async (e) => {
+  const handleGuardarEdicion = (e) => {
     e.preventDefault();
     if (!catadorSeleccionado) return;
-    try {
-      await updateCatador(catadorSeleccionado.id, catadorSeleccionado);
-      setModalEditarAbierto(false);
-    } catch {
-      // Error manejado por el provider
-    }
+
+    actualizarCatador.mutate(catadorSeleccionado);
+    toast.success('Catador actualizado correctamente');
+    setModalEditarAbierto(false);
   };
 
-  // Consultar catador por documento
-  const handleConsultar = (e) => {
-    e.preventDefault();
-    const encontrado = catadores.find((c) =>
-      c.numero_identificacion.trim().toLowerCase() === cedulaConsulta.trim().toLowerCase()
-    );
-    if (encontrado) {
-      setResultadoConsulta(encontrado);
-      toast.success('Catador encontrado en el sistema');
-    } else {
-      setResultadoConsulta(null);
-      toast.error('No se encontró ningún catador con ese número de identificación');
-    }
-  };
 
   const laboratoriosUnicos = Array.from(new Set(catadores.map((c) => c.laboratorio)));
+
+  useTableEntranceAnimation(tableRef, [catadoresFiltrados.length]);
 
   return (
     <div className="space-y-6">
@@ -130,38 +135,35 @@ export default function CatadoresPage() {
       <ModuloCabecera
         titulo="Catadores"
         subtitulo="Registro de profesionales Q-Grader y acreditaciones de análisis sensorial"
-        imagen="/images/portadas/catador.jpg"
-        mensajeInfo="En este módulo podrás registrar y gestionar la información detallada de cada uno de tus catadores."
+        imagenPortada="/images/portadas/catador.jpg"
+        mensaje="En este módulo podrás registrar y gestionar la información detallada de cada uno de tus catadores."
+        icono={Award}
         totalRegistros={catadores.length}
         textoBotonRegistrar="Registrar Catador"
-        textoBotonConsultar="Consultar Catador"
         onRegistrar={() => setModalRegistrarAbierto(true)}
-        onConsultar={() => {
-          setCedulaConsulta('');
-          setResultadoConsulta(null);
-          setModalConsultarAbierto(true);
-        }}
       />
 
+      <QueryState query={query} />
+
       {/* Barra de Búsqueda y Filtros */}
-      <div className="bg-white rounded-2xl p-4 border border-stone-200 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
+      <div className="bg-white rounded-2xl p-4 border border-surface-200 shadow-2xs flex flex-col md:flex-row gap-4 items-center justify-between">
         <div className="relative w-full md:w-96">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-surface-400" />
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Buscar por cédula, nombre, certificación..."
-            className="w-full pl-9 pr-4 py-2 text-sm border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-700/20 focus:border-amber-700"
+            className="w-full pl-9 pr-4 py-2 text-sm border border-surface-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
           />
         </div>
 
-        <div className="flex items-center gap-3 w-full md:w-auto">
-          <span className="text-xs font-medium text-stone-500">Laboratorio:</span>
+        <div className="flex items-center gap-2 w-full md:w-auto">
+          <Filter className="h-4 w-4 text-surface-400 shrink-0" />
           <select
             value={filtroLaboratorio}
             onChange={(e) => setFiltroLaboratorio(e.target.value)}
-            className="text-sm border border-stone-200 rounded-xl px-3 py-2 bg-stone-50 focus:outline-none focus:ring-2 focus:ring-amber-700/20"
+            className="text-sm border border-surface-200 rounded-xl px-3 py-2 bg-white text-surface-700 focus:outline-none focus:ring-2 focus:ring-brand-terracota/20 cursor-pointer"
           >
             <option value="todos">Todos los laboratorios</option>
             {laboratoriosUnicos.map((lab) => (
@@ -174,10 +176,10 @@ export default function CatadoresPage() {
       </div>
 
       {/* Tabla de Catadores */}
-      <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl border border-surface-200 shadow-2xs overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-stone-50 border-b border-stone-200 text-stone-600 font-semibold text-xs uppercase tracking-wider">
+          <table ref={tableRef} className="w-full text-left text-sm">
+            <thead className="bg-surface-50 border-b border-surface-200 text-surface-600 font-semibold text-xs uppercase tracking-wider">
               <tr>
                 <th className="py-3 px-4">Nº</th>
                 <th className="py-3 px-4">Identificación</th>
@@ -189,31 +191,24 @@ export default function CatadoresPage() {
                 <th className="py-3 px-4 text-center">Acciones</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-stone-100">
+            <tbody className="divide-y divide-surface-100">
               {catadoresFiltrados.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="text-center py-10 text-stone-400">
+                  <td colSpan={8} className="text-center py-10 text-surface-400">
                     No se encontraron catadores que coincidan con la búsqueda.
                   </td>
                 </tr>
               ) : (
                 catadoresFiltrados.map((catador, index) => (
-                  <tr key={catador.id} className="hover:bg-amber-50/40 transition-colors">
-                    <td className="py-3 px-4 text-stone-500 font-medium">{index + 1}</td>
-                    <td className="py-3 px-4 font-semibold text-stone-900">
+                  <tr key={catador.id} className="hover:bg-surface-50/80 transition-colors">
+                    <td className="py-3 px-4 text-surface-500 font-medium">{index + 1}</td>
+                    <td className="py-3 px-4 font-semibold text-surface-900">
                       {catador.numero_identificacion}
                     </td>
-                    <td className="py-3 px-4 text-stone-800">
-                      <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-full bg-amber-100 text-amber-800 font-bold flex items-center justify-center text-xs">
-                          {catador.primer_nombre[0]}
-                        </div>
-                        <span>
-                          {catador.primer_nombre} {catador.segundo_nombre}
-                        </span>
-                      </div>
+                    <td className="py-3 px-4 text-surface-800 font-medium">
+                      {catador.primer_nombre} {catador.segundo_nombre}
                     </td>
-                    <td className="py-3 px-4 text-stone-700">
+                    <td className="py-3 px-4 text-surface-700">
                       {catador.primer_apellido} {catador.segundo_apellido}
                     </td>
                     <td className="py-3 px-4">
@@ -222,32 +217,30 @@ export default function CatadoresPage() {
                         {catador.certificacion}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-stone-600 text-xs">
+                    <td className="py-3 px-4 text-surface-600 text-xs">
                       {catador.laboratorio}
                     </td>
-                    <td className="py-3 px-4 text-stone-600">{catador.telefono}</td>
-                    <td className="py-3 px-4">
+                    <td className="py-3 px-4 text-surface-600 text-xs">{catador.telefono}</td>
+                    <td className="py-3 px-4 text-center">
                       <div className="flex items-center justify-center gap-1.5">
-                        <button
+                        <ActionButton
+                          icon={Pencil}
+                          title="Editar Catador"
+                          variant="primary"
                           onClick={() => {
                             setCatadorSeleccionado(catador);
                             setModalEditarAbierto(true);
                           }}
-                          className="p-1.5 text-stone-500 hover:text-amber-800 hover:bg-amber-100 rounded-lg transition-colors"
-                          title="Editar catador"
-                        >
-                          <Edit className="w-4 h-4" />
-                        </button>
-                        <button
+                        />
+                        <ActionButton
+                          icon={Eye}
+                          title="Ver Detalles"
+                          variant="view"
                           onClick={() => {
                             setCatadorSeleccionado(catador);
                             setModalDetalleAbierto(true);
                           }}
-                          className="p-1.5 text-stone-500 hover:text-stone-900 hover:bg-stone-100 rounded-lg transition-colors"
-                          title="Ver detalles"
-                        >
-                          <Eye className="w-4 h-4" />
-                        </button>
+                        />
                       </div>
                     </td>
                   </tr>
@@ -258,7 +251,7 @@ export default function CatadoresPage() {
         </div>
 
         {/* Footer de la tabla */}
-        <div className="p-4 border-t border-stone-200 bg-stone-50 flex items-center justify-between text-xs text-stone-500">
+        <div className="p-4 border-t border-surface-200 bg-surface-50 flex items-center justify-between text-xs text-surface-500">
           <span>
             Total registros: <b>{catadoresFiltrados.length}</b> de {catadores.length}
           </span>
@@ -487,7 +480,7 @@ export default function CatadoresPage() {
             <div className="p-6 border-b border-stone-200 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center">
-                  <Edit className="w-5 h-5" />
+                  <Pencil className="w-5 h-5" />
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-stone-900">Actualizar Catador</h3>
@@ -626,88 +619,6 @@ export default function CatadoresPage() {
                 </button>
               </div>
             </form>
-          </div>
-        </div>
-      )}
-
-      {/* ========================================================================= */}
-      {/* MODAL: CONSULTAR CATADOR                                                  */}
-      {/* ========================================================================= */}
-      {modalConsultarAbierto && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs">
-          <div className="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-stone-200">
-            <div className="p-6 border-b border-stone-200 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-stone-100 text-stone-700 flex items-center justify-center">
-                  <Search className="w-5 h-5" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-stone-900">Consultar Catador</h3>
-                  <p className="text-xs text-stone-500">
-                    Búsqueda directa por número de cédula o identificación
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={() => setModalConsultarAbierto(false)}
-                className="text-stone-400 hover:text-stone-600 p-1"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="p-6 space-y-4">
-              <form onSubmit={handleConsultar} className="flex gap-2">
-                <input
-                  type="text"
-                  required
-                  value={cedulaConsulta}
-                  onChange={(e) => setCedulaConsulta(e.target.value)}
-                  placeholder="Ingrese número de documento..."
-                  className="flex-1 border border-stone-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-amber-700/20"
-                />
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-stone-800 text-white font-semibold text-sm rounded-xl hover:bg-stone-900 transition-colors"
-                >
-                  Buscar
-                </button>
-              </form>
-
-              {resultadoConsulta && (
-                <div className="p-4 bg-amber-50/50 border border-amber-200 rounded-xl space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-amber-900">
-                      {resultadoConsulta.primer_nombre} {resultadoConsulta.primer_apellido}
-                    </span>
-                    <span className="text-xs px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-full font-medium">
-                      {resultadoConsulta.estado}
-                    </span>
-                  </div>
-                  <p className="text-xs text-stone-600">
-                    <b>ID:</b> {resultadoConsulta.numero_identificacion}
-                  </p>
-                  <p className="text-xs text-stone-600">
-                    <b>Certificación:</b> {resultadoConsulta.certificacion}
-                  </p>
-                  <p className="text-xs text-stone-600">
-                    <b>Laboratorio:</b> {resultadoConsulta.laboratorio}
-                  </p>
-                  <p className="text-xs text-stone-600">
-                    <b>Teléfono:</b> {resultadoConsulta.telefono}
-                  </p>
-                </div>
-              )}
-            </div>
-
-            <div className="p-4 border-t border-stone-100 flex justify-end">
-              <button
-                onClick={() => setModalConsultarAbierto(false)}
-                className="px-4 py-2 text-sm text-stone-600 hover:bg-stone-100 rounded-xl"
-              >
-                Cerrar
-              </button>
-            </div>
           </div>
         </div>
       )}

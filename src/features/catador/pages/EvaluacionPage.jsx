@@ -70,6 +70,7 @@ export default function EvaluacionPage() {
         puntuacion_sca_global: resultado.puntuacionTotal,
         categoria: resultado.categoria,
         unido: true,
+
       });
     }
 

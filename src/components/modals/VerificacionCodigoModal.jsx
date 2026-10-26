@@ -24,45 +24,57 @@ function formatTime(seconds) {
 }
 
 export default function VerificacionCodigoModal({ isOpen, onClose, onVerified, email = '' }) {
-  const [digits, setDigits] = useState(Array(CODE_LENGTH).fill(''));
+  const [digits, setDigits] = useState(() => Array(CODE_LENGTH).fill(''));
   const [loading, setLoading] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
   const [timeLeft, setTimeLeft] = useState(EXPIRATION_SECONDS);
-  const [expired, setExpired] = useState(false);
   const inputsRef = useRef([]);
-  const timerRef = useRef(null);
+  const hasAlertedExpiryRef = useRef(false);
+
+  // Derivar estado de expiración
+  const expired = timeLeft <= 0;
 
   // Reiniciar estado cada vez que el modal se abre
   useEffect(() => {
-    if (isOpen) {
-      setDigits(Array(CODE_LENGTH).fill(''));
-      setExpired(false);
-      setTimeLeft(EXPIRATION_SECONDS);
-      setResendCooldown(0);
-      setTimeout(() => inputsRef.current[0]?.focus(), 150);
-    } else {
-      clearInterval(timerRef.current);
-    }
+    if (!isOpen) return;
+
+    setDigits(Array(CODE_LENGTH).fill(''));
+    setTimeLeft(EXPIRATION_SECONDS);
+    setResendCooldown(0);
+    hasAlertedExpiryRef.current = false;
+    const focusTimer = setTimeout(() => inputsRef.current[0]?.focus(), 150);
+
+    return () => clearTimeout(focusTimer);
   }, [isOpen]);
 
   // Contador de expiración de 5 minutos
   useEffect(() => {
     if (!isOpen || expired) return;
 
-    timerRef.current = setInterval(() => {
+    const timer = setInterval(() => {
       setTimeLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(timerRef.current);
-          setExpired(true);
-          toast.error('El código ha expirado. Solicita uno nuevo.');
-          return 0;
-        }
+        if (prev <= 1) return 0;
         return prev - 1;
       });
     }, 1000);
 
-    return () => clearInterval(timerRef.current);
+    return () => clearInterval(timer);
   }, [isOpen, expired]);
+
+  // Notificar cuando el tiempo expire
+  useEffect(() => {
+    if (!isOpen) {
+      hasAlertedExpiryRef.current = false;
+      return;
+    }
+    if (timeLeft === 0 && !hasAlertedExpiryRef.current) {
+      hasAlertedExpiryRef.current = true;
+      toast.error('El código ha expirado. Solicita uno nuevo.');
+    }
+    if (timeLeft > 0) {
+      hasAlertedExpiryRef.current = false;
+    }
+  }, [isOpen, timeLeft]);
 
   // Cuenta regresiva para reenvío
   useEffect(() => {
@@ -135,7 +147,7 @@ export default function VerificacionCodigoModal({ isOpen, onClose, onVerified, e
     if (resendCooldown > 0) return;
     toast.success('Código reenviado a tu correo');
     setResendCooldown(60);
-    setExpired(false);
+    hasAlertedExpiryRef.current = false;
     setTimeLeft(EXPIRATION_SECONDS);
     setDigits(Array(CODE_LENGTH).fill(''));
     setTimeout(() => inputsRef.current[0]?.focus(), 100);
@@ -239,7 +251,7 @@ export default function VerificacionCodigoModal({ isOpen, onClose, onVerified, e
                   >
                     {digits.map((digit, index) => (
                       <input
-                        key={index}
+                        key={`otp-slot-${index}`}
                         ref={(el) => (inputsRef.current[index] = el)}
                         id={`otp-digit-${index}`}
                         type="text"
@@ -252,7 +264,7 @@ export default function VerificacionCodigoModal({ isOpen, onClose, onVerified, e
                         className={`
                           w-11 h-12 text-center text-xl font-bold rounded-lg border-2
                           text-surface-900 bg-white
-                          transition-all duration-150
+                          transition-colors duration-150
                           focus:outline-none focus:ring-2 focus:ring-offset-0
                           disabled:bg-surface-100 disabled:cursor-not-allowed disabled:text-surface-400
                           ${expired

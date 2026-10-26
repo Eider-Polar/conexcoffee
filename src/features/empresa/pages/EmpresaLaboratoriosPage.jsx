@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import ModuloCabecera from '../components/ModuloCabecera';
+import { ModuloCabecera } from '@/components/data-display';
+
 import {
   Search,
   Eye,
@@ -47,8 +48,8 @@ export default function EmpresaLaboratoriosPage() {
   const [criterioConsulta, setCriterioConsulta] = useState('');
   const [resultadoConsulta, setResultadoConsulta] = useState(null);
 
+  const term = searchTerm.toLowerCase();
   const labsFiltrados = laboratorios.filter((l) => {
-    const term = searchTerm.toLowerCase();
     return (
       (l.nit || '').toLowerCase().includes(term) ||
       (l.nombre || '').toLowerCase().includes(term) ||

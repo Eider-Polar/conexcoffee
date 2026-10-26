@@ -11,7 +11,7 @@ import Header from './components/Header';
 // ============================================
 
 export default function DashboardLayout() {
-  const { sidebarOpen } = useUIStore();
+  const sidebarOpen = useUIStore((s) => s.sidebarOpen);
 
   return (
     <div className="min-h-screen bg-surface-50">

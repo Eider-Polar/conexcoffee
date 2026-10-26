@@ -1,9 +1,31 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import {
+  ArrowRight,
+  Leaf,
+  Building2,
+  Handshake,
+  ShoppingBag,
+  Coffee,
+  FlaskConical,
+  Package,
+  UserCheck,
+} from 'lucide-react';
+
+const ICON_MAP = {
+  Leaf,
+  Building2,
+  Handshake,
+  ShoppingBag,
+  Coffee,
+  FlaskConical,
+  Package,
+  UserCheck,
+};
 
 // Tarjeta de acceso rápido a un módulo (usada en el dashboard overview)
 export default function ModuleCard({ mod }) {
-  const Icon = mod.icon || ArrowRight;
+  const Icon = mod.icon || ICON_MAP[mod.iconName] || ArrowRight;
+
   return (
     <div className="bg-white rounded-2xl border border-surface-200 p-5 hover:shadow-lg hover:-translate-y-1 transition-all duration-200 group flex flex-col justify-between gap-4">
       <div className="flex items-start gap-3">

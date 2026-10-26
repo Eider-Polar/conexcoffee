@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Settings,
   Shield,
@@ -7,10 +7,13 @@ import {
   Server,
   Lock,
 } from 'lucide-react';
-import ModuloCabecera from '../components/ModuloCabecera';
+import { ModuloCabecera } from '@/components/data-display';
+import { QueryState } from '@/components/feedback';
+import { useSuperadminConfiguracion } from '../hooks/useSuperadminData';
 import { useSuperAdmin } from '@/hooks/useSuperAdmin';
 
 export default function ConfiguracionPage() {
+  const query = useSuperadminConfiguracion();
   const { configuracion, updateConfiguracion } = useSuperAdmin();
   const [guardadoExitoso, setGuardadoExitoso] = useState(false);
   const [config, setConfig] = useState({
@@ -26,12 +29,23 @@ export default function ConfiguracionPage() {
     puntajeMinimoSca: configuracion?.puntajeScaMinimo || 84.0,
   });
 
+  useEffect(() => {
+    if (query.data?.[0]) {
+      setConfig((prev) => ({ ...prev, ...query.data[0] }));
+    } else if (configuracion) {
+      setConfig((prev) => ({ ...prev, ...configuracion }));
+    }
+  }, [query.data, configuracion]);
+
   const guardarConfiguracion = async (e) => {
     e.preventDefault();
-    await updateConfiguracion(config);
+    if (updateConfiguracion) {
+      await updateConfiguracion(config);
+    }
     setGuardadoExitoso(true);
     setTimeout(() => setGuardadoExitoso(false), 3000);
   };
+
 
   return (
     <div className="space-y-6">
@@ -43,6 +57,8 @@ export default function ConfiguracionPage() {
         mensaje="En este módulo podrás configurar las variables globales de la plataforma y parámetros operativos."
         icono={Settings}
       />
+
+      <QueryState query={query} />
 
       {guardadoExitoso && (
         <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center gap-3 text-emerald-800 text-sm font-semibold animate-in fade-in">
@@ -121,7 +137,7 @@ export default function ConfiguracionPage() {
                 type="number"
                 step="0.5"
                 value={config.puntajeMinimoSca}
-                onChange={(e) => setConfig({ ...config, puntajeMinimoSca: Number(e.target.value) })}
+                onChange={(e) => setConfig({ ...config, puntajeMinimoSca: e.target.value === '' ? 0 : Number(e.target.value) || 0 })}
                 className="w-full px-3.5 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
               />
             </div>
@@ -133,7 +149,7 @@ export default function ConfiguracionPage() {
                 type="number"
                 step="0.1"
                 value={config.umbralHumedadMax}
-                onChange={(e) => setConfig({ ...config, umbralHumedadMax: Number(e.target.value) })}
+                onChange={(e) => setConfig({ ...config, umbralHumedadMax: e.target.value === '' ? 0 : Number(e.target.value) || 0 })}
                 className="w-full px-3.5 py-2 text-sm rounded-xl border border-surface-200 focus:ring-2 focus:ring-brand-terracota/20 focus:border-brand-terracota"
               />
             </div>
