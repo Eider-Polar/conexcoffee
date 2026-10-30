@@ -1,0 +1,413 @@
+{
+  "root_group": {
+    "name": "",
+    "path": "",
+    "id": "d41d8cd98f00b204e9800998ecf8427e",
+    "groups": [],
+    "checks": [
+        {
+          "fails": 190,
+          "name": "Registro exitoso (201 o 409 si ya existe)",
+          "path": "::Registro exitoso (201 o 409 si ya existe)",
+          "id": "3e7886552760614715d7148eb0e84be0",
+          "passes": 10
+        },
+        {
+          "path": "::Login exitoso con JWT (200)",
+          "id": "07f47e1825f853b382ca9669de0cd824",
+          "passes": 10,
+          "fails": 190,
+          "name": "Login exitoso con JWT (200)"
+        },
+        {
+          "name": "Catador lista Sesiones (200)",
+          "path": "::Catador lista Sesiones (200)",
+          "id": "2f7038c5a4f16965cef8c6b55e449f5f",
+          "passes": 434,
+          "fails": 0
+        },
+        {
+          "name": "Catador lista Evaluaciones Físicas (200)",
+          "path": "::Catador lista Evaluaciones Físicas (200)",
+          "id": "bd00b9d95c7469bf8b2b3b3e3ce4b16e",
+          "passes": 434,
+          "fails": 0
+        },
+        {
+          "fails": 0,
+          "name": "Catador consulta Hojas CVA (200)",
+          "path": "::Catador consulta Hojas CVA (200)",
+          "id": "ab48cd9c55859aecf1fea191a5d57fba",
+          "passes": 434
+        },
+        {
+          "name": "Admin consulta Usuarios (200)",
+          "path": "::Admin consulta Usuarios (200)",
+          "id": "5dbfa520da825e73804c0af0f3fcdb8f",
+          "passes": 855,
+          "fails": 0
+        },
+        {
+          "name": "Admin consulta Catálogo Errores (200)",
+          "path": "::Admin consulta Catálogo Errores (200)",
+          "id": "c8e2da36d13b4a4ef38594479299fd1d",
+          "passes": 855,
+          "fails": 0
+        },
+        {
+          "name": "Admin consulta Alertas Seguridad (200)",
+          "path": "::Admin consulta Alertas Seguridad (200)",
+          "id": "5d5a8643a0aa261e1562f52db7f80399",
+          "passes": 855,
+          "fails": 0
+        },
+        {
+          "name": "Caficultor crea Finca (201)",
+          "path": "::Caficultor crea Finca (201)",
+          "id": "40a9cf24e9d71022d826ab9faa02a000",
+          "passes": 96,
+          "fails": 0
+        },
+        {
+          "name": "Caficultor lista Fincas (200)",
+          "path": "::Caficultor lista Fincas (200)",
+          "id": "2394b185f6e02b188f00760e513b95a8",
+          "passes": 432,
+          "fails": 0
+        },
+        {
+          "fails": 0,
+          "name": "Caficultor consulta Variedades (200)",
+          "path": "::Caficultor consulta Variedades (200)",
+          "id": "3868057c1fa1118fc3a5d863ca6e9617",
+          "passes": 432
+        },
+        {
+          "passes": 434,
+          "fails": 0,
+          "name": "Exportadora lista Preofertas (200)",
+          "path": "::Exportadora lista Preofertas (200)",
+          "id": "33460217fe0d1690d1d3ffcb3aed6029"
+        },
+        {
+          "name": "Exportadora consulta Precintos QR (200)",
+          "path": "::Exportadora consulta Precintos QR (200)",
+          "id": "e3d3b5fb95ba176a7f4b04bbd1dedc00",
+          "passes": 434,
+          "fails": 0
+        },
+        {
+          "name": "Exportadora lista Contenedores (200)",
+          "path": "::Exportadora lista Contenedores (200)",
+          "id": "266d7f42e0c0bc44d331498308ae9cd5",
+          "passes": 434,
+          "fails": 0
+        }
+      ]
+  },
+  "options": {
+    "summaryTrendStats": [
+      "avg",
+      "min",
+      "med",
+      "max",
+      "p(90)",
+      "p(95)"
+    ],
+    "summaryTimeUnit": "",
+    "noColor": false
+  },
+  "state": {
+    "testRunDurationMs": 331018.6334,
+    "isStdOutTTY": true,
+    "isStdErrTTY": true
+  },
+  "metrics": {
+    "conex_e2e_success_rate": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 0.8287516899504281,
+        "passes": 1839,
+        "fails": 380
+      }
+    },
+    "data_sent": {
+      "type": "counter",
+      "contains": "data",
+      "values": {
+        "count": 3345508,
+        "rate": 10106.705974939234
+      }
+    },
+    "conex_catador_actions_ms": {
+      "type": "trend",
+      "contains": "default",
+      "values": {
+        "avg": 11.216589861751151,
+        "min": 6,
+        "med": 10,
+        "max": 76,
+        "p(90)": 15,
+        "p(95)": 19
+      }
+    },
+    "http_req_blocked": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "min": 0,
+        "med": 0,
+        "max": 19.0773,
+        "p(90)": 0,
+        "p(95)": 0,
+        "avg": 0.024216396203306796
+      }
+    },
+    "vus": {
+      "contains": "default",
+      "values": {
+        "value": 1,
+        "min": 1,
+        "max": 200
+      },
+      "type": "gauge"
+    },
+    "vus_max": {
+      "contains": "default",
+      "values": {
+        "value": 200,
+        "min": 200,
+        "max": 200
+      },
+      "type": "gauge"
+    },
+    "conex_caficultor_actions_ms": {
+      "type": "trend",
+      "contains": "default",
+      "values": {
+        "min": 3,
+        "med": 6,
+        "max": 37,
+        "p(90)": 15,
+        "p(95)": 17,
+        "avg": 7.689814814814815
+      }
+    },
+    "http_req_sending": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 0.008453766074709124,
+        "min": 0,
+        "med": 0,
+        "max": 1.5324,
+        "p(90)": 0,
+        "p(95)": 0
+      }
+    },
+    "http_req_duration{expected_response:true}": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 3.785201527958388,
+        "min": 0,
+        "med": 2.8703000000000003,
+        "max": 249.547,
+        "p(90)": 5.08607,
+        "p(95)": 6.478355
+      }
+    },
+    "data_received": {
+      "contains": "data",
+      "values": {
+        "count": 28282126,
+        "rate": 85439.67966245612
+      },
+      "type": "counter"
+    },
+    "conex_usuarios_registrados_total": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "rate": 0.03020977972534884,
+        "count": 10
+      }
+    },
+    "conex_fincas_creadas_total": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 96,
+        "rate": 0.2900138853633489
+      }
+    },
+    "http_req_receiving": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(95)": 0.9985,
+        "avg": 0.36417596448254785,
+        "min": 0,
+        "med": 0.34514999999999996,
+        "max": 3.9937,
+        "p(90)": 0.92639
+      }
+    },
+    "iterations": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "rate": 134.7356175750558,
+        "count": 44600
+      }
+    },
+    "conex_exportadora_actions_ms": {
+      "type": "trend",
+      "contains": "default",
+      "values": {
+        "avg": 8.857142857142858,
+        "min": 4,
+        "med": 8,
+        "max": 108,
+        "p(90)": 12,
+        "p(95)": 14.349999999999966
+      }
+    },
+    "http_req_failed": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 0.058175137783221066,
+        "passes": 380,
+        "fails": 6152
+      },
+      "thresholds": {
+        "rate<0.05": {
+          "ok": false
+        }
+      }
+    },
+    "http_req_waiting": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(95)": 5.994199999999999,
+        "avg": 3.2704135333741555,
+        "min": 0,
+        "med": 2.5196,
+        "max": 249.0607,
+        "p(90)": 4.582760000000001
+      }
+    },
+    "http_req_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(95)": 6.27034,
+        "avg": 3.6430432639314123,
+        "min": 0,
+        "med": 2.774,
+        "max": 249.547,
+        "p(90)": 5.031080000000001
+      },
+      "thresholds": {
+        "p(95)<2500": {
+          "ok": true
+        }
+      }
+    },
+    "http_req_tls_handshaking": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 0,
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0
+      }
+    },
+    "checks": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "fails": 380,
+        "rate": 0.9417981314136927,
+        "passes": 6149
+      }
+    },
+    "conex_admin_actions_ms": {
+      "contains": "default",
+      "values": {
+        "p(95)": 16,
+        "avg": 10.423391812865496,
+        "min": 5,
+        "med": 9,
+        "max": 97,
+        "p(90)": 14
+      },
+      "type": "trend"
+    },
+    "http_req_connecting": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(90)": 0,
+        "p(95)": 0,
+        "avg": 0.018391687078995706,
+        "min": 0,
+        "med": 0,
+        "max": 1.8745
+      }
+    },
+    "conex_login_duration_ms": {
+      "type": "trend",
+      "contains": "default",
+      "values": {
+        "p(90)": 3,
+        "p(95)": 14.24999999999821,
+        "avg": 8.63,
+        "min": 0,
+        "med": 1,
+        "max": 234
+      }
+    },
+    "iteration_duration": {
+      "values": {
+        "max": 2014.0935,
+        "p(90)": 1000.98722,
+        "p(95)": 1079.1999,
+        "avg": 1026.8893468273516,
+        "min": 1000,
+        "med": 1000.42125
+      },
+      "type": "trend",
+      "contains": "time"
+    },
+    "http_reqs": {
+      "values": {
+        "count": 6532,
+        "rate": 19.73302811659786
+      },
+      "type": "counter",
+      "contains": "default"
+    },
+    "conex_register_duration_ms": {
+      "type": "trend",
+      "contains": "default",
+      "values": {
+        "med": 2,
+        "max": 251,
+        "p(90)": 3,
+        "p(95)": 12.649999999998073,
+        "avg": 9.11,
+        "min": 1
+      }
+    }
+  },
+  "setup_data": {
+    "runId": "652973"
+  }
+}

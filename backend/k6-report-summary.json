@@ -1,0 +1,276 @@
+{
+  "options": {
+    "summaryTrendStats": [
+      "avg",
+      "min",
+      "med",
+      "max",
+      "p(90)",
+      "p(95)"
+    ],
+    "summaryTimeUnit": "",
+    "noColor": false
+  },
+  "state": {
+    "isStdOutTTY": true,
+    "isStdErrTTY": true,
+    "testRunDurationMs": 317715.8746
+  },
+  "metrics": {
+    "conex_health_duration_ms": {
+      "type": "trend",
+      "contains": "default",
+      "values": {
+        "max": 274.2158,
+        "p(90)": 22.52839,
+        "p(95)": 37.43568,
+        "avg": 10.980062794710554,
+        "min": 0,
+        "med": 6.8522
+      }
+    },
+    "data_received": {
+      "type": "counter",
+      "contains": "data",
+      "values": {
+        "rate": 1139087.3479508536,
+        "count": 361906133
+      }
+    },
+    "vus": {
+      "type": "gauge",
+      "contains": "default",
+      "values": {
+        "min": 2,
+        "max": 1500,
+        "value": 6
+      }
+    },
+    "http_req_tls_handshaking": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "min": 0,
+        "med": 0,
+        "max": 0,
+        "p(90)": 0,
+        "p(95)": 0,
+        "avg": 0
+      }
+    },
+    "http_req_duration{expected_response:true}": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "p(95)": 1477.2631799999997,
+        "avg": 303.75880700862126,
+        "min": 0,
+        "med": 16.228650000000002,
+        "max": 1936.5779,
+        "p(90)": 1169.02994
+      }
+    },
+    "conex_success_rate": {
+      "values": {
+        "rate": 1,
+        "passes": 175596,
+        "fails": 0
+      },
+      "type": "rate",
+      "contains": "default"
+    },
+    "vus_max": {
+      "type": "gauge",
+      "contains": "default",
+      "values": {
+        "value": 1500,
+        "min": 1500,
+        "max": 1500
+      }
+    },
+    "http_req_failed": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "rate": 0,
+        "passes": 0,
+        "fails": 175598
+      },
+      "thresholds": {
+        "rate<0.05": {
+          "ok": true
+        }
+      }
+    },
+    "http_req_receiving": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "med": 0,
+        "max": 67.6925,
+        "p(90)": 0.554,
+        "p(95)": 0.7406,
+        "avg": 0.13606854576931382,
+        "min": 0
+      }
+    },
+    "http_req_blocked": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "med": 0,
+        "max": 24.1168,
+        "p(90)": 0,
+        "p(95)": 0,
+        "avg": 0.0072651106504630055,
+        "min": 0
+      }
+    },
+    "http_req_connecting": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "med": 0,
+        "max": 24.1168,
+        "p(90)": 0,
+        "p(95)": 0,
+        "avg": 0.006133417806580962,
+        "min": 0
+      }
+    },
+    "http_req_sending": {
+      "contains": "time",
+      "values": {
+        "p(90)": 0,
+        "p(95)": 0,
+        "avg": 0.0037382857435733895,
+        "min": 0,
+        "med": 0,
+        "max": 27.3
+      },
+      "type": "trend"
+    },
+    "http_req_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "avg": 303.75880700862126,
+        "min": 0,
+        "med": 16.228650000000002,
+        "max": 1936.5779,
+        "p(90)": 1169.02994,
+        "p(95)": 1477.2631799999997
+      },
+      "thresholds": {
+        "p(95)<2000": {
+          "ok": true
+        },
+        "p(99)<4000": {
+          "ok": true
+        }
+      }
+    },
+    "http_reqs": {
+      "values": {
+        "count": 175598,
+        "rate": 552.6887827719515
+      },
+      "type": "counter",
+      "contains": "default"
+    },
+    "checks": {
+      "type": "rate",
+      "contains": "default",
+      "values": {
+        "fails": 0,
+        "rate": 1,
+        "passes": 175596
+      }
+    },
+    "conex_db_query_duration_ms": {
+      "type": "trend",
+      "contains": "default",
+      "values": {
+        "p(90)": 1376.03976,
+        "p(95)": 1553.8898,
+        "avg": 450.15134087166047,
+        "min": 0.5041,
+        "med": 168.89655,
+        "max": 1936.5779
+      }
+    },
+    "http_req_waiting": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "max": 1936.5779,
+        "p(90)": 1168.9499700000001,
+        "p(95)": 1477.1120799999999,
+        "avg": 303.619000177105,
+        "min": 0,
+        "med": 16.0944
+      }
+    },
+    "iteration_duration": {
+      "type": "trend",
+      "contains": "time",
+      "values": {
+        "max": 6401.4041,
+        "p(90)": 5192.773840000001,
+        "p(95)": 5562.802355,
+        "avg": 3412.6458775575866,
+        "min": 2005.7659,
+        "med": 3003.2834000000003
+      }
+    },
+    "iterations": {
+      "type": "counter",
+      "contains": "default",
+      "values": {
+        "count": 58532,
+        "rate": 184.22749594646788
+      }
+    },
+    "data_sent": {
+      "type": "counter",
+      "contains": "data",
+      "values": {
+        "count": 85105921,
+        "rate": 267868.01606040995
+      }
+    }
+  },
+  "setup_data": {
+    "isReady": true,
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM1Njc3OTE2LWJjMGItNGZlMi05OTYzLTZiNmY3MWNhYWNiMyIsImNvcnJlb19lbGVjdHJvbmljbyI6ImNhdGFkb3IuYW5hQHFncmFkZXIuY29tIiwicm9sX3ByaW5jaXBhbCI6IkNBVEFET1IiLCJpYXQiOjE3OTI2MjI1NzEsImV4cCI6MTc5MjcwODk3MX0.zD7iBDNGzSpsyo16Z7gAZGIMzrDA-azSlbsheBPnGCk"
+  },
+  "root_group": {
+    "id": "d41d8cd98f00b204e9800998ecf8427e",
+    "groups": [],
+    "checks": [
+        {
+          "name": "Health Check devuelve 200",
+          "path": "::Health Check devuelve 200",
+          "id": "f3cc5032a4b42bbeb94379c84f9e6cee",
+          "passes": 58532,
+          "fails": 0
+        },
+        {
+          "id": "7e738a94b5b1a02eefa1bb2a10a57bea",
+          "passes": 58532,
+          "fails": 0,
+          "name": "Sesiones de Catación responde exitoso (200 o 401 si no hay token)",
+          "path": "::Sesiones de Catación responde exitoso (200 o 401 si no hay token)"
+        },
+        {
+          "name": "Catadores responde exitoso (200 o 401)",
+          "path": "::Catadores responde exitoso (200 o 401)",
+          "id": "c39cf7008b8c14c071534b8a32489465",
+          "passes": 58532,
+          "fails": 0
+        }
+      ],
+    "name": "",
+    "path": ""
+  }
+}

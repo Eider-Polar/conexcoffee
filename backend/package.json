@@ -1,0 +1,55 @@
+{
+  "name": "conexcoffee-backend",
+  "version": "1.0.0",
+  "description": "Backend ConexCoffee con arquitectura POO, Estándares REST y Catálogo CC-XXXX",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon index.js",
+    "dev": "nodemon index.js",
+    "db:seed": "node scripts/seed-fake-data.js",
+    "db:create-superadmin": "node scripts/create-superadmin.js",
+    "test": "node scripts/test-api.js",
+    "test:stress": "k6 run k6/stress-test.js",
+    "test:stress:quick": "k6 run --vus 20 --duration 20s k6/stress-test.js",
+    "test:stress:e2e": "k6 run k6/e2e-roles-stress.js",
+    "test:stress:e2e:quick": "k6 run --vus 10 --duration 15s k6/e2e-roles-stress.js",
+    "test:stress:max": "k6 run --stage 30s:100,1m:300,1m:600,1m:1000,1m:1500,45s:0 k6/stress-test.js"
+  },
+  "keywords": [
+    "nodejs",
+    "backend",
+    "poo",
+    "api"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.21.2",
+    "express-rate-limit": "^6.10.0",
+    "helmet": "^7.0.0",
+    "joi": "^17.13.8",
+    "jsonwebtoken": "^9.0.3",
+    "pg": "^8.11.3",
+    "pg-hstore": "^2.3.4",
+    "qrcode": "^1.5.4",
+    "resend": "^6.17.2",
+    "sequelize": "^6.32.1",
+    "web-push": "^3.6.7",
+    "ws": "^8.21.0"
+  },
+  "devDependencies": {
+    "jest": "^29.6.2",
+    "nodemon": "^3.1.14",
+    "supertest": "^6.3.3"
+  },
+  "overrides": {
+    "uuid": "^11.1.1",
+    "qs": "^6.16.1",
+    "ws": "^8.21.0",
+    "path-to-regexp": "^0.1.13"
+  }
+}
